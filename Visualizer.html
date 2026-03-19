@@ -490,7 +490,7 @@
       word-break: break-word;
     }
 
-    /* Topic-velger inne i MQTT-noder: ← topic-navn → */
+    /* Topic-velger inne i MQTT-noder: <- topic-navn -> */
     .nr-topic-slider { display: flex; align-items: center; gap: 4px; background: rgba(0,0,0,.25); border: 1px solid rgba(255,255,255,.10); border-radius: 8px; padding: 3px 4px; }
     .nr-topic-arrow  { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); color: var(--text); border-radius: 6px; width: 20px; height: 20px; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0; }
     .nr-topic-arrow:hover { background: rgba(255,255,255,.16); }
@@ -1586,7 +1586,7 @@ function nrAddWire(root, fromPortEl, toPortEl) {
   const toNode   = toPortEl.closest('.nr-node-inst');
   if (!fromNode || !toNode) return;
   if (!(fromPortEl.dataset.port === 'out' && toPortEl.dataset.port === 'in')) return;
-  // Kun ut → inn er tillatt
+  // Kun ut -> inn er tillatt
 
   const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   // createElementNS kreves for SVG-elementer — vanlig createElement lager HTML, ikke SVG
@@ -1621,7 +1621,7 @@ function nrHasWire(root, a, b) {
 }
 
 // Sjekker stille om flyten er gyldig — returnerer true/false
-// Rekkefølge: noder finnes → riktig topic → koblinger i riktig orden
+// Rekkefølge: noder finnes -> riktig topic -> koblinger i riktig orden
 function nrFlowValid(root) {
   for (const title of ['Inject', 'MQTT Out', 'MQTT In', 'Debug']) {
     if (!nrGetNodeByTitle(root, title)) return false;
