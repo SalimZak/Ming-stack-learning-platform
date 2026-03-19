@@ -329,6 +329,11 @@
     .arrow-btn.left::before  { content: "◀"; position: absolute; top: 50%; left:  8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
     .arrow-btn.selected.right::after  { color: #fff; }
     .arrow-btn.selected.left::before  { color: #fff; }
+    .arrow-btn.both  { padding-left: 26px; padding-right: 26px; }
+    .arrow-btn.both::before  { content: "◀"; position: absolute; top: 50%; left:  8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
+    .arrow-btn.both::after   { content: "▶"; position: absolute; top: 50%; right: 8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
+    .arrow-btn.selected.both::before  { color: #fff; }
+    .arrow-btn.selected.both::after   { color: #fff; }
 
     .dropzone {
       border: 2px dashed rgba(56,184,208,.5); background: rgba(56,184,208,.04);
@@ -1331,8 +1336,8 @@ function t3Start() {
   const arrows = [
     { type: 'TempPublish', text: 'Publish: 50\u00b0C\nTopic: Temp', dir: 'right' },
     { type: 'HumPublish',  text: 'Publish: 45% RH\nTopic: Hum',    dir: 'right' },
-    { type: 'SubTemp',     text: 'Subscribe\nTopic: Temp',          dir: 'left'  },
-    { type: 'SubHum',      text: 'Subscribe\nTopic: Hum',           dir: 'left'  },
+    { type: 'SubTemp',     text: 'Subscribe\nTopic: Temp',          dir: 'both'  },
+    { type: 'SubHum',      text: 'Subscribe\nTopic: Hum',           dir: 'both'  },
     { type: 'TempPublish', text: 'Publish: 50\u00b0C',              dir: 'right' },
     { type: 'HumPublish',  text: 'Publish: 45% RH',                 dir: 'right' },
   ];
