@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+<meta charset="UTF-8">
+<title>MQTT Oppgaver</title>
+
+<style>
+
+:root {
+  --bg: #0d1b2a;
+  --card: #1a2e42;
+  --text: #E8D0A8;
+  --muted: #8fa3b3;
+  --cyan: #38B8D0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 40px;
+}
+
+.infobox {
+  background: var(--card);
+  border: 1px solid var(--cyan);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.task-header {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.task-desc {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.startbtn {
+  padding: 10px 20px;
+  background: var(--cyan);
+  border: none;
+  cursor: pointer;
+}
+
+/* start knapp */
+.startbtn {
+  margin-top: 16px;
+  padding: 10px 24px;
+
+  background: var(--cyan);
+  border: none;
+  border-radius: 8px;
+
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 13px;
+
+  color: #000;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.startbtn:hover {
+  opacity: 0.85;
+}
+
+/* score boksen */
+.scoreBox{
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+  margin-bottom:20px;
+}
+
+/* start/informasjonsboksen */
+.MCbox,.TFbox{
+  width:500px;
+  margin:20px auto;
+  padding:25px;
+  border:2px solid var(--cyan);
+  border-radius:12px;
+  background:var(--card);
+  box-shadow:0 0 15px rgba(0,229,255,.15);
+}
+
+/* teksten på spørsmålene */
+.MCbox p,.TFbox p{
+  margin-bottom:15px;
+  font-weight:bold;
+}
+
+/* svar knapp valgene */
+.MCbox button,.TFbox button{
+  width:100%;
+  margin:8px 0;
+  padding:12px;
+  background:var(--bg2);
+  color:var(--text);
+  border:1px solid var(--cyan);
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* gjennomsiktig knapp */
+.MCbox button:hover,.TFbox button:hover{
+  background:var(--cyan);
+  color:black;
+}
+
+/* valgt svar */
+.selected{
+  background:var(--cyan)!important;
+  color:black!important;
+}
+
+.correct{
+  background:green!important;
+  color:white!important;
+}
+
+.wrong{
+  background:red!important;
+  color:white!important;
+}
+
+.finishButton{
+  display:block;
+  margin:30px auto;
+  padding:14px 36px;
+  background:var(--cyan);
+  color:black;
+  border:none;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* Info knapp nederst i hjørnet */
+.info-box{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:34px;
+  height:34px;
+  line-height:34px;
+  text-align:center;
+  border:2px solid var(--cyan);
+  color:var(--cyan);
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+/* popup fra info knappen */
+.popup-overlay{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,.6);
+  justify-content:center;
+  align-items:center;
+}
+
+.popup-box{
+  background:var(--card);
+  padding:25px;
+  border:2px solid var(--cyan);
+  border-radius:10px;
+  width:350px;
+  text-align:center;
+}
+
+.popup-close{
+  margin-top:15px;
+  padding:10px 20px;
+  background:var(--cyan);
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Task 1 multiplechoice --> 
+<div id="page-mqtt-t1">
+
+<h1 class="page-title">Task 1 Multiplechoice</h1>
+
+<div id="mqttT1-infobox" class="infobox">
+  <h3>Multiple Choice</h3>
+  <p>Informasjon om Temaet skal stå her</p>
+  <p>Dette er er multiplechoice oppgave med 10 spørsmål. Med 4 valg alternativer. kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
+  <button class="startbtn" onclick="mqttT1Start()">Start</button>
+</div>
+
+<div id="mqttT1-taskbox" style="display:none;">
+
+<div id="mqttT1-score" class="scoreBox">Poeng Score: 0 / 10</div>
+
+<div class="MCbox" data-correct="1">
+  <p>Spørsmål 1?</p>
+  <button onclick="quizSelect(this,0)">Valg 1</button>
+  <button onclick="quizSelect(this,1)">Valg 2</button>
+  <button onclick="quizSelect(this,2)">Valg 3</button>
+  <button onclick="quizSelect(this,3)">Valg 4</button>
+</div>
+
+<div class="MCbox" data-correct="0">
+  <p>Spørsmål 2?</p>
+  <button onclick="quizSelect(this,0)">Valg 1</button>
+  <button onclick="quizSelect(this,1)">Valg 2</button>
+  <button onclick="quizSelect(this,2)">Valg 3</button>
+  <button onclick="quizSelect(this,3)">Valg 4</button>
+</div>
+
+<div class="MCbox" data-correct="0">
+  <p>Spørsmål 3?</p>
+  <button onclick="quizSelect(this,0)">Valg 1</button>
+  <button onclick="quizSelect(this,1)">Valg 2</button>
+  <button onclick="quizSelect(this,2)">Valg 3</button>
+  <button onclick="quizSelect(this,3)">Valg 4</button>
+</div>
+
+<div class="MCbox" data-correct="3">
+  <p>Spørsmål 4?</p>
+  <button onclick="quizSelect(this,0)">Valg 1</button>
+  <button onclick="quizSelect(this,1)">Valg 2</button>
+  <button onclick="quizSelect(this,2)">Valg 3</button>
+  <button onclick="quizSelect(this,3)">Valg 4</button>
+</div>
+
+<div class="MCbox" data-correct="2">
+  <p>Spørsmål 5?</p>
+  <button onclick="quizSelect(this,0)">Valg 1</button>
+  <button onclick="quizSelect(this,1)">Valg 2</button>
+  <button onclick="quizSelect(this,2)">Valg 3</button>
+  <button onclick="quizSelect(this,3)">Valg 4</button>
+</div>
+
+<div class="MCbox" data-correct="1">
+  <p>Spørsmål 6?</p>
+  <button onclick="quizSelect(this,0)">Valg 1</button>
+  <button onclick="quizSelect(this,1)">Valg 2</button>
+  <button onclick="quizSelect(this,2)">Valg 3</button>
+  <button onclick="quizSelect(this,3)">Valg 4</button>
+</div>
+
+<div class="MCbox" data-correct="1">
+  <p>Spørsmål 7?</p>
+  <button onclick="quizSelect(this,0)">Valg 1</button>
+  <button onclick="quizSelect(this,1)">Valg 2</button>
+  <button onclick="quizSelect(this,2)">Valg 3</button>
+  <button onclick="quizSelect(this,3)">Valg 4</button>
+</div>
+
+<div class="MCbox" data-correct="3">
+  <p>Spørsmål 8?</p>
+  <button onclick="quizSelect(this,0)">Valg 1</button>
+  <button onclick="quizSelect(this,1)">Valg 2</button>
+  <button onclick="quizSelect(this,2)">Valg 3</button>
+  <button onclick="quizSelect(this,3)">Valg 4</button>
+</div>
+
+<div class="MCbox" data-correct="0">
+  <p>Spørsmål 9?</p>
+  <button onclick="quizSelect(this,0)">Valg 1</button>
+  <button onclick="quizSelect(this,1)">Valg 2</button>
+  <button onclick="quizSelect(this,2)">Valg 3</button>
+  <button onclick="quizSelect(this,3)">Valg 4</button>
+</div>
+
+<div class="MCbox" data-correct="2">
+  <p>Spørsmål 10?</p>
+  <button onclick="quizSelect(this,0)">Valg 1</button>
+  <button onclick="quizSelect(this,1)">Valg 2</button>
+  <button onclick="quizSelect(this,2)">Valg 3</button>
+  <button onclick="quizSelect(this,3)">Valg 4</button>
+</div>
+
+<button class="finishButton" onclick="quizFinish('.MCbox','mqttT1-score')">Lever</button>
+
+</div>
+</div>
+
+<!-- Task 2 True/False -->
+<div id="page-mqtt-t2">
+
+<h1 class="page-title">Task 2 True or False</h1>
+
+<div id="mqttT2-infobox" class="infobox">
+  <h3>True / False Oppgave</h3>
+  <p>Informasjon om temaet før oppgaven starter.</p>
+  <p>Dette er er true or false oppgave med 10 spørsmål. Kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
+  <button class="startbtn" onclick="mqttT2Start()">Start</button>
+</div>
+
+<div id="mqttT2-taskbox" style="display:none;">
+
+<div id="mqttT2-score" class="scoreBox">Poeng Score: 0 / 10</div>
+
+<div class="TFbox" data-correct="1">
+  <p>Spørsmål 1?</p>
+  <button onclick="quizSelect(this,1)">True</button>
+  <button onclick="quizSelect(this,0)">False</button>
+</div>
+
+<div class="TFbox" data-correct="0">
+  <p>Spørsmål 2?</p>
+  <button onclick="quizSelect(this,1)">True</button>
+  <button onclick="quizSelect(this,0)">False</button>
+</div>
+
+<div class="TFbox" data-correct="0">
+  <p>Spørsmål 3?</p>
+  <button onclick="quizSelect(this,1)">True</button>
+  <button onclick="quizSelect(this,0)">False</button>
+</div>
+
+<div class="TFbox" data-correct="0">
+  <p>Spørsmål 4?</p>
+  <button onclick="quizSelect(this,1)">True</button>
+  <button onclick="quizSelect(this,0)">False</button>
+</div>
+
+<div class="TFbox" data-correct="1">
+  <p>Spørsmål 5?</p>
+  <button onclick="quizSelect(this,1)">True</button>
+  <button onclick="quizSelect(this,0)">False</button>
+</div>
+
+<div class="TFbox" data-correct="1">
+  <p>Spørsmål 6?</p>
+  <button onclick="quizSelect(this,1)">True</button>
+  <button onclick="quizSelect(this,0)">False</button>
+</div>
+
+<div class="TFbox" data-correct="1">
+  <p>Spørsmål 7?</p>
+  <button onclick="quizSelect(this,1)">True</button>
+  <button onclick="quizSelect(this,0)">False</button>
+</div>
+
+<div class="TFbox" data-correct="0">
+  <p>Spørsmål 8?</p>
+  <button onclick="quizSelect(this,1)">True</button>
+  <button onclick="quizSelect(this,0)">False</button>
+</div>
+
+<div class="TFbox" data-correct="1">
+  <p>Spørsmål 9?</p>
+  <button onclick="quizSelect(this,1)">True</button>
+  <button onclick="quizSelect(this,0)">False</button>
+</div>
+
+<div class="TFbox" data-correct="0">
+  <p>Spørsmål 10?</p>
+  <button onclick="quizSelect(this,1)">True</button>
+  <button onclick="quizSelect(this,0)">False</button>
+</div>
+
+<button class="finishButton" onclick="quizFinish('.TFbox','mqttT2-score')">Lever</button>
+
+</div>
+</div>
+
+
+<!-- informasjon knapp -->
+<span class="info-box" onclick="openInfo()">i</span>
+
+<!-- popup til informasjonknappen -->
+<div id="infoPopup" class="popup-overlay">
+  <div class="popup-box">
+    <h3>Forklaring</h3>
+    <p id="popupText">Her kommer begrepsforklaring.</p>
+    <button class="popup-close" onclick="closeInfo()">Lukk</button>
+  </div>
+</div>
+
+<script>
+// popup system
+function openInfo(){
+
+  let text = ""; // tekst i popup
+  if(document.getElementById('page-mqtt-t1').style.display !== 'none'){
+    text = "Dette er en Multiple Choice oppgave for MQTT. Velg riktig svar og lever når du føler deg ferdig. Lykke til!";
+  }
+  else if(document.getElementById('page-mqtt-t2').style.display !== 'none'){
+    text = "Dette er en True/False oppgave. Velg riktig svar og lever når du føler deg ferdig. Lykke til!";
+  }
+  else if(document.getElementById('task5Page') && document.getElementById('task5Page').style.display !== 'none'){
+    text = "Her skal du finne relevante begreper ved å klikke på kortene.";
+  }
+
+  // setter teksten i popup
+  document.getElementById('popupText').innerText = text;
+
+  // viser popup
+  document.getElementById('infoPopup').style.display='flex';
+}
+
+// variabler
+let selectedAnswersMC = []; //lagrer valgte svar for mc i array
+let selectedAnswersTF = []; //lagrer valgte svar for tf i array
+let taskFinishedMC = false; //sjekk om mc er ferdig
+let taskFinishedTF = false; //sjekk om tf er ferdig
+
+//quizen med spørsmål
+function quizSelect(btn, answerI){
+
+  let qBox = btn.parentElement; // finner spørsmål boksen
+  let buttons = qBox.querySelectorAll('button'); //finner alle svar knappene
+  let group; // variabel for riktig type (mc eller tf)
+  let selectedAnswers;// lagrer gnerelle svar og sjekk
+  let taskFinished;
+
+//MC
+  if(qBox.classList.contains('MCbox')){ 
+    group = '.MCbox';
+    selectedAnswers = selectedAnswersMC;
+    taskFinished = taskFinishedMC;
+  }
+  //TF
+  else if(qBox.classList.contains('TFbox')){
+    group = '.TFbox';
+    selectedAnswers = selectedAnswersTF;
+    taskFinished = taskFinishedTF;
+  }
+
+  if(taskFinished) return; // stopper oppgave dersom den er ferdig
+  let boxes = document.querySelectorAll(group); // henter alle spørsmålene fra den samme gruppen
+  let realI = Array.from(boxes).indexOf(qBox); // finner nummer på spørsmålet, fra spørsmålsboksen
+  buttons.forEach(b => b.classList.remove('selected')); // fjerner valgt og markere ny som git fritt valg av svar
+  btn.classList.add('selected');
+  selectedAnswers[realI] = answerI; // lagrer svarene på riktig plass
+}
+
+function quizFinish(boxClass, scoreId){
+
+  let selectedAnswers; // riktig lagret verdier basert på gruppe
+  if(boxClass === '.MCbox'){
+    taskFinishedMC = true;
+    selectedAnswers = selectedAnswersMC;
+  } else {
+    taskFinishedTF = true;
+    selectedAnswers = selectedAnswersTF;
+  }
+
+  let qBoxes = document.querySelectorAll(boxClass); // henter alle spørsmål
+  let score = 0; // teller poeng
+
+  qBoxes.forEach((box,i)=>{ // går gjennom alle spørsmålene
+    let riktig = Number(box.dataset.correct); // riktig svar fra data.correct
+    let buttons = box.querySelectorAll('button'); // alle valgalternativene
+
+    buttons.forEach((btn,index)=>{ // går gjennom alle svarene
+      btn.disabled = true; // fjerner funksjonalitet for knapp og fagre for valgt svar
+      btn.classList.remove('selected');
+
+      if(index === riktig){ // hvis dette er riktig svar er grønn
+        btn.classList.add('correct');
+      }
+
+      if(selectedAnswers[i] === index && selectedAnswers[i] !== riktig){ //går gjennomvalgt svar og ser om feil og da blir den rød
+        btn.classList.add('wrong');
+      }
+    });
+
+    if(selectedAnswers[i] === riktig){ // hvis bruker valgte riktig så øker poeng
+      score++;
+    }
+  });
+
+  document.getElementById(scoreId).innerText =
+    `Poeng Score: ${score} / ${qBoxes.length}`; //oppdaterer score/spørsmåls lengden
+}
+
+/* MC oppgave */
+function mqttT1Start(){
+//skjuler infoside og tf, og viser mc oppgave. nullstiller valgte svar
+  document.getElementById('mqttT1-infobox').style.display='none';
+  document.getElementById('mqttT1-taskbox').style.display='block';
+  document.getElementById('page-mqtt-t2').style.display='none'; 
+  selectedAnswersMC = [];
+  taskFinishedMC = false;
+}
+
+/* TF oppgave */
+function mqttT2Start(){
+//skjuler infoside og mc, og viser mc oppgave. nullstiller valgte svar
+  document.getElementById('mqttT2-infobox').style.display='none'; 
+  document.getElementById('mqttT2-taskbox').style.display='block'; 
+  document.getElementById('page-mqtt-t1').style.display='none'; 
+  selectedAnswersTF = [];
+  taskFinishedTF = false;
+}
+
+/* popup lukk */
+function closeInfo(){
+  document.getElementById('infoPopup').style.display='none';
+}
+
+</script>
+
+</body>
+</html>
+

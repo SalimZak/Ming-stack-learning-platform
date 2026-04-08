@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+
+<title>Task 5 - Flip Cards</title>
+
+<style>
+
+
+:root {
+  --bg: #0d1b2a;
+  --card: #1a2e42;
+  --text: #E8D0A8;
+  --muted: #8fa3b3;
+  --cyan: #38B8D0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial;
+  padding: 40px;
+}
+
+
+#startScreen {
+  max-width: 600px;
+}
+
+.infobox {
+  background: var(--card);
+  border: 1px solid var(--cyan);
+  padding: 20px;
+}
+
+.startbtn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: var(--cyan);
+  border: none;
+  cursor: pointer;
+}
+
+#game {
+  display: none;
+}
+
+/* oppgave tekst */
+.taskbox {
+  background: var(--card);
+  border: 1px solid var(--cyan);
+  padding: 15px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+/* poengscore */
+.scoreBox {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.complete-banner {
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--cyan);
+  padding: 16px;
+  background: rgba(56,184,208,.08);
+  border: 1px solid var(--cyan);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  display: none;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.kort {
+  perspective: 1000px;
+}
+
+.inner {
+  width: 100%;
+  height: 120px;
+  position: relative;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.kort.flipped .inner {
+  transform: rotateY(180deg);
+}
+
+.front, .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  text-align: center;
+  padding: 10px;
+}
+
+.front {
+  background: var(--card);
+}
+
+.back {
+  background: #222;
+  transform: rotateY(180deg);
+}
+
+.correct {
+  background: green !important;
+}
+
+.wrong {
+  background: red !important;
+}
+
+.infoBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px;
+  background: var(--card);
+  border: 1px solid var(--cyan);
+  cursor: pointer;
+}
+.kort {
+  perspective: 1000px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+/* popup fra info knappen */
+.popup-overlay{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,.6);
+  justify-content:center;
+  align-items:center;
+}
+
+.popup-box{
+  background:var(--card);
+  padding:25px;
+  border:2px solid var(--cyan);
+  border-radius:10px;
+  width:350px;
+  text-align:center;
+}
+
+.popup-close{
+  margin-top:15px;
+  padding:10px 20px;
+  background:var(--cyan);
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<!-- taks 5 mqtt card flip -->
+<div id="startScreen">
+  <div class="infobox">
+    <h2>Task 5 - Card Flip</h2>
+    <p>Her skal du finne de 7 relevante begrepene for MQTT utifra de 16 som er vist. 
+      Begrepene kommer i en tilfeldig rekkefølge. Det er forklaring på begrepene bak kortet. Dersom det blir rødt så er det feil, hvis det er frønt så er det riktig</p>
+    <button class="startbtn" onclick="startGame()">Start</button>
+  </div>
+</div>
+<!-- informasjon knapp -->
+
+
+<!-- popup til informasjonknappen -->
+<div id="infoPopup" class="popup-overlay">
+  <div class="popup-box">
+    <h3>Forklaring</h3>
+    <p id="popupText">Her kommer begrepsforklaring.</p>
+    <button class="popup-close" onclick="closeInfo()">Lukk</button>
+  </div>
+</div>
+
+<!-- Task 5 card flip -->
+<div id="task5Page">
+
+  <!-- fullført -->
+  <div id="completeBanner" class="complete-banner">
+    COMPLETE
+  </div>
+
+  <!-- oppgave tekst -->
+  <div class="taskbox">
+    Finn de 7 riktige begrepene ved å klikke på kortene. 
+  </div>
+
+  <!-- score -->
+  <div class="scoreBox">
+    Poengscore: <span id="score">0</span> / 7
+  </div>
+
+  <!-- utformingen -->
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<!-- Info knappen -->
+<button class="infoBtn" onclick="openInfo()">i</button>
+
+<script>
+
+/* kortene */
+const cardsData = [
+  {Begrep:"Begrep 1", Forklaring:"Kort forklaring av begrepet", correct:true},
+  {Begrep:"Begrep 2", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Begrep 3", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Begrep 4", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Begrep 5", Forklaring:"Kort forklaring av begrepet", correct:true},
+  {Begrep:"Begrep 6", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Begrep 7", Forklaring:"Kort forklaring av begrepet", correct:true},
+  {Begrep:"Begrep 8", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Begrep 9", Forklaring:"Kort forklaring av begrepet", correct:true},
+  {Begrep:"Begrep 10", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Begrep 11", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Begrep 12", Forklaring:"Kort forklaring av begrepet", correct:true},
+  {Begrep:"Begrep 13", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Begrep 14", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Begrep 15", Forklaring:"Kort forklaring av begrepet", correct:true},
+  {Begrep:"Begrep 16", Forklaring:"Kort forklaring av begrepet", correct:true}
+];
+function openInfo(){
+  let text = "";
+
+  if(document.getElementById('task5Page') 
+     && document.getElementById('task5Page').style.display !== 'none'){
+    text = "Her skal du finne relevante begreper ved å klikke på kortene.";
+  }
+  // setter teksten i popup
+  document.getElementById('popupText').innerText = text;
+
+  // viser popup
+  document.getElementById('infoPopup').style.display = 'flex';
+}
+
+let score = 0;
+function startGame(){
+  document.getElementById("startScreen").style.display = "none";
+  document.getElementById("task5Page").style.display = "block";
+  randomPlaced(cardsData); //random plassert
+  createCards();
+}
+
+// blander array ved å ta det siste plasseringen og bytte med et random plassering. og fortsette slikt
+function randomPlaced(array){
+  for(let i = array.length - 1; i > 0; i--){
+    let j = Math.floor(Math.random() * (i + 1));
+    let temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+}
+
+// lager kort
+function createCards(){
+  const grid = document.getElementById("grid");
+  for(let i = 0; i < cardsData.length; i++){
+    let data = cardsData[i]; // for hvert element/kort
+    // lager en kort boks, det som skal stå inni containeren, fremre del og bakre del
+    let kort = document.createElement("div");
+    kort.className = "kort";
+
+    let inner = document.createElement("div");
+    inner.className = "inner";
+
+    let front = document.createElement("div");
+    front.className = "front";
+    front.innerText = data.Begrep;
+
+    let back = document.createElement("div");
+    back.className = "back";
+    back.innerText = data.Forklaring;
+
+    // setter sammen kortet
+    inner.appendChild(front);
+    inner.appendChild(back);
+    kort.appendChild(inner);
+
+    // roterer ved klikk
+    kort.onclick = function(){
+      handleClick(kort, data);
+    };
+//lager kortene i griden
+    let gridElement = document.getElementById("grid");
+    gridElement.appendChild(kort);
+  }
+}
+
+//klikker på kortet
+function handleClick(kort, data){
+  //de som er blitt flippet er statisk
+  if(kort.classList.contains("flipped")) return;
+  //lagrer de som har blitt flippet
+  kort.classList.add("flipped");
+
+  //blir enten rød eller grønn basert på svaret etter flip, 0,4 sek
+  setTimeout(function(){
+    if(data.correct){
+      kort.querySelector(".back").classList.add("correct");
+      score++;
+    } else {
+      kort.querySelector(".back").classList.add("wrong");
+    }
+
+    //oppdaterer poenget
+    document.getElementById("score").innerText = score;
+    // fullført oppgave etter 7
+    if(score === 7){
+      document.getElementById("completeBanner").style.display = "block";
+    }
+  }, 400);
+}
+
+//popup lukk
+function closeInfo(){
+  document.getElementById('infoPopup').style.display='none';
+}
+
+</script>
+
+</body>
+</html>
+
