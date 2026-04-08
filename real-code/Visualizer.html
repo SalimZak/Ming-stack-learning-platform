@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<!-- Forteller nettleseren at dette er moderne HTML5 -->
+<html lang="no">
+<!-- lang="no" settes til norsk som standard, oppdateres når brukeren bytter språk -->
+<head>
+  <meta charset="UTF-8">
+  <!-- Uten denne vil norske tegn som æ, ø, å vises feil -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Får innholdet til å tilpasse seg skjermen -->
+
+  <title>ARTIFICER</title>
+
+  <!--
+    Bruker systemfonter som allerede er installert på datamaskinen:
+      Monospace: Consolas (Windows), Menlo (Mac), DejaVu Sans Mono (Linux)
+      UI/overskrifter: Segoe UI (Windows), system-ui (Mac), Ubuntu (Linux)
+  -->
+
+  <style>
+
+    /* Nullstiller standard marg og padding på alle elementer så siden ser lik ut i alle nettlesere */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /*
+      box-sizing: border-box gjør at padding og border er inkludert i bredden/høyden,
+      i stedet for å legge seg utenpå og gjøre elementer større enn forventet
+    */
+
+    /* ── Farger, størrelser og skrifttyper lagres som variabler her så de er enkle å endre ── */
+    :root {
+      --bg:         #0d1b2a;   /* hovedbakgrunn, mørk marineblå */
+      --bg2:        #111f30;   /* litt lysere bakgrunn for nestede områder */
+      --card:       #1a2e42;   /* bakgrunn for kort */
+      --text:       #E8D0A8;   /* hovedtekst, varm pergamentfarge */
+      --muted:      #8fa3b3;   /* sekundærtekst og etiketter */
+      --gold:       #E8D0A8;   /* samme som --text, holdt separat for fleksibilitet */
+      --cyan:       #38B8D0;   /* aksentfarge for aktive elementer og lenker */
+
+      /* Gjennomsiktige overlegg — tilpasser seg automatisk om bakgrunnsfargen endres */
+      --border:     rgba(232,208,168,.13);
+      --panel:      rgba(255,255,255,.05);
+      --panel2:     rgba(255,255,255,.09);
+
+      --sidebar-w:  240px;
+      --sidebar-bg: linear-gradient(180deg, #061730 0%, #1a0535 100%);
+      /* Gradient fra mørk blå øverst til mørk lilla nederst i sidepanelet */
+
+      --shadow:     0 10px 30px rgba(0,0,0,.45);
+      --radius:     13px;   /* brukes på alle kort og knapper for konsistente avrundede hjørner */
+
+      /* Node-RED simulator-mål lagret som variabler for enkel justering */
+      --topbar-h:   52px;
+      --left-w:     182px;
+      --right-w:    300px;
+      --node-w:     142px;
+      --port:       13px;
+
+      /* clamp(min, foretrukket, maks) — skalerer padding basert på skjermbredde */
+      --pad: clamp(14px, 2.2vw, 24px);
+
+      /* Systemskrifttyper — ingen internettforbindelse nødvendig */
+      --font-mono: 'Consolas', 'Menlo', 'DejaVu Sans Mono', 'Courier New', monospace;
+      --font-ui:   'Segoe UI', system-ui, -apple-system, 'Ubuntu', sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      /* Både html og body trenger height: 100% — hvis bare body har det fungerer det ikke */
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+    }
+
+    /* ── Ytre ramme — sidebar til venstre, innhold til høyre ── */
+    .app-shell {
+      display: flex;
+      height: 100vh;        /* fyller hele skjermhøyden */
+      overflow: hidden;     /* bare innholdsområdet skal scrolle, ikke hele siden */
+    }
+
+    /* ── Sidepanel ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex: 0 0 var(--sidebar-w);
+      /* flex: 0 0 240px betyr: ikke voks, ikke krymp, hold alltid 240px bred */
+      background: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      overflow: hidden;
+      transition: transform .25s ease;  /* klar for slide-in animasjon om det legges til later */
+      z-index: 100;
+    }
+
+    .sidebar-brand {
+      padding: 18px 16px 14px;
+      font-family: var(--font-ui);
+      font-size: 15px; font-weight: 900; letter-spacing: .8px;
+      /* letter-spacing gjør at logotekst ser mer gjennomtenkt ut */
+      color: var(--gold);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .nav-section {
+      padding: 10px 8px;
+      flex: 1;          /* fyller resten av sidepanelets høyde */
+      overflow-y: auto; /* scrollbar kun om nødvendig */
+    }
+
+    .nav-label {
+      font-size: 9px; font-weight: 800; color: var(--muted);
+      letter-spacing: 1.3px; text-transform: uppercase; padding: 10px 8px 4px;
+    }
+
+    .nav-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 10px; border-radius: 9px;
+      color: rgba(232,208,168,.65);  /* gull med 65% gjennomsiktighet for inaktiv tilstand */
+      text-decoration: none;
+      font-size: 12px; font-weight: 700; cursor: pointer;
+      transition: background .14s, color .14s;
+      /* Nullstiller standard knapp-stiler fra nettleseren */
+      border: none; background: none; width: 100%; text-align: left;
+    }
+    .nav-link:hover  { background: rgba(255,255,255,.07); color: var(--gold); }
+    .nav-link.active {
+      background: rgba(56,184,208,.15);
+      color: var(--cyan);
+      border-left: 2px solid var(--cyan);
+      /* 2px venstre-kant viser hvilken side som er aktiv — vanlig mønster i moderne UI */
+    }
+    .nav-link .nav-icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+
+    .nav-sub {
+      margin-left: 14px;
+      border-left: 1px solid var(--border);
+      /* Venstre-kanten tegner en vertikal linje som kobler undermenyer til sin forelder */
+      padding-left: 6px;
+    }
+    .nav-sub .nav-link { font-size: 11px; padding: 7px 8px; border-radius: 7px; }
+
+    /* ── Språkbytte-knapp ── */
+    #lang-toggle {
+      padding: 6px 14px;
+      background: rgba(56,184,208,.08);
+      border: 1px solid rgba(56,184,208,.3);
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 11px; font-weight: 800;
+      border-radius: 9px; cursor: pointer;
+      transition: background .14s; letter-spacing: .5px;
+      flex-shrink: 0;  /* knappen skal ikke krympe om topbaren er smal */
+    }
+    #lang-toggle:hover { background: rgba(56,184,208,.18); }
+
+    /* ── Hovedinnhold ── */
+    main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    /* flex: 1 fyller all horisontal plass som ikke er tatt av sidepanelet */
+
+    .topbar {
+      height: 44px;
+      flex-shrink: 0;  /* holder topbaren på nøyaktig 44px, krymp aldri */
+      background: rgba(0,0,0,.25); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 20px; gap: 16px;
+    }
+
+    #breadcrumb { flex: 1; font-size: 11px; color: var(--muted); font-weight: 700; }
+    #breadcrumb span { color: var(--cyan); }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      /* Dette er det eneste elementet som scroller — sidepanel og topbar forblir faste */
+      padding: var(--pad) calc(var(--pad) * 1.4);
+    }
+
+    /* ── Sidevisninger — SPA-mønster ──
+       Alle sider ligger alltid i DOM-en, men er skjult med display:none.
+       Bare den med .active vises. Ingen HTTP-forespørsler ved navigering. */
+    .page-view { display: none; }
+    .page-view.active {
+      display: block;
+      animation: fadeSlideIn .22s ease;  /* kort inngangsanimasjon */
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Typografi ── */
+    .page-title {
+      font-family: var(--font-ui);
+      font-size: clamp(22px, 2.4vw, 30px);
+      /* Aldri mindre enn 22px, aldri større enn 30px, skalerer jevnt imellom */
+      font-weight: 900;
+      margin: 14px 0 6px; color: var(--gold);
+    }
+    .page-sub {
+      font-size: 12px; color: var(--muted);
+      line-height: 1.6; margin-bottom: 22px;
+      max-width: 600px;  /* hindrer for lange linjer som er vanskelige å lese */
+    }
+
+    /* ── Kortgitter ── */
+    .grid      { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .grid-auto {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      /* Lager automatisk så mange kolonner som får plass — ingen media queries nødvendig */
+      gap: 14px;
+    }
+
+    .card {
+      display: block; background: var(--card); padding: 18px;
+      border-radius: var(--radius); text-decoration: none;
+      color: var(--gold); border: 1px solid var(--border); cursor: pointer;
+      transition: border-color .15s, transform .15s, background .15s;
+      font-family: var(--font-mono); font-size: inherit; text-align: left;
+    }
+    .card:hover {
+      border-color: rgba(56,184,208,.5);
+      transform: translateY(-2px);  /* løfter kortet litt opp ved hover */
+      background: #1f3650;
+    }
+    .card-icon  { font-size: 24px; margin-bottom: 10px; }
+    .card strong { font-family: var(--font-ui); font-size: 14px; font-weight: 800; display: block; margin-bottom: 5px; }
+    .card span  { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+    .small-link {
+      color: var(--cyan); text-decoration: none;
+      font-size: 12px; font-weight: 700;
+      display: inline-block; margin-top: 18px;
+      background: none; border: none; cursor: pointer;
+    }
+    .small-link:hover { text-decoration: underline; }
+
+    /* ── Sensorside ── */
+    .sensor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 22px; }
+    .sensor-card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .sensor-label { font-size: 10px; font-weight: 800; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+    .sensor-value {
+      font-family: var(--font-ui);
+      font-size: 38px; font-weight: 900; color: var(--cyan);
+      /* Stor tallvisning — UI-font ser bedre ut enn monospace på store størrelser */
+    }
+    .sensor-unit   { font-size: 14px; color: var(--muted); margin-left: 4px; }
+    .sensor-status { font-size: 10px; margin-top: 8px; }
+    .status-live   { color: #4ade80; }  /* grønn = ekte data fra ESP32 */
+    .status-sim    { color: #fbbf24; }  /* gul = simulerte verdier */
+
+    .sensor-log { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+    .sensor-log-title { font-size: 11px; font-weight: 800; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+    .log-line { font-size: 11px; color: rgba(255,255,255,.75); padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+    .log-line:last-child { border-bottom: none; }
+    .log-ts { color: var(--muted); margin-right: 8px; }
+
+    /* ── MQTT Oppgave 3 ── */
+    .task-header { font-family: var(--font-ui); font-size: 20px; font-weight: 900; margin-bottom: 8px; color: var(--gold); }
+    .task-desc   { font-size: 12px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; max-width: 620px; }
+
+    .infobox {
+      background: var(--panel); border: 1px solid var(--cyan);
+      border-radius: var(--radius); padding: 20px; margin-bottom: 20px;
+    }
+    .infobox h4 { font-family: var(--font-ui); font-size: 15px; font-weight: 800; margin-bottom: 10px; color: var(--cyan); }
+    .infobox p  { font-size: 12px; color: var(--muted); line-height: 1.8; }
+
+    .startbtn {
+      margin-top: 16px; padding: 10px 24px;
+      background: var(--cyan); border: none; border-radius: 8px;
+      font-family: var(--font-mono); font-weight: 800; font-size: 13px;
+      color: #000;  /* svart tekst på cyan bakgrunn for god kontrast */
+      cursor: pointer; transition: opacity .15s;
+    }
+    .startbtn:hover { opacity: .85; }
+
+    .taskbox {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 16px;
+      font-size: 12px; color: var(--muted); margin-bottom: 20px; line-height: 1.7;
+    }
+
+    /* Tre-kolonne diagram: sensorer | megler+velger | klienter */
+    .mqtt-layout  { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+    .mqtt-side, .mqtt-center { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .device-row   { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+
+    .circle {
+      width: 80px; height: 80px; border-radius: 50%;
+      border: 2px solid var(--cyan); background: rgba(56,184,208,.08);
+      display: flex; justify-content: center; align-items: center; font-size: 28px;
+    }
+    .broker-circle {
+      width: 130px; height: 130px; border-radius: 50%;
+      border: 2px solid var(--cyan); background: rgba(56,184,208,.10);
+      display: flex; justify-content: center; align-items: center;
+      text-align: center; font-family: var(--font-ui);
+      font-weight: 800; font-size: 15px; color: var(--gold);
+      white-space: pre-line;
+      /* white-space: pre-line gjør at \n i tekststrengen blir et ekte linjeskift */
+    }
+
+    .dev-label { font-size: 11px; font-weight: 700; color: var(--gold); text-align: center; }
+
+    .arrow-select-box   { background: var(--panel); border: 2px solid var(--border); border-radius: 12px; padding: 12px; min-width: 170px; }
+    .arrow-select-title { font-size: 11px; font-weight: 800; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+    .arrow-list         { display: flex; flex-direction: column; gap: 8px; }
+
+    .arrow-btn {
+      position: relative;
+      /* position: relative trengs for at ::after/::before pil-tegn kan plasseres absolutt inni knappen */
+      border: 1px solid var(--cyan); padding: 7px 10px;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+      color: var(--cyan); background: rgba(56,184,208,.07);
+      border-radius: 6px; cursor: pointer; text-align: left;
+      transition: background .15s;
+      white-space: pre-line;  /* gjør \n om til ekte linjeskift i knappetikett */
+      width: 100%;
+    }
+    .arrow-btn.right { padding-right: 26px; }  /* plass til ▶ på høyre side */
+    .arrow-btn.left  { padding-left:  26px; }  /* plass til ◀ på venstre side */
+    .arrow-btn:hover    { background: rgba(56,184,208,.15); }
+    .arrow-btn.selected { background: rgba(56,184,208,.25); border-color: #fff; color: #fff; }
+
+    /* Legger til pil-tegn med CSS uten å trenge ekstra HTML-elementer */
+    .arrow-btn.right::after  { content: "▶"; position: absolute; top: 50%; right: 8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
+    .arrow-btn.left::before  { content: "◀"; position: absolute; top: 50%; left:  8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
+    .arrow-btn.selected.right::after  { color: #fff; }
+    .arrow-btn.selected.left::before  { color: #fff; }
+    .arrow-btn.both  { padding-left: 26px; padding-right: 26px; }
+    .arrow-btn.both::before  { content: "◀"; position: absolute; top: 50%; left:  8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
+    .arrow-btn.both::after   { content: "▶"; position: absolute; top: 50%; right: 8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
+    .arrow-btn.selected.both::before  { color: #fff; }
+    .arrow-btn.selected.both::after   { color: #fff; }
+
+    .dropzone {
+      border: 2px dashed rgba(56,184,208,.5); background: rgba(56,184,208,.04);
+      border-radius: 8px; min-height: 46px; min-width: 150px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 11px; color: var(--muted);
+      text-align: center; padding: 6px; transition: border-color .15s, background .15s;
+    }
+    .dropzone-hint  { font-size: 9px; color: rgba(56,184,208,.5); margin-top: 2px; font-weight: 700; letter-spacing: .3px; }
+    .dropzone:hover { border-color: var(--cyan); background: rgba(56,184,208,.08); }
+    .dropzone.zone-correct { border-color: #4ade80; background: rgba(74,222,128,.1);  color: #4ade80; }  /* grønn = riktig */
+    .dropzone.zone-wrong   { border-color: #f87171; background: rgba(248,113,113,.1); color: #f87171; }  /* rød = feil */
+
+    .messagebox      { text-align: center; font-size: 13px; font-weight: 800; padding: 10px 20px; border-radius: 8px; margin-bottom: 16px; }
+    .message-correct { background: rgba(74,222,128,.15);  color: #4ade80; border: 1px solid #4ade80; }
+    .message-wrong   { background: rgba(248,113,113,.15); color: #f87171; border: 1px solid #f87171; }
+
+    .complete-banner {
+      text-align: center; font-family: var(--font-ui); font-size: 22px; font-weight: 900;
+      color: var(--cyan); padding: 16px; background: rgba(56,184,208,.08);
+      border: 1px solid var(--cyan); border-radius: 12px; margin-bottom: 20px;
+    }
+
+    /* ── Node-RED Simulator (Oppgave 4) ── */
+    #nr-root { width: 100%; }
+
+    .nr-app {
+      height: calc(100vh - 44px - 110px);
+      /* 100vh minus topbar og oppgavebeskrivelse over simulatoren */
+      min-height: 520px; overflow: hidden;
+      background:
+        radial-gradient(1000px 500px at 20% 10%, rgba(56,184,208,.12), transparent 60%),
+        radial-gradient(800px 450px at 80% 30%, rgba(232,208,168,.10), transparent 60%),
+        var(--bg);
+      /* To myke gradientglød over bakgrunnen for dybde */
+      color: var(--text); font-family: var(--font-mono);
+      border-radius: 14px; box-shadow: var(--shadow); border: 1px solid var(--border);
+    }
+
+    .nr-topbar {
+      height: var(--topbar-h);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 14px; border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,.22);
+      backdrop-filter: blur(10px);  /* frostet-glass effekt bak topbaren */
+    }
+    .nr-brand   { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 13px; }
+    .nr-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .nr-btn {
+      background: var(--panel); border: 1px solid var(--border);
+      color: var(--text); padding: 6px 10px; border-radius: 10px;
+      cursor: pointer; font-weight: 700; font-size: 12px; font-family: var(--font-mono);
+    }
+    .nr-btn:hover  { background: var(--panel2); }
+    .nr-btn:active { transform: translateY(1px); }  /* liten "trykk"-effekt */
+    .nr-btn-small  { padding: 5px 8px; border-radius: 8px; font-size: 11px; }
+
+    /* Tre-kolonne layout inne i simulatoren */
+    .nr-main  { height: calc(100% - var(--topbar-h)); display: flex; overflow: hidden; }
+    .nr-left  { width: var(--left-w);  flex: 0 0 var(--left-w);  border-right: 1px solid var(--border); background: rgba(0,0,0,.14); overflow: auto; padding-bottom: 12px; }
+    .nr-right { width: var(--right-w); flex: 0 0 var(--right-w); border-left:  1px solid var(--border); background: rgba(0,0,0,.14); overflow: hidden; display: flex; flex-direction: column; }
+
+    .nr-panel-title { padding: 10px 10px 6px; font-weight: 900; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .9px; }
+
+    /* Nodebrikker i venstre panel som kan dras ut på lerretet */
+    .nr-node-list { padding: 6px 8px 8px; display: grid; gap: 8px; }
+    .nr-node {
+      user-select: none;  /* hindrer tekst fra å bli markert under dra */
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: 10px; cursor: grab;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto auto;
+      /* 2x2 grid: tittel øverst venstre, "drag"-pille høyre (strekker seg over begge rader), undertittel nederst venstre */
+      column-gap: 8px; row-gap: 2px;
+    }
+    .nr-node:active { cursor: grabbing; }
+    .nr-node-title  { font-weight: 900; font-size: 12px; }
+    .nr-node-sub    { font-size: 11px; color: var(--muted); font-weight: 700; }
+    .nr-node-drag   { grid-row: 1 / span 2; align-self: center; justify-self: end; font-size: 10px; color: var(--muted); border: 1px solid var(--border); padding: 4px 8px; border-radius: 999px; background: rgba(0,0,0,.18); }
+
+    /* Lerret der noder slippes og kobles */
+    .nr-canvas-wrap { flex: 1 1 auto; position: relative; overflow: hidden; }
+    .nr-canvas {
+      position: relative; height: 100%; width: 100%; overflow: hidden;
+      /* Rutenettbakgrunn laget med CSS-gradienter, samme stil som ekte Node-RED */
+      background-image:
+        linear-gradient(to right,  rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .nr-drop-hint {
+      position: absolute; left: 12px; top: 12px;
+      padding: 8px 12px; border-radius: 12px; border: 1px solid var(--border);
+      background: rgba(0,0,0,.25); color: var(--muted); font-weight: 700; font-size: 12px;
+      z-index: 2;
+      pointer-events: none;  /* hint-teksten skal aldri blokkere klikk på lerretet */
+    }
+
+    /* SVG-overlegg for ledninger — ligger over lerretet, under noder */
+    .nr-wires {
+      position: absolute; inset: 0; z-index: 1;
+      pointer-events: none;
+      /* pointer-events: none lar klikk gå gjennom SVG-laget til noder og lerret under */
+    }
+    .nr-wire      { stroke: rgba(56,184,208,.95); filter: drop-shadow(0 2px 6px rgba(0,0,0,.35)); }
+    .nr-wire-temp { stroke: rgba(232,208,168,.95); stroke-dasharray: 6 6; }
+    /* Stiplet gull-linje vises mens brukeren drar en ny kobling */
+
+    /* Nodeinstanser som slippes på lerretet */
+    .nr-node-inst {
+      position: absolute;
+      /* Absolutt posisjonering lar noder dras fritt ved å oppdatere left/top i JavaScript */
+      width: var(--node-w); border-radius: 12px; border: 1px solid var(--border);
+      background: rgba(20,30,40,.90); box-shadow: var(--shadow);
+      backdrop-filter: blur(10px); user-select: none; z-index: 3;
+    }
+    .nr-node-inst-head  { display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 5px 7px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .nr-node-inst-title { font-weight: 900; font-size: 12px; }
+    .nr-play { background: rgba(255,255,255,.06); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 3px 8px; cursor: pointer; font-weight: 950; font-size: 11px; }
+    .nr-play:hover { background: rgba(255,255,255,.10); }
+    .nr-node-inst-body { padding: 6px; display: grid; gap: 4px; }
+    .nr-field > span   { font-size: 10px; color: var(--muted); font-weight: 900; }
+
+    /* Inn- og ut-porter på sidene av nodeinstanser */
+    .nr-port {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      /* Sentrert vertikalt på noden med transform, fungerer selv om nodehøyden endrer seg */
+      width: var(--port); height: var(--port);
+      border-radius: 999px; border: 2px solid rgba(255,255,255,.75);
+      background: rgba(0,0,0,.35); cursor: crosshair;
+      pointer-events: auto;  /* skrur på klikk selv om SVG-overlegget har pointer-events: none */
+      z-index: 4;
+    }
+    .nr-port-in  { left:  -7px; border-color: rgba(232,208,168,.9); box-shadow: 0 0 0 3px rgba(232,208,168,.10); }
+    .nr-port-out { right: -7px; border-color: rgba(56,184,208,.9);  box-shadow: 0 0 0 3px rgba(56,184,208,.12); }
+    /* -7px plasserer portene halvveis utenfor nodens kant så de ser tilkoblet ut */
+    .nr-port:hover { transform: translateY(-50%) scale(1.15); }
+
+    /* Debug-panel til høyre */
+    .nr-debug-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px 8px; border-bottom: 1px solid var(--border); }
+    .nr-debug-title  { font-weight: 950; font-size: 13px; }
+    .nr-debug-body   { padding: 8px 10px 12px; overflow: auto; flex: 1 1 auto; }
+    .nr-debug-bubble { padding: 8px 10px; border: 1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.04); border-radius: 12px; color: var(--muted); font-weight: 700; font-size: 12px; margin-bottom: 8px; }
+    .nr-debug-lines  { display: grid; gap: 6px; }
+    .dbg-line {
+      font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,.88);
+      padding: 8px 10px; border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04); border-radius: 10px;
+      white-space: pre-wrap;   /* bevarer linjeskift og mellomrom i debug-meldinger */
+      word-break: break-word;
+    }
+
+    /* Topic-velger inne i MQTT-noder: <- topic-navn -> */
+    .nr-topic-slider { display: flex; align-items: center; gap: 4px; background: rgba(0,0,0,.25); border: 1px solid rgba(255,255,255,.10); border-radius: 8px; padding: 3px 4px; }
+    .nr-topic-arrow  { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); color: var(--text); border-radius: 6px; width: 20px; height: 20px; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0; }
+    .nr-topic-arrow:hover { background: rgba(255,255,255,.16); }
+    .nr-topic-value  {
+      flex: 1; font-size: 10px; font-weight: 700; color: var(--cyan);
+      text-align: center; white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis;  /* lange topic-navn vises med ... i stedet for å flyte ut */
+    }
+
+    /* ── Responsiv layout ── */
+    @media (max-width: 820px) {
+      /* Stabler simulatorpanelene vertikalt på smale vinduer */
+      .nr-main  { flex-direction: column; }
+      .nr-left  { width: 100%; flex: 0 0 auto; border-right: none; border-bottom: 1px solid var(--border); }
+      .nr-right { width: 100%; flex: 0 0 30vh; border-left:  none; border-top:    1px solid var(--border); }
+    }
+    @media (max-width: 600px) {
+      /* To-kolonne kortgitter kollapser til én kolonne */
+      .grid { grid-template-columns: 1fr; }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ══ SIDEPANEL ══ -->
+  <!-- Bruker nav-tag for semantisk HTML — skjermlesere gjenkjenner dette som navigasjon -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span data-i18n="brand">ARTIFICER</span>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label" data-i18n="nav_home">Hjem</div>
+
+      <!-- Bruker button i stedet for a-tag fordi vi ikke skifter url bare div -->
+      <!-- data-page leses av go() for å markere riktig menyvalg som aktivt -->
+      <button class="nav-link active" data-page="home"     onclick="go('home')">
+        <span class="nav-icon"></span><span data-i18n="nav_home">Hjem</span>
+      </button>
+      <button class="nav-link"        data-page="sensors"  onclick="go('sensors')">
+        <span class="nav-icon"></span><span data-i18n="nav_sensors">Sensordata</span>
+      </button>
+      <button class="nav-link"        data-page="role"     onclick="go('role')">
+        <span class="nav-icon"></span><span data-i18n="role_title">Velg rolle</span>
+      </button>
+      <button class="nav-link"        data-page="settings" onclick="go('settings')">
+        <span class="nav-icon"></span><span data-i18n="settings_title">Innstillinger</span>
+      </button>
+
+      <div class="nav-label" style="margin-top:6px" data-i18n="nav_tasks">Oppgaver</div>
+
+      <button class="nav-link" data-page="ming" onclick="go('ming')">
+        <span class="nav-icon"></span>MING
+      </button>
+
+      <!-- nav-sub gir innrykk og en vertikal linje som viser hierarki -->
+      <div class="nav-sub">
+        <button class="nav-link" data-page="mqtt" onclick="go('mqtt')">
+          <span class="nav-icon"></span>MQTT
+        </button>
+        <div class="nav-sub">
+          <button class="nav-link" data-page="mqtt-t1" onclick="go('mqtt-t1')"><span class="nav-icon"></span><span data-i18n="mqtt_task1">Oppgave 1</span></button>
+          <button class="nav-link" data-page="mqtt-t2" onclick="go('mqtt-t2')"><span class="nav-icon"></span><span data-i18n="mqtt_task2">Oppgave 2</span></button>
+          <button class="nav-link" data-page="task3"   onclick="go('task3')"  ><span class="nav-icon"></span><span data-i18n="mqtt_task3">Oppgave 3</span></button>
+          <button class="nav-link" data-page="task4"   onclick="go('task4')"  ><span class="nav-icon"></span><span data-i18n="mqtt_task4">Oppgave 4</span></button>
+        </div>
+        <button class="nav-link" data-page="influx"  onclick="go('influx')" ><span class="nav-icon"></span>InfluxDB</button>
+        <div class="nav-sub">
+          <button class="nav-link" data-page="influx-t1"  onclick="go('influx-t1')" ><span class="nav-icon"></span><span data-i18n="influx_task1">Oppgave 1</span></button>
+          <button class="nav-link" data-page="influx-t2"  onclick="go('influx-t2')" ><span class="nav-icon"></span><span data-i18n="influx_task2">Oppgave 2</span></button>
+        </div>
+        <button class="nav-link" data-page="nodered" onclick="go('nodered')"><span class="nav-icon"></span>Node-RED</button>
+        <div class="nav-sub">
+          <button class="nav-link" data-page="nodered-t1" onclick="go('nodered-t1')"><span class="nav-icon"></span><span data-i18n="nodered_task1">Oppgave 1</span></button>
+          <button class="nav-link" data-page="nodered-t2" onclick="go('nodered-t2')"><span class="nav-icon"></span><span data-i18n="nodered_task2">Oppgave 2</span></button>
+        </div>
+        <button class="nav-link" data-page="grafana" onclick="go('grafana')"><span class="nav-icon"></span>Grafana</button>
+        <div class="nav-sub">
+          <button class="nav-link" data-page="grafana-t1" onclick="go('grafana-t1')"><span class="nav-icon"></span><span data-i18n="grafana_task1">Oppgave 1</span></button>
+          <button class="nav-link" data-page="grafana-t2" onclick="go('grafana-t2')"><span class="nav-icon"></span><span data-i18n="grafana_task2">Oppgave 2</span></button>
+        </div>
+      </div>
+
+      <div class="nav-label" style="margin-top:6px" data-i18n="nav_manual">Manual</div>
+      <button class="nav-link" data-page="student" onclick="go('student')"><span class="nav-icon"></span><span data-i18n="role_student">Elev</span></button>
+      <button class="nav-link" data-page="teacher" onclick="go('teacher')"><span class="nav-icon"></span><span data-i18n="role_teacher">Lærer</span></button>
+    </div>
+  </nav>
+
+  <!-- ══ HOVEDINNHOLD ══ -->
+  <main>
+    <div class="topbar">
+      <div id="breadcrumb"><span data-i18n="nav_home">Hjem</span></div>
+      <!-- Viser hvilken "versjon" av språket -->
+      <button id="lang-toggle" onclick="toggleLang()">🇬🇧 EN</button>
+    </div>
+
+    <div class="content">
+
+      <!-- ══ HJEMSIDE ══ -->
+      <!-- "active" er hardkodet her så hjemesiden vises uten å vente på JavaScript -->
+      <div id="page-home" class="page-view active">
+        <h1 class="page-title" data-i18n="home_headline">IIoT i en skoeske</h1>
+        <p  class="page-sub"   data-i18n="home_sub">En kompakt undervisningsplattform.</p>
+        <div class="grid-auto">
+          <button class="card" onclick="go('sensors')">
+            <div class="card-icon"></div>
+            <strong data-i18n="home_card_sensors_title">Live sensordata</strong>
+            <span   data-i18n="home_card_sensors_desc">Se sanntidsavlesninger.</span>
+          </button>
+          <button class="card" onclick="go('ming')">
+            <div class="card-icon"></div>
+            <strong>MING</strong>
+            <span data-i18n="ming_sub">Velg en modul.</span>
+          </button>
+          <button class="card" onclick="go('task3')">
+            <div class="card-icon"></div>
+            <strong data-i18n="home_card_t3_title">MQTT Oppgave 3</strong>
+            <span   data-i18n="home_card_t3_desc">Klikk og plasser piler.</span>
+          </button>
+          <button class="card" onclick="go('task4')">
+            <div class="card-icon"></div>
+            <strong data-i18n="home_card_t4_title">Node-RED Simulator</strong>
+            <span   data-i18n="home_card_t4_desc">Bygg en Node-RED-flyt.</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ ROLLEVALG ══ -->
+      <div id="page-role" class="page-view">
+        <h1 class="page-title" data-i18n="role_title">Velg rolle</h1>
+        <p  class="page-sub"   data-i18n="role_sub">Velg om du er elev eller lærer.</p>
+        <div class="grid">
+          <button class="card" onclick="go('student')">
+            <strong data-i18n="role_student">Elev</strong>
+            <span   data-i18n="role_studentSub">Elevveiledning og oppgaver.</span>
+          </button>
+          <button class="card" onclick="go('teacher')">
+            <strong data-i18n="role_teacher">Lærer</strong>
+            <span   data-i18n="role_teacherSub">Lærerveiledning og støtte.</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ ELEVVEILEDNING ══ -->
+      <div id="page-student" class="page-view">
+        <h1 class="page-title" data-i18n="student_title">Elevveiledning</h1>
+        <p  class="page-sub"   data-i18n="student_sub">Din guide til MING-oppgavene.</p>
+        <div class="grid">
+          <button class="card" onclick="go('ming')">
+            <strong data-i18n="manual_openMING">Åpne MING-oppgaver</strong>
+            <span   data-i18n="manual_openMINGsub">MQTT, InfluxDB, Node-RED, Grafana</span>
+          </button>
+          <button class="card" onclick="go('role')">
+            <strong data-i18n="manual_back">Tilbake</strong>
+            <span   data-i18n="manual_backSub">Til rollevalg.</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ LÆRERVEILEDNING ══ -->
+      <div id="page-teacher" class="page-view">
+        <h1 class="page-title" data-i18n="teacher_title">Lærerveiledning</h1>
+        <p  class="page-sub"   data-i18n="teacher_sub">Din guide til undervisning med MING-plattformen.</p>
+        <div class="grid">
+          <button class="card" onclick="go('ming')">
+            <strong data-i18n="manual_openMING">Åpne MING-oppgaver</strong>
+            <span   data-i18n="manual_openMINGsub">MQTT, InfluxDB, Node-RED, Grafana</span>
+          </button>
+          <button class="card" onclick="go('role')">
+            <strong data-i18n="manual_back">Tilbake</strong>
+            <span   data-i18n="manual_backSub">Til rollevalg.</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ INNSTILLINGER ══ -->
+      <div id="page-settings" class="page-view">
+        <h1 class="page-title" data-i18n="settings_title">Innstillinger</h1>
+        <p  class="page-sub"   data-i18n="settings_sub">Konfigurer preferansene dine her.</p>
+        <div class="card" style="max-width:420px;cursor:default;display:block;">
+          <strong style="margin-bottom:12px;display:block;">Language / Språk</strong>
+          <div style="display:flex;gap:10px;">
+            <button onclick="setLang('en')" style="flex:1;padding:10px;background:var(--panel);border:1px solid var(--border);color:var(--gold);border-radius:8px;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:700;" data-i18n="langEN">English</button>
+            <button onclick="setLang('no')" style="flex:1;padding:10px;background:var(--panel);border:1px solid var(--border);color:var(--gold);border-radius:8px;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:700;" data-i18n="langNO">Norsk</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ MING-HUB ══ -->
+      <div id="page-ming" class="page-view">
+        <h1 class="page-title" data-i18n="ming_title">MING</h1>
+        <p  class="page-sub"   data-i18n="ming_sub">Velg en modul.</p>
+        <div class="grid">
+          <button class="card" onclick="go('mqtt')"   ><strong>MQTT</strong>    <span data-i18n="ming_mqttSub">Meldingsprotokoll.</span></button>
+          <button class="card" onclick="go('influx')" ><strong>InfluxDB</strong> <span data-i18n="ming_influxSub">Tidsserie-database.</span></button>
+          <button class="card" onclick="go('nodered')"><strong>Node-RED</strong> <span data-i18n="ming_noderedSub">Visuelle flyter.</span></button>
+          <button class="card" onclick="go('grafana')"><strong>Grafana</strong>  <span data-i18n="ming_grafanaSub">Visualisering.</span></button>
+        </div>
+      </div>
+
+      <!-- ══ MQTT — oppgavevalg ══ -->
+      <div id="page-mqtt" class="page-view">
+        <h1 class="page-title" data-i18n="mqtt_title">MQTT</h1>
+        <p  class="page-sub"   data-i18n="mqtt_sub">Velg en oppgave.</p>
+        <div class="grid">
+          <button class="card" onclick="go('mqtt-t1')"><strong data-i18n="mqtt_task1">Oppgave 1</strong><span data-i18n="mqtt_task1sub">Enkel testflyt.</span></button>
+          <button class="card" onclick="go('mqtt-t2')"><strong data-i18n="mqtt_task2">Oppgave 2</strong><span data-i18n="mqtt_task2sub">Utforsk videre.</span></button>
+          <button class="card" onclick="go('task3')"  ><strong data-i18n="mqtt_task3">Oppgave 3</strong><span data-i18n="mqtt_task3sub">Klikk og plasser.</span></button>
+          <button class="card" onclick="go('task4')"  ><strong>Oppgave 4</strong><span data-i18n="home_card_t4_desc">Node-RED simulator.</span></button>
+        </div>
+        <button class="small-link" onclick="go('ming')">← MING</button>
+      </div>
+
+      <!-- ══ MQTT OPPGAVE 1 — plassholder, innhold legges til senere ══ -->
+      <div id="page-mqtt-t1" class="page-view">
+        <h1 class="page-title" data-i18n="mqtt_t1_title">MQTT – Oppgave 1</h1>
+        <p  class="page-sub"   data-i18n="mqtt_t1_placeholder">[ Sett inn oppgaveinnhold her ]</p>
+        <button class="small-link" onclick="go('mqtt')" data-i18n="mqtt_t1_back">← Tilbake til MQTT-oppgaver</button>
+      </div>
+
+      <!-- ══ MQTT OPPGAVE 2 — plassholder ══ -->
+      <div id="page-mqtt-t2" class="page-view">
+        <h1 class="page-title" data-i18n="mqtt_t2_title">MQTT – Oppgave 2</h1>
+        <p  class="page-sub"   data-i18n="mqtt_t2_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('mqtt')" data-i18n="mqtt_t2_back">← Tilbake til MQTT-oppgaver</button>
+      </div>
+
+      <!-- ══ INFLUXDB — oppgavevalg + plassholdere ══ -->
+      <div id="page-influx" class="page-view">
+        <h1 class="page-title" data-i18n="influx_title">InfluxDB</h1>
+        <p  class="page-sub"   data-i18n="influx_sub">Velg en oppgave.</p>
+        <div class="grid">
+          <button class="card" onclick="go('influx-t1')"><strong data-i18n="influx_task1">Oppgave 1</strong><span data-i18n="influx_task1sub">Kom i gang.</span></button>
+          <button class="card" onclick="go('influx-t2')"><strong data-i18n="influx_task2">Oppgave 2</strong><span data-i18n="influx_task2sub">Spørringer på data.</span></button>
+        </div>
+        <button class="small-link" onclick="go('ming')">← MING</button>
+      </div>
+      <div id="page-influx-t1" class="page-view">
+        <h1 class="page-title" data-i18n="influx_t1_title">InfluxDB – Oppgave 1</h1>
+        <p  class="page-sub"   data-i18n="influx_t1_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('influx')" data-i18n="influx_t1_back">← Tilbake</button>
+      </div>
+      <div id="page-influx-t2" class="page-view">
+        <h1 class="page-title" data-i18n="influx_t2_title">InfluxDB – Oppgave 2</h1>
+        <p  class="page-sub"   data-i18n="influx_t2_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('influx')" data-i18n="influx_t2_back">← Tilbake</button>
+      </div>
+
+      <!-- ══ NODE-RED — oppgavevalg + plassholdere ══ -->
+      <div id="page-nodered" class="page-view">
+        <h1 class="page-title" data-i18n="nodered_title">Node-RED</h1>
+        <p  class="page-sub"   data-i18n="nodered_sub">Velg en oppgave.</p>
+        <div class="grid">
+          <button class="card" onclick="go('nodered-t1')"><strong data-i18n="nodered_task1">Oppgave 1</strong><span data-i18n="nodered_task1sub">Kom i gang.</span></button>
+          <button class="card" onclick="go('nodered-t2')"><strong data-i18n="nodered_task2">Oppgave 2</strong><span data-i18n="nodered_task2sub">Avanserte flyter.</span></button>
+        </div>
+        <button class="small-link" onclick="go('ming')">← MING</button>
+      </div>
+      <div id="page-nodered-t1" class="page-view">
+        <h1 class="page-title" data-i18n="nodered_t1_title">Node-RED – Oppgave 1</h1>
+        <p  class="page-sub"   data-i18n="nodered_t1_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t1_back">← Tilbake</button>
+      </div>
+      <div id="page-nodered-t2" class="page-view">
+        <h1 class="page-title" data-i18n="nodered_t2_title">Node-RED – Oppgave 2</h1>
+        <p  class="page-sub"   data-i18n="nodered_t2_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t2_back">← Tilbake</button>
+      </div>
+
+      <!-- ══ GRAFANA — oppgavevalg + plassholdere ══ -->
+      <div id="page-grafana" class="page-view">
+        <h1 class="page-title" data-i18n="grafana_title">Grafana</h1>
+        <p  class="page-sub"   data-i18n="grafana_sub">Velg en oppgave.</p>
+        <div class="grid">
+          <button class="card" onclick="go('grafana-t1')"><strong data-i18n="grafana_task1">Oppgave 1</strong><span data-i18n="grafana_task1sub">Første dashboard.</span></button>
+          <button class="card" onclick="go('grafana-t2')"><strong data-i18n="grafana_task2">Oppgave 2</strong><span data-i18n="grafana_task2sub">Avanserte visualiseringer.</span></button>
+        </div>
+        <button class="small-link" onclick="go('ming')">← MING</button>
+      </div>
+      <div id="page-grafana-t1" class="page-view">
+        <h1 class="page-title" data-i18n="grafana_t1_title">Grafana – Oppgave 1</h1>
+        <p  class="page-sub"   data-i18n="grafana_t1_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t1_back">← Tilbake</button>
+      </div>
+      <div id="page-grafana-t2" class="page-view">
+        <h1 class="page-title" data-i18n="grafana_t2_title">Grafana – Oppgave 2</h1>
+        <p  class="page-sub"   data-i18n="grafana_t2_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t2_back">← Tilbake</button>
+      </div>
+
+      <!-- ══ SENSORSIDE ══ -->
+      <!-- Henter live data fra ESP32, faller tilbake til simulerte verdier om enheten er offline -->
+      <div id="page-sensors" class="page-view">
+        <h1 class="page-title" data-i18n="sensors_title">Live sensordata</h1>
+        <p  class="page-sub"   data-i18n="sensors_sub">Sanntidsavlesninger.</p>
+        <div class="sensor-grid">
+          <div class="sensor-card">
+            <div class="sensor-label" data-i18n="sensors_pot">Potensiometer</div>
+            <div>
+              <!-- Oppdateres hvert sekund av JavaScript-pollingsløkken -->
+              <span class="sensor-value" id="pot-value">—</span>
+              <span class="sensor-unit">V</span>
+            </div>
+            <!-- Viser ● LIVE eller ◌ simulert avhengig av om ESP32 svarer -->
+            <div class="sensor-status" id="pot-status"></div>
+          </div>
+          <div class="sensor-card">
+            <div class="sensor-label" data-i18n="sensors_dist">Avstand (VL53L0X)</div>
+            <div>
+              <span class="sensor-value" id="dist-value">—</span>
+              <span class="sensor-unit">mm</span>
+            </div>
+            <div class="sensor-status" id="dist-status"></div>
+          </div>
+        </div>
+        <div class="sensor-log">
+          <div class="sensor-log-title" data-i18n="sensors_log">Logg</div>
+          <!-- Nye logginnlegg legges øverst, maks 10 innlegg om gangen -->
+          <div id="sensor-log-lines"></div>
+        </div>
+      </div>
+
+      <!-- ══ MQTT OPPGAVE 3 — Klikk og Plasser ══ -->
+      <div id="page-task3" class="page-view">
+        <h1 class="page-title" data-i18n="t3_header">MQTT – Oppgave 3</h1>
+
+        <!-- Infoboks som vises før oppgaven starter, skjules av t3Start() -->
+        <div id="t3-infobox" class="infobox">
+          <h4 data-i18n="t3_infoTitle">Forklaring av MQTT-flyt</h4>
+          <p  data-i18n="t3_infoBody">Forklaringstekst.</p>
+          <button class="startbtn" onclick="t3Start()" data-i18n="t3_startBtn">Start oppgave</button>
+        </div>
+
+        <!-- Vises kun når alle 8 soner er riktig fylt -->
+        <div id="t3-complete-banner" class="complete-banner" style="display:none" data-i18n="t3_complete">✓ Fullført!</div>
+        <!-- Kort riktig/feil-tilbakemelding, skjules automatisk etter 1 sekund -->
+        <div id="t3-message" class="messagebox" style="display:none"></div>
+        <!-- Instruksjonsboks, skjult til oppgaven starter -->
+        <div class="taskbox" id="t3-taskbox" style="display:none" data-i18n="t3_taskbox">Instruksjoner.</div>
+
+        <!-- Tre-kolonne diagram: skjult til t3Start() kalles -->
+        <div class="mqtt-layout" id="t3-layout" style="display:none">
+
+          <!-- VENSTRE: sensorer som publiserer -->
+          <div class="mqtt-side">
+            <div class="device-row">
+              <div class="circle"></div>
+              <!-- Etiketter settes av t3RefreshLabels() så de oppdateres ved språkbytte -->
+              <div class="dev-label" id="t3-lbl-temp"></div>
+              <!-- data-expected leses av t3Place() for å sjekke om pilen er riktig -->
+              <div class="dropzone" data-expected="TempPublish" onclick="t3Place(this)">
+                <div data-i18n="t3_clickPlace">Klikk for å plassere</div>
+                <div class="dropzone-hint" data-i18n="t3_hintPublish">Send melding til utgiver</div>
+              </div>
+            </div>
+            <div class="device-row">
+              <div class="circle"></div>
+              <div class="dev-label" id="t3-lbl-hum"></div>
+              <div class="dropzone" data-expected="HumPublish" onclick="t3Place(this)">
+                <div data-i18n="t3_clickPlace">Klikk for å plassere</div>
+                <div class="dropzone-hint" data-i18n="t3_hintPublish">Send melding til utgiver</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MIDTEN: megler-sirkel og pilvelger -->
+          <div class="mqtt-center">
+            <!-- Tekst settes av t3RefreshLabels() — \n blir linjeskift pga white-space:pre-line -->
+            <div class="broker-circle" id="t3-broker-lbl"></div>
+            <div class="arrow-select-box">
+              <div class="arrow-select-title" data-i18n="t3_select">Velg</div>
+              <!-- Pilknapper bygges dynamisk av t3Start() -->
+              <div class="arrow-list" id="t3-arrows"></div>
+            </div>
+          </div>
+
+          <!-- HØYRE: abonnerende klienter -->
+          <div class="mqtt-side">
+            <!-- Klient 1 — abonnerer på Temp -->
+            <div class="device-row">
+              <div class="circle"></div>
+              <div class="dev-label" id="t3-lbl-c1"></div>
+              <div class="dropzone" data-expected="SubTemp"     onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintSubscribe">Motta meldinger fra utgiver</div></div>
+              <div class="dropzone" data-expected="TempPublish" onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintForward">Send melding til abonnent</div></div>
+            </div>
+            <!-- Klient 2 — abonnerer kun på Hum -->
+            <div class="device-row">
+              <div class="circle"></div>
+              <div class="dev-label" id="t3-lbl-c2"></div>
+              <div class="dropzone" data-expected="SubHum"      onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintSubscribe">Motta meldinger fra utgiver</div></div>
+              <div class="dropzone" data-expected="HumPublish"  onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintForward">Send melding til abonnent</div></div>
+            </div>
+            <!-- Klient 3 — abonnerer på Temp -->
+            <div class="device-row">
+              <div class="circle"></div>
+              <div class="dev-label" id="t3-lbl-c3"></div>
+              <div class="dropzone" data-expected="SubTemp"     onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintSubscribe">Motta meldinger fra utgiver</div></div>
+              <div class="dropzone" data-expected="TempPublish" onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintForward">Send melding til abonnent</div></div>
+            </div>
+          </div>
+        </div>
+
+        <button class="small-link" onclick="go('mqtt')">← MQTT</button>
+      </div>
+
+      <!-- ══ NODE-RED OPPGAVE 4 ══ -->
+      <!-- #nr-root er tom — initNodeRed() fyller den med simulator-UI når brukeren navigerer hit -->
+      <div id="page-task4" class="page-view">
+        <div style="margin-bottom:12px">
+          <div class="task-header" data-i18n="nr_title">Sette opp MQTT i Node-RED</div>
+          <div class="task-desc"   data-i18n="nr_desc">Oppgavebeskrivelse.</div>
+        </div>
+        <div id="nr-root"></div>
+        <button class="small-link" style="margin-top:8px" onclick="go('mqtt')">← MQTT</button>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div><!-- /app-shell -->
+
+
+<!-- ══════════════════════════════════════════════════════════
+     i18n — OVERSETTELSESSYSTEM
+     Egenutviklet, ingen eksterne pakker.
+     Bruker data-i18n-attributter i HTML for å oversette tekst.
+══════════════════════════════════════════════════════════════ -->
+<script>
+
+// To objekter med alle tekster — ett per språk, med samme nøkler
+const LANGUAGES = {
+
+  en: {
+    brand: 'ARTIFICER',
+    langSwitch: 'Switch language', langEN: 'English', langNO: 'Norsk',
+    langENSub: 'Continue in English.', langNOSub: 'Fortsett på norsk.',
+    nav_switchLang: 'Switch language', nav_home: 'Home', nav_manual: 'Manual',
+    nav_tasks: 'Tasks', nav_settings: 'Settings', nav_sensors: 'Sensor Data', nav_dashboard: 'Dashboard',
+    role_title: 'Select role', role_sub: 'Choose whether you are a student or a teacher.',
+    role_student: 'Student', role_studentSub: 'Student guide and tasks.',
+    role_teacher: 'Teacher', role_teacherSub: 'Teacher guide and support.',
+    student_title: 'Student Manual', student_sub: 'Your guide to the MING tasks.',
+    teacher_title: 'Teacher Manual', teacher_sub: 'Your guide to teaching with the MING platform.',
+    manual_openMING: 'Open MING tasks', manual_openMINGsub: 'MQTT, InfluxDB, Node-RED, Grafana',
+    manual_back: 'Back', manual_backSub: 'Return to role selection.',
+    settings_title: 'Settings', settings_sub: 'Configure your preferences here.',
+    ming_title: 'MING', ming_sub: 'Select a module.',
+    ming_mqttSub: 'Message protocol for IoT devices.', ming_influxSub: 'Time-series database for sensor data.',
+    ming_noderedSub: 'Visual flow-based programming.', ming_grafanaSub: 'Data visualisation and dashboards.',
+    mqtt_title: 'MQTT', mqtt_sub: 'Select a task.',
+    mqtt_task1: 'Task 1', mqtt_task1sub: 'Simple test flow in Node-RED.',
+    mqtt_task2: 'Task 2', mqtt_task2sub: 'Explore MQTT further.',
+    mqtt_task3: 'Task 3', mqtt_task3sub: 'Click and place.',
+    mqtt_task4: 'Task 4',
+    mqtt_t1_title: 'MQTT – Task 1', mqtt_t1_placeholder: '[ Insert task content here ]', mqtt_t1_back: '← Back to MQTT tasks',
+    mqtt_t2_title: 'MQTT – Task 2', mqtt_t2_desc: 'Fill in here.', mqtt_t2_back: '← Back to MQTT tasks',
+    influx_title: 'InfluxDB', influx_sub: 'Select a task.',
+    influx_task1: 'Task 1', influx_task1sub: 'Getting started with InfluxDB.',
+    influx_task2: 'Task 2', influx_task2sub: 'Querying time-series data.',
+    influx_t1_title: 'InfluxDB – Task 1', influx_t1_desc: 'Fill in here.', influx_t1_back: '← Back to InfluxDB tasks',
+    influx_t2_title: 'InfluxDB – Task 2', influx_t2_desc: 'Fill in here.', influx_t2_back: '← Back to InfluxDB tasks',
+    nodered_title: 'Node-RED', nodered_sub: 'Select a task.',
+    nodered_task1: 'Task 1', nodered_task1sub: 'Getting started with Node-RED.',
+    nodered_task2: 'Task 2', nodered_task2sub: 'Advanced flows.',
+    nodered_t1_title: 'Node-RED – Task 1', nodered_t1_desc: 'Fill in here.', nodered_t1_back: '← Back to Node-RED tasks',
+    nodered_t2_title: 'Node-RED – Task 2', nodered_t2_desc: 'Fill in here.', nodered_t2_back: '← Back to Node-RED tasks',
+    grafana_title: 'Grafana', grafana_sub: 'Select a task.',
+    grafana_task1: 'Task 1', grafana_task1sub: 'Setting up your first dashboard.',
+    grafana_task2: 'Task 2', grafana_task2sub: 'Advanced visualisations.',
+    grafana_t1_title: 'Grafana – Task 1', grafana_t1_desc: 'Fill in here.', grafana_t1_back: '← Back to Grafana tasks',
+    grafana_t2_title: 'Grafana – Task 2', grafana_t2_desc: 'Fill in here.', grafana_t2_back: '← Back to Grafana tasks',
+    sensors_title: 'Live Sensor Data',
+    sensors_sub: 'Real-time readings from the ESP32. Shows simulated values when the device is not connected.',
+    sensors_pot: 'Potentiometer', sensors_dist: 'Distance (VL53L0X)', sensors_log: 'Log',
+    sensors_live: '● LIVE', sensors_sim: '◌ simulated',
+    t3_header: 'MQTT – Task 3', t3_infoTitle: 'MQTT Flow Explanation',
+    t3_infoBody: 'Devices such as sensors first connect to an MQTT broker through a handshake. After the connection is established, the device can publish data to specific topics. Other clients can subscribe to topics to receive relevant messages. Temperature messages go to Temp subscribers. Humidity messages go to Hum subscribers.',
+    t3_startBtn: 'Start Task', t3_complete: '✓ MQTT Task Complete!',
+    t3_taskbox: 'Click an arrow from the Select panel, then click the correct drop zone to place it. Client 1 and Client 3 subscribe to Temperature. Client 2 subscribes to Humidity only.',
+    t3_clickPlace: 'Click to place', t3_sendBroker: 'Send to Broker', t3_recvBroker: 'Receive from Broker',
+    t3_hintPublish: 'Send message to publisher', t3_hintSubscribe: 'Receive messages from publisher', t3_hintForward: 'Send message to subscriber',
+    t3_select: 'Select', t3_valid: '✓ Valid', t3_invalid: '✗ Invalid',
+    t3_tempSensor: 'Temp Sensor (Publisher)', t3_humSensor: 'Humidity Sensor (Publisher)',
+    t3_publisher: '(Publisher)', t3_subscriber: '(Subscriber)',
+    t3_broker: 'MQTT\nBroker',
+    t3_client1: 'Client 1 (Subscriber)', t3_client2: 'Client 2 (Subscriber)', t3_client3: 'Client 3 (Subscriber)',
+    nr_title: 'Setting up MQTT in Node-RED',
+    nr_desc: 'In this task you will create a simple test flow in Node-RED that sends one fixed value through MQTT and receives it back. Use an Inject node to start the message manually, publish it via MQTT Out, then subscribe to the same topic with MQTT In to receive it. The goal is to verify that MQTT communication works correctly, and to give you insight into how messages are sent, received and processed in Node-RED before sensor data is added later. When the flow is set up correctly, the message will appear in the debug window.',
+    nr_brand: 'Node-RED (simulation)', nr_hint: 'Hint', nr_check: 'Check flow',
+    nr_reset: 'Reset', nr_simulate: 'Simulate sensor', nr_nodes: 'Nodes',
+    nr_debug: 'Debug', nr_clear: 'Clear',
+    nr_dropHint: 'Drag nodes here and connect them with wires',
+    nr_ready: 'Ready. Drag in nodes and connect with wires.',
+    nr_resetOk: 'Reset OK', nr_initOk: 'Init OK',
+    nr_noMore: 'No more hints. You can do it!',
+    nr_wrongTopic: 'Wrong topic selected. Tip: what kind of data does the sensor send?',
+    nr_flowOk: '✓ Flow OK! All nodes, topic and connections are correct.',
+    nr_flowInvalid: 'Flow is not set up correctly. Check the flow first.',
+    nr_simInvalid: 'Flow incomplete or wrong topic — check the flow first.',
+    nr_missing: 'Missing node: ', nr_missingWire: 'Missing connection: ',
+    nr_tempResult: 'Room temperature is {value} degrees Celsius',
+    // {value} erstattes med faktisk tall ved kjøring
+    nr_msgReceived: 'Message received: ',
+    // nr_hints er et array — t('nr_hints') returnerer hele arrayen, hint-knappen velger riktig indeks
+    nr_hints: [
+      'Hint 1/5: Drag one of each node type from the left panel.',
+      'Hint 2/5: Drag between the ports to connect nodes.',
+      'Hint 3/5: Enter the same topic in both MQTT Out and MQTT In.',
+      'Hint 4/5: The order should be: Inject → MQTT Out → MQTT In → Debug.',
+      'Hint 5/5: Press the play button (▶) on the Inject node to send.',
+    ],
+    home_headline: 'IIoT in a Shoebox',
+    home_sub: 'A compact, self-contained teaching platform demonstrating the MING stack — MQTT, InfluxDB, Node-RED and Grafana — running fully locally.',
+    home_card_sensors_title: 'Live Sensor Data', home_card_sensors_desc: 'View real-time readings from the potentiometer and VL53L0X distance sensor.',
+    home_card_t3_title: 'MQTT Task 3', home_card_t3_desc: 'Click and place arrows to simulate the MQTT publish/subscribe flow.',
+    home_card_t4_title: 'Node-RED Simulator', home_card_t4_desc: 'Build a Node-RED flow by dragging nodes onto the canvas and wiring them together.',
+    back: 'Back', fillIn: 'Fill in here.',
+  },
+
+  no: {
+    brand: 'ARTIFICER',
+    langSwitch: 'Velg språk', langEN: 'English', langNO: 'Norsk',
+    langENSub: 'Continue in English.', langNOSub: 'Fortsett på norsk.',
+    nav_switchLang: 'Bytt språk', nav_home: 'Hjem', nav_manual: 'Manual',
+    nav_tasks: 'Oppgaver', nav_settings: 'Innstillinger', nav_sensors: 'Sensordata', nav_dashboard: 'Dashboard',
+    role_title: 'Velg rolle', role_sub: 'Velg om du er elev eller lærer.',
+    role_student: 'Elev', role_studentSub: 'Elevveiledning og oppgaver.',
+    role_teacher: 'Lærer', role_teacherSub: 'Lærerveiledning og støtte.',
+    student_title: 'Elevveiledning', student_sub: 'Din guide til MING-oppgavene.',
+    teacher_title: 'Lærerveiledning', teacher_sub: 'Din guide til undervisning med MING-plattformen.',
+    manual_openMING: 'Åpne MING-oppgaver', manual_openMINGsub: 'MQTT, InfluxDB, Node-RED, Grafana',
+    manual_back: 'Tilbake', manual_backSub: 'Til rollevalg.',
+    settings_title: 'Innstillinger', settings_sub: 'Konfigurer preferansene dine her.',
+    ming_title: 'MING', ming_sub: 'Velg en modul.',
+    ming_mqttSub: 'Meldingsprotokoll for IoT-enheter.', ming_influxSub: 'Tidsserie-database for sensordata.',
+    ming_noderedSub: 'Visuell flyt-basert programmering.', ming_grafanaSub: 'Datavisualisering og dashboards.',
+    mqtt_title: 'MQTT', mqtt_sub: 'Velg en oppgave.',
+    mqtt_task1: 'Oppgave 1', mqtt_task1sub: 'Enkel testflyt i Node-RED.',
+    mqtt_task2: 'Oppgave 2', mqtt_task2sub: 'Utforsk MQTT videre.',
+    mqtt_task3: 'Oppgave 3', mqtt_task3sub: 'Klikk og plasser.',
+    mqtt_task4: 'Oppgave 4',
+    mqtt_t1_title: 'MQTT – Oppgave 1', mqtt_t1_placeholder: '[ Sett inn oppgaveinnhold her ]', mqtt_t1_back: '← Tilbake til MQTT-oppgaver',
+    mqtt_t2_title: 'MQTT – Oppgave 2', mqtt_t2_desc: 'Fyll inn her.', mqtt_t2_back: '← Tilbake til MQTT-oppgaver',
+    influx_title: 'InfluxDB', influx_sub: 'Velg en oppgave.',
+    influx_task1: 'Oppgave 1', influx_task1sub: 'Kom i gang med InfluxDB.',
+    influx_task2: 'Oppgave 2', influx_task2sub: 'Spørringer på tidsseriedata.',
+    influx_t1_title: 'InfluxDB – Oppgave 1', influx_t1_desc: 'Fyll inn her.', influx_t1_back: '← Tilbake til InfluxDB-oppgaver',
+    influx_t2_title: 'InfluxDB – Oppgave 2', influx_t2_desc: 'Fyll inn her.', influx_t2_back: '← Tilbake til InfluxDB-oppgaver',
+    nodered_title: 'Node-RED', nodered_sub: 'Velg en oppgave.',
+    nodered_task1: 'Oppgave 1', nodered_task1sub: 'Kom i gang med Node-RED.',
+    nodered_task2: 'Oppgave 2', nodered_task2sub: 'Avanserte flyter.',
+    nodered_t1_title: 'Node-RED – Oppgave 1', nodered_t1_desc: 'Fyll inn her.', nodered_t1_back: '← Tilbake til Node-RED-oppgaver',
+    nodered_t2_title: 'Node-RED – Oppgave 2', nodered_t2_desc: 'Fyll inn her.', nodered_t2_back: '← Tilbake til Node-RED-oppgaver',
+    grafana_title: 'Grafana', grafana_sub: 'Velg en oppgave.',
+    grafana_task1: 'Oppgave 1', grafana_task1sub: 'Sett opp ditt første dashboard.',
+    grafana_task2: 'Oppgave 2', grafana_task2sub: 'Avanserte visualiseringer.',
+    grafana_t1_title: 'Grafana – Oppgave 1', grafana_t1_desc: 'Fyll inn her.', grafana_t1_back: '← Tilbake til Grafana-oppgaver',
+    grafana_t2_title: 'Grafana – Oppgave 2', grafana_t2_desc: 'Fyll inn her.', grafana_t2_back: '← Tilbake til Grafana-oppgaver',
+    sensors_title: 'Live sensordata',
+    sensors_sub: 'Sanntidsavlesninger fra ESP32. Viser simulerte verdier når enheten ikke er tilkoblet.',
+    sensors_pot: 'Potensiometer', sensors_dist: 'Avstand (VL53L0X)', sensors_log: 'Logg',
+    sensors_live: '● LIVE', sensors_sim: '◌ simulert',
+    t3_header: 'MQTT – Oppgave 3', t3_infoTitle: 'Forklaring av MQTT-flyt',
+    t3_infoBody: 'Enheter som sensorer kobler seg først til en MQTT-megler gjennom et håndtrykk. Etter at tilkoblingen er etablert, kan enheten publisere data til spesifikke topics. Andre klienter kan abonnere på topics for å motta relevante meldinger. Temperaturmeldinger går til Temp-abonnenter. Fuktighetsmeldinger går til Hum-abonnenter.',
+    t3_startBtn: 'Start oppgave', t3_complete: '✓ MQTT-oppgave fullført!',
+    t3_taskbox: 'Klikk en pil fra Valg-panelet, klikk deretter riktig droppunkt for å plassere den. Klient 1 og Klient 3 abonnerer på Temperatur. Klient 2 abonnerer kun på Fuktighet.',
+    t3_clickPlace: 'Klikk for å plassere', t3_sendBroker: 'Send til megler', t3_recvBroker: 'Motta fra megler',
+    t3_hintPublish: 'Send melding til utgiver', t3_hintSubscribe: 'Motta meldinger fra utgiver', t3_hintForward: 'Send melding til abonnent',
+    t3_select: 'Velg', t3_valid: '✓ Riktig', t3_invalid: '✗ Feil',
+    t3_tempSensor: 'Temperatursensor (Utgiver)', t3_humSensor: 'Fuktighetssensor (Utgiver)',
+    t3_publisher: '(Utgiver)', t3_subscriber: '(Abonnent)',
+    t3_broker: 'MQTT\nMegler',
+    t3_client1: 'Klient 1 (Abonnent)', t3_client2: 'Klient 2 (Abonnent)', t3_client3: 'Klient 3 (Abonnent)',
+    nr_title: 'Sette opp MQTT i Node-RED',
+    nr_desc: 'I denne oppgaven skal du lage en enkel testflyt i Node-RED som sender én fast verdi gjennom MQTT og mottar den igjen. Du skal bruke en Inject-node for å starte meldingen manuelt, publisere den via MQTT Out, og deretter abonnere på samme topic med MQTT In for å ta imot meldingen. Hensikten er å verifisere at MQTT-kommunikasjonen fungerer korrekt, og å gi deg innsikt i hvordan meldinger sendes, mottas og behandles i Node-RED. Når flyten er riktig satt opp, skal meldingen vises i debug-vinduet.',
+    nr_brand: 'Node-RED (simulering)', nr_hint: 'Hint', nr_check: 'Sjekk flyt',
+    nr_reset: 'Reset', nr_simulate: 'Simuler sensor', nr_nodes: 'Noder',
+    nr_debug: 'Debug', nr_clear: 'Tøm',
+    nr_dropHint: 'Dra noder hit og koble dem med piler',
+    nr_ready: 'Klar. Dra inn noder og koble med piler.',
+    nr_resetOk: 'Reset OK', nr_initOk: 'Init OK',
+    nr_noMore: 'Ingen flere hint. Du klarer dette!',
+    nr_wrongTopic: 'Feil topic valgt. Tips: hvilken type data sender sensoren?',
+    nr_flowOk: '✓ Flyt OK! Alle noder, topic og koblinger er riktige.',
+    nr_flowInvalid: 'Flyten er ikke riktig satt opp. Sjekk flyt først.',
+    nr_simInvalid: 'Flyt ikke komplett eller feil topic - sjekk flyten først.',
+    nr_missing: 'Mangler node: ', nr_missingWire: 'Mangler kobling: ',
+    nr_tempResult: 'Temperaturen i rommet er {value} grader Celsius',
+    nr_msgReceived: 'Melding mottatt: ',
+    nr_hints: [
+      'Hint 1/5: Dra inn en av hver node fra venstre panel.',
+      'Hint 2/5: Dra piler mellom portene for å koble nodene sammen.',
+      'Hint 3/5: Skriv samme topic i både MQTT Out og MQTT In.',
+      'Hint 4/5: Rekkefølgen bør være: Inject → MQTT Out → MQTT In → Debug.',
+      'Hint 5/5: Trykk på play-knappen (▶) på Inject-noden for å sende.',
+    ],
+    home_headline: 'IIoT i en skoeske',
+    home_sub: 'En kompakt, selvstendig undervisningsplattform som demonstrerer MING-stacken — MQTT, InfluxDB, Node-RED og Grafana — som kjører fullt lokalt.',
+    home_card_sensors_title: 'Live sensordata', home_card_sensors_desc: 'Se sanntidsavlesninger fra potensiometeret og VL53L0X-avstandssensoren.',
+    home_card_t3_title: 'MQTT Oppgave 3', home_card_t3_desc: 'Klikk og plasser piler for å simulere MQTT publish/subscribe-flyten.',
+    home_card_t4_title: 'Node-RED Simulator', home_card_t4_desc: 'Bygg en Node-RED-flyt ved å dra noder inn på lerretet og koble dem sammen.',
+    back: 'Tilbake', fillIn: 'Fyll inn her.',
+  }
+};
+
+// Henter lagret språk fra localStorage, standard er norsk
+let _lang = localStorage.getItem('artificer_lang') || 'no';
+
+// Slår opp riktig tekst for en nøkkel — returnerer selve nøkkelen om oversettelsen mangler
+function t(key) {
+  const dict = LANGUAGES[_lang] || LANGUAGES['no'];
+  return dict[key] !== undefined ? dict[key] : key;
+}
+
+function getLang() { return _lang; }
+
+// Bytter språk, lagrer valget og oppdaterer all tekst i DOM-en
+function setLang(code) {
+  if (!LANGUAGES[code]) return;
+  _lang = code;
+  localStorage.setItem('artificer_lang', code);
+  applyI18n();
+}
+
+// Går gjennom alle elementer med data-i18n og bytter ut teksten
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.getAttribute('data-i18n'));
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    el.title = t(el.getAttribute('data-i18n-title'));
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    el.innerHTML = t(el.getAttribute('data-i18n-html'));
+  });
+
+  // Oppdaterer språkknappen til å vise det andre språket
+  const toggle = document.getElementById('lang-toggle');
+  if (toggle) {
+    toggle.textContent = _lang === 'no' ? '🇬🇧 EN' : '🇳🇴 NB';
+    toggle.title       = _lang === 'no' ? 'Switch to English' : 'Bytt til norsk';
+  }
+
+  // Oppdaterer html lang-attributtet for skjermlesere
+  document.documentElement.lang = _lang;
+}
+
+// Kjører oversettelsen så snart DOM-en er klar
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', applyI18n);
+} else {
+  applyI18n();
+}
+
+</script>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     MENU — navigasjon mellom sider
+     SENSORPOLLING — henter data fra ESP32
+     MQTT OPPGAVE 3 — klikk og plasser
+     NODE-RED SIMULATOR — oppgave 4
+══════════════════════════════════════════════════════════════ -->
+<script>
+
+// ── MENU ──────────────────────────────────────────────────
+
+// Breadcrumbs-stier for hver side — funksjoner i stedet for strenger
+// fordi t() må kalles når brødsmulene vises, ikke når objektet lages (da vet vi ikke språk)
+const BREADCRUMBS = {
+  home:         () => t('nav_home'),
+  role:         () => t('role_title'),
+  student:      () => t('student_title'),
+  teacher:      () => t('teacher_title'),
+  settings:     () => t('settings_title'),
+  sensors:      () => t('sensors_title'),
+  ming:         () => 'MING',
+  mqtt:         () => 'MING → MQTT',
+  'mqtt-t1':    () => `MING → MQTT → ${t('mqtt_task1')}`,
+  'mqtt-t2':    () => `MING → MQTT → ${t('mqtt_task2')}`,
+  task3:        () => `MING → MQTT → ${t('mqtt_task3')}`,
+  task4:        () => 'MING → MQTT → Node-RED',
+  influx:       () => 'MING → InfluxDB',
+  'influx-t1':  () => `MING → InfluxDB → ${t('influx_task1')}`,
+  'influx-t2':  () => `MING → InfluxDB → ${t('influx_task2')}`,
+  nodered:      () => 'MING → Node-RED',
+  'nodered-t1': () => `MING → Node-RED → ${t('nodered_task1')}`,
+  'nodered-t2': () => `MING → Node-RED → ${t('nodered_task2')}`,
+  grafana:      () => 'MING → Grafana',
+  'grafana-t1': () => `MING → Grafana → ${t('grafana_task1')}`,
+  'grafana-t2': () => `MING → Grafana → ${t('grafana_task2')}`,
+};
+
+// Holder styr på hvilken side som vises — brukes av sensor-pollingsløkken
+let _currentPage = 'home';
+
+// Hoved-navigasjonsfunksjon — skjuler alle sider og viser den riktige
+function go(page) {
+  document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+
+  const target = document.getElementById('page-' + page);
+  if (!target) return;  // sikkerhetsvakt mot ukjente side-IDer
+  target.classList.add('active');
+
+  document.querySelectorAll(`.nav-link[data-page="${page}"]`)
+    .forEach(el => el.classList.add('active'));
+
+  _currentPage = page;
+  updateBreadcrumb();
+  document.querySelector('.content').scrollTop = 0;
+
+  // Starter sensor/simulator kun når brukeren navigerer dit — sparer ressurser
+  if (page === 'sensors') startSensorPolling();
+  if (page === 'task4')   initNodeRed('nr-root');
+  if (page === 'task3')   t3RefreshLabels();
+}
+
+// Oppdaterer brødsmule-teksten i topbaren
+function updateBreadcrumb() {
+  const bc = document.getElementById('breadcrumb');
+  if (!bc) return;
+  const fn = BREADCRUMBS[_currentPage];
+  bc.innerHTML = `<span>${fn ? fn() : _currentPage}</span>`;
+}
+
+// Bytter mellom norsk og engelsk, oppdaterer JS-bygd tekst manuelt etterpå
+function toggleLang() {
+  setLang(getLang() === 'no' ? 'en' : 'no');
+  t3RefreshLabels();   // disse elementene har ikke data-i18n, må oppdateres manuelt
+  updateBreadcrumb();
+}
+
+
+// ── SENSORPOLLING ────────────────────────────────────────────
+
+// Henter sensordata fra ESP32 hvert sekund
+const SENSOR_POLL_INTERVAL = 1000;
+const SENSOR_URL = '/sensor'; 
+let _sensorInterval = null;    // lagrer setInterval-ID for å unngå doble løkker
+
+// Henter data fra ESP32 med 2-sekunders timeout
+// Om noe feiler (offline, timeout, feil JSON) returneres simulerte verdier i stedet
+async function fetchSensor() {
+  try {
+    const res = await fetch(SENSOR_URL, { signal: AbortSignal.timeout(2000) });
+    // AbortSignal.timeout(2000) avbryter forespørselen etter 2 sekunder
+    // Uten dette ville siden henge i 30+ sekunder om ESP32 ikke svarer
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'firmware reported error');
+    return { pot: parseFloat(data.pot), dist: parseInt(data.dist), real: true };
+  } catch {
+    // Simulerte verdier innenfor reelle hardware-grenser:
+    // volt: 0–3.3V, distanse: 30–1200mm (VL53L0X datasheet)
+    return {
+      pot:  parseFloat((Math.random() * 3.3).toFixed(3)),
+      dist: Math.floor(30 + Math.random() * 1170),
+      real: false
+    };
+  }
+}
+
+// Starter pollingsløkken første gang sensorsiden åpnes
+function startSensorPolling() {
+  const MAX_LOG_ENTRIES = 10;
+  if (_sensorInterval) return;  // løkken kjører allerede, ikke start en til
+
+  _sensorInterval = setInterval(async () => {
+    if (_currentPage !== 'sensors') return;  // brukeren har navigert bort, hopp over
+
+    const d = await fetchSensor();
+
+    // Oppdaterer store tallvisninger
+    document.getElementById('pot-value').textContent  = d.pot.toFixed(3);
+    document.getElementById('dist-value').textContent = d.dist;
+
+    // Grønn badge for ekte data, gul for simulert
+    const badge = d.real
+      ? `<span class="status-live">${t('sensors_live')}</span>`
+      : `<span class="status-sim">${t('sensors_sim')}</span>`;
+    document.getElementById('pot-status').innerHTML  = badge;
+    document.getElementById('dist-status').innerHTML = badge;
+
+    // Legger nyeste logg-innlegg øverst
+    const logContainer = document.getElementById('sensor-log-lines');
+    const entry = document.createElement('div');
+    entry.className = 'log-line';
+    entry.innerHTML =
+      `<span class="log-ts">${new Date().toLocaleTimeString()}</span>` +
+      `pot = ${d.pot.toFixed(3)} V &nbsp;|&nbsp; dist = ${d.dist} mm` +
+      (d.real ? '' : ' <span class="status-sim">[sim]</span>');
+    logContainer.prepend(entry);
+
+    // Fjerner det eldste innlegget om loggen overstiger maks
+    while (logContainer.children.length > MAX_LOG_ENTRIES) {
+      logContainer.removeChild(logContainer.lastChild);
+    }
+  }, SENSOR_POLL_INTERVAL);
+}
+
+
+// ── MQTT OPPGAVE 3 ───────────────────────────────────────────
+
+let t3Selected = null;  // pilen brukeren har valgt
+let t3Correct  = 0;     // antall riktig plasserte piler
+const T3_REQUIRED = 8;  // oppgaven er ferdig når alle 8 soner er fylt
+
+// Oppdaterer etiketter i diagrammet — kalles også ved språkbytte
+function t3RefreshLabels() {
+  const map = {
+    't3-lbl-temp':   't3_tempSensor',
+    't3-lbl-hum':    't3_humSensor',
+    't3-lbl-c1':     't3_client1',
+    't3-lbl-c2':     't3_client2',
+    't3-lbl-c3':     't3_client3',
+    't3-broker-lbl': 't3_broker',
+  };
+  Object.entries(map).forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = t(key);
+  });
+}
+
+// Kalles av Start-knappen — skjuler infoboks og viser diagrammet
+function t3Start() {
+  document.getElementById('t3-infobox').style.display = 'none';
+  document.getElementById('t3-taskbox').style.display = 'block';
+  document.getElementById('t3-layout').style.display  = 'flex';
+  t3RefreshLabels();
+  t3Correct  = 0;
+  t3Selected = null;
+  document.getElementById('t3-complete-banner').style.display = 'none';
+
+  // Pilene inkluderer duplikater — TempPublish finnes to ganger fordi
+  // samme temperaturmelding videresendes til Klient 1 og Klient 3
+  const arrows = [
+    { type: 'TempPublish', text: 'Publish: 50\u00b0C\nTopic: Temp', dir: 'right' },
+    { type: 'HumPublish',  text: 'Publish: 45% RH\nTopic: Hum',    dir: 'right' },
+    { type: 'SubTemp',     text: 'Subscribe\nTopic: Temp',          dir: 'both'  },
+    { type: 'SubHum',      text: 'Subscribe\nTopic: Hum',           dir: 'both'  },
+    { type: 'TempPublish', text: 'Publish: 50\u00b0C',              dir: 'right' },
+    { type: 'HumPublish',  text: 'Publish: 45% RH',                 dir: 'right' },
+  ];
+
+  const list = document.getElementById('t3-arrows');
+  list.innerHTML = '';
+  arrows.forEach((a, i) => {
+    const btn = document.createElement('button');
+    btn.className     = 'arrow-btn ' + a.dir;
+    btn.textContent   = a.text;
+    btn.dataset.index = i;
+    btn.onclick       = () => t3SelectArrow(btn, a);
+    list.appendChild(btn);
+  });
+}
+
+// Markerer den valgte pilen og lagrer den i t3Selected
+function t3SelectArrow(btn, arrow) {
+  document.querySelectorAll('.arrow-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  t3Selected = arrow;
+}
+
+// Kalles når brukeren klikker en dropsone
+function t3Place(zone) {
+  if (zone.classList.contains('zone-correct')) return;  // allerede fylt, ignorer
+  if (!t3Selected) return;                              // ingen pil valgt, ignorer
+
+  const ok = t3Selected.type === zone.dataset.expected;
+
+  // Erstatter plassholder-teksten med den valgte pilen
+  zone.innerHTML = `<div class="arrow-btn ${t3Selected.dir}" style="pointer-events:none;margin:0;width:auto">${t3Selected.text}</div>`;
+
+  if (ok) {
+    zone.classList.add('zone-correct');
+    t3Correct++;
+    t3ShowMsg(t('t3_valid'), true);
+    if (t3Correct >= T3_REQUIRED) {
+      document.getElementById('t3-complete-banner').style.display = 'block';
+    }
+  } else {
+    zone.classList.add('zone-wrong');
+    t3ShowMsg(t('t3_invalid'), false);
+    // Nullstiller sonen etter 900ms så brukeren kan prøve igjen
+    setTimeout(() => {
+      zone.classList.remove('zone-wrong');
+      let hintKey;
+      if (zone.dataset.expected.startsWith('Sub')) {
+        hintKey = 't3_hintSubscribe';
+      } else {
+        // Sjekker om sonen er på venstre (sensor) eller høyre (klient) side
+        const sides = document.querySelectorAll('#t3-layout > .mqtt-side');
+        hintKey = sides[0] && sides[0].contains(zone) ? 't3_hintPublish' : 't3_hintForward';
+      }
+      zone.innerHTML = `<div>${t('t3_clickPlace')}</div><div class="dropzone-hint">${t(hintKey)}</div>`;
+    }, 900);
+  }
+
+  // Tømmer valget uansett om svaret var riktig eller feil
+  t3Selected = null;
+  document.querySelectorAll('.arrow-btn').forEach(b => b.classList.remove('selected'));
+}
+
+// Viser en kort riktig/feil-melding som skjules etter 1 sekund
+function t3ShowMsg(text, ok) {
+  const el = document.getElementById('t3-message');
+  el.textContent   = text;
+  el.className     = 'messagebox ' + (ok ? 'message-correct' : 'message-wrong');
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 1000);
+}
+
+
+// ── NODE-RED SIMULATOR ───────────────────────────────────────
+
+let _nrCtrl = null;  // AbortController — abort() fjerner alle event listeners på en gang
+let _rafMove = 0;    // requestAnimationFrame-handle — 0 betyr ingen frame er planlagt
+
+// Enkel in-memory MQTT-megler for simulatoren
+// Bruker IIFE (funksjon som kjører seg selv) slik at subs-Map-en er privat
+const Broker = (() => {
+  const subs = new Map();  // topic-streng -> Set av callback-funksjoner
+  return {
+    sub(topic, cb) {
+      if (!subs.has(topic)) subs.set(topic, new Set());
+      subs.get(topic).add(cb);
+      return () => subs.get(topic)?.delete(cb);
+      // Returnerer en avslutt-funksjon — ?. forhindrer feil om topic allerede er slettet
+    },
+    pub(topic, payload) {
+      const set = subs.get(topic);
+      if (!set) return;  // ingen abonnenter på dette topic
+      for (const cb of set) cb({ topic, payload, ts: Date.now() });
+    },
+    clear() { subs.clear(); }
+  };
+})();
+
+const TOPIC_OPTIONS = ['sensor/temperatur', 'sensor/fuktighet', 'sensor/trykk'];
+const CORRECT_TOPIC = 'sensor/temperatur';
+// Bare sensor/temperatur er riktig — sensoren sender temperaturdata
+
+let _selectedTopicIndex = 0;  // hvilket topic som vises på MQTT-nodene
+let _hintIndex = 0;           // hvilket hint som vises neste gang
+let _nrNodeId  = 1;           // auto-inkrement ID for nodeinstanser på lerretet
+const _nrWires = [];          // alle tegnede koblinger — oppdateres av nrRedrawWires()
+
+// Henter sensorverdi for simulatoren — skalerer potmeter-volt til temperaturlignende tall,
+// fjernes når temperatur sensor er lagt til
+async function nrGetSensorValue() {
+  try {
+    const res = await fetch(SENSOR_URL, { signal: AbortSignal.timeout(2000) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error);
+    return { value: parseFloat((data.pot * 10).toFixed(2)), real: true };
+    // Ganger med 10 for å gjøre 0–3.3V om til 0–33°C
+  } catch {
+    return { value: parseFloat((18 + Math.random() * 10).toFixed(2)), real: false };
+    // Tilfeldig innendørs temperatur 18–28°C som reserve
+  }
+}
+
+// Legger til en ny linje i debug-panelet, nyeste øverst
+function nrDebugLog(root, msg) {
+  const out = root.querySelector('#debug-lines');
+  if (!out) return;
+  const line = document.createElement('div');
+  line.className   = 'dbg-line';
+  line.textContent = msg;
+  out.prepend(line);
+}
+
+// Som nrDebugLog men erstatter forrige sim-resultat i stedet for å stable nye linjer
+function nrSimLog(root, msg) {
+  const out = root.querySelector('#debug-lines');
+  if (!out) return;
+  out.querySelectorAll('.dbg-sim-line').forEach(el => el.remove());
+  const line = document.createElement('div');
+  line.className   = 'dbg-line dbg-sim-line';
+  line.textContent = msg;
+  out.prepend(line);
+}
+
+// Returnerer HTML for en drabar nodebrikke i venstre panel
+function nrNodeTile(title, kind) {
+  return `<div class="nr-node" draggable="true" data-title="${title}" data-kind="${kind}">
+    <div class="nr-node-title">${title}</div>
+    <div class="nr-node-sub">${kind}</div>
+    <div class="nr-node-drag">drag</div>
+  </div>`;
+}
+
+// Returnerer HTML for topic-velgeren inne i MQTT-noder
+function nrTopicSliderHtml() {
+  return `<div class="nr-topic-slider">
+    <button class="nr-topic-arrow" data-dir="-1">←</button>
+    <span class="nr-topic-value">${TOPIC_OPTIONS[_selectedTopicIndex]}</span>
+    <button class="nr-topic-arrow" data-dir="1">→</button>
+  </div>`;
+}
+
+// Oppdaterer topic-teksten på alle MQTT-noder etter at brukeren klikker pilen
+function nrUpdateTopicSliders(root) {
+  root.querySelectorAll('.nr-topic-value').forEach(el => {
+    el.textContent = TOPIC_OPTIONS[_selectedTopicIndex];
+  });
+}
+
+// Bygger en nodeinstans som kan plasseres på lerretet
+function nrCreateNodeInst(title, x, y) {
+  const id  = 'n' + (_nrNodeId++);
+  const el  = document.createElement('div');
+  el.className     = 'nr-node-inst';
+  el.dataset.id    = id;
+  el.dataset.title = title;
+
+  const isMQTT  = title.indexOf('MQTT') !== -1;
+  const hasPlay = title === 'Inject';
+  const hasIn   = title !== 'Inject';  // Inject har ingen innport — den starter kjeden
+  const hasOut  = title !== 'Debug';   // Debug har ingen utport — den avslutter kjeden
+
+  const bodyHtml = isMQTT  ? `<div class="nr-field"><span>Topic</span>${nrTopicSliderHtml()}</div>` : '';
+  const playBtn  = hasPlay ? '<button class="nr-play" title="Inject">&#9654;</button>' : '';
+  // &#9654; er HTML-koden for ▶-tegnet
+
+  el.innerHTML = `
+    <div class="nr-node-inst-head"><div class="nr-node-inst-title">${title}</div>${playBtn}</div>
+    <div class="nr-node-inst-body">${bodyHtml}</div>
+    ${hasIn  ? '<div class="nr-port nr-port-in"  data-port="in"></div>'  : ''}
+    ${hasOut ? '<div class="nr-port nr-port-out" data-port="out"></div>' : ''}`;
+
+  el.style.left = x + 'px';
+  el.style.top  = y + 'px';
+  return el;
+}
+
+// Fjerner alle SVG-ledninger fra lerretet og tømmer arrayen
+function nrClearWires(root) {
+  const svg = root.querySelector('#wires');
+  if (svg) svg.innerHTML = '';
+  _nrWires.length = 0;
+}
+
+// Beregner midtpunktet til en port relativt til lerretets hjørne
+// SVG-koordinater er relative til SVG-elementet, ikke skjermen
+function nrGetPortCenter(portEl, canvasRect) {
+  const r = portEl.getBoundingClientRect();
+  return {
+    x: r.left + r.width  / 2 - canvasRect.left,
+    y: r.top  + r.height / 2 - canvasRect.top
+  };
+}
+
+// Returnerer en kubisk Bezier-kurve SVG-sti mellom to punkter
+// dx-offsettet gir den karakteristiske S-kurven som ekte Node-RED bruker
+function nrSvgPath(a, b) {
+  const dx = Math.max(50, Math.abs(b.x - a.x) * 0.5);
+  // Minimum 50px offset slik at korte koblinger fortsatt viser en synlig kurve
+  return `M ${a.x} ${a.y} C ${a.x + dx} ${a.y}, ${b.x - dx} ${b.y}, ${b.x} ${b.y}`;
+}
+
+// Tegner alle ledninger på nytt — kalles etter nodebevegelse eller vindusendring
+function nrRedrawWires(root) {
+  const canvas = root.querySelector('#canvas');
+  const svg    = root.querySelector('#wires');
+  if (!canvas || !svg) return;
+  const cr = canvas.getBoundingClientRect();
+  svg.setAttribute('viewBox', `0 0 ${cr.width} ${cr.height}`);
+  for (const w of _nrWires) {
+    const fn = root.querySelector(`.nr-node-inst[data-id="${w.from.nodeId}"]`);
+    const tn = root.querySelector(`.nr-node-inst[data-id="${w.to.nodeId}"]`);
+    if (!fn || !tn) continue;  // noden er fjernet, hopp over
+    const fp = fn.querySelector(`.nr-port[data-port="${w.from.port}"]`);
+    const tp = tn.querySelector(`.nr-port[data-port="${w.to.port}"]`);
+    if (!fp || !tp) continue;
+    w.pathEl.setAttribute('d', nrSvgPath(nrGetPortCenter(fp, cr), nrGetPortCenter(tp, cr)));
+  }
+}
+
+// Oppretter en permanent SVG-ledning fra utport til innport
+function nrAddWire(root, fromPortEl, toPortEl) {
+  const svg = root.querySelector('#wires');
+  if (!svg) return;
+  const fromNode = fromPortEl.closest('.nr-node-inst');
+  const toNode   = toPortEl.closest('.nr-node-inst');
+  if (!fromNode || !toNode) return;
+  if (!(fromPortEl.dataset.port === 'out' && toPortEl.dataset.port === 'in')) return;
+  // Kun ut -> inn er tillatt
+
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  // createElementNS kreves for SVG-elementer — vanlig createElement lager HTML, ikke SVG
+  path.setAttribute('class',          'nr-wire');
+  path.setAttribute('fill',           'none');
+  path.setAttribute('stroke-width',   '4');
+  path.setAttribute('stroke-linecap', 'round');
+  svg.appendChild(path);
+
+  _nrWires.push({
+    from:   { nodeId: fromNode.dataset.id, port: 'out' },
+    to:     { nodeId: toNode.dataset.id,   port: 'in'  },
+    pathEl: path
+  });
+  nrRedrawWires(root);
+}
+
+// Finner den første nodeinstansen med et gitt navn, eller null
+function nrGetNodeByTitle(root, title) {
+  return Array.from(root.querySelectorAll('.nr-node-inst'))
+    .find(n => n.dataset.title === title) || null;
+}
+
+function nrGetTopic() { return TOPIC_OPTIONS[_selectedTopicIndex]; }
+
+// Sjekker om det finnes en kobling fra node 'a' til node 'b'
+function nrHasWire(root, a, b) {
+  const fn = nrGetNodeByTitle(root, a);
+  const tn = nrGetNodeByTitle(root, b);
+  if (!fn || !tn) return false;
+  return _nrWires.some(w => w.from.nodeId === fn.dataset.id && w.to.nodeId === tn.dataset.id);
+}
+
+// Sjekker stille om flyten er gyldig — returnerer true/false
+// Rekkefølge: noder finnes -> riktig topic -> koblinger i riktig orden
+function nrFlowValid(root) {
+  for (const title of ['Inject', 'MQTT Out', 'MQTT In', 'Debug']) {
+    if (!nrGetNodeByTitle(root, title)) return false;
+  }
+  if (nrGetTopic() !== CORRECT_TOPIC)           return false;
+  if (!nrHasWire(root, 'Inject',   'MQTT Out')) return false;
+  if (!nrHasWire(root, 'MQTT Out', 'MQTT In'))  return false;
+  if (!nrHasWire(root, 'MQTT In',  'Debug'))    return false;
+  return true;
+}
+
+// Simulerer at Inject-noden sender en melding gjennom flyten
+async function nrHandlePlay(root) {
+  if (!nrFlowValid(root)) { nrDebugLog(root, t('nr_flowInvalid')); return; }
+
+  const result = await nrGetSensorValue();
+  const source = result.real ? '[ESP32]' : '[sim]';
+  const topic  = nrGetTopic();
+
+  // Abonnerer FØR publisering — slik fungerer ekte MQTT også
+  const unsub = Broker.sub(topic, m => {
+    unsub();  // éngangsabonnement — fjern deg selv etter første melding
+    // Uten dette ville hver Play-trykk legge til en ny lytter
+    const raw = m.payload.toString().replace(/temp=/i, '');
+    const v   = parseFloat(raw);
+    const msg = !isNaN(v)
+      ? t('nr_tempResult').replace('{value}', v.toFixed(2))
+      : t('nr_msgReceived') + m.payload;
+    nrDebugLog(root, source + ' ' + msg);
+  });
+
+  Broker.pub(topic, 'temp=' + result.value.toFixed(2));
+}
+
+// Sjekker flyten og logger første feil den finner — én feil om gangen for å ikke overvelde
+function nrCheckFlow(root) {
+  for (const title of ['Inject', 'MQTT Out', 'MQTT In', 'Debug']) {
+    if (!nrGetNodeByTitle(root, title)) {
+      nrDebugLog(root, t('nr_missing') + title);
+      return;
+    }
+  }
+  if (nrGetTopic() !== CORRECT_TOPIC) { nrDebugLog(root, t('nr_wrongTopic')); return; }
+  if (!nrHasWire(root, 'Inject',   'MQTT Out')) { nrDebugLog(root, t('nr_missingWire') + 'Inject → MQTT Out'); return; }
+  if (!nrHasWire(root, 'MQTT Out', 'MQTT In'))  { nrDebugLog(root, t('nr_missingWire') + 'MQTT Out → MQTT In'); return; }
+  if (!nrHasWire(root, 'MQTT In',  'Debug'))    { nrDebugLog(root, t('nr_missingWire') + 'MQTT In → Debug'); return; }
+  nrDebugLog(root, t('nr_flowOk'));
+}
+
+// Bygger hele simulator-UI-en inne i #nr-root
+// _nrInit-flagget hindrer at den bygges to ganger om brukeren navigerer frem og tilbake
+function initNodeRed(rootId) {
+  const root = document.getElementById(rootId);
+  if (!root || root._nrInit) return;
+  root._nrInit = true;
+
+  // Avbryter eventuelle gjenværende lyttere fra forrige økt
+  if (_nrCtrl) { try { _nrCtrl.abort(); } catch(e) {} }
+  _nrCtrl = new AbortController();
+  const signal = _nrCtrl.signal;
+  // Alle addEventListener-kall nedenfor bruker { signal }
+  // Når _nrCtrl.abort() kalles fjernes alle lyttere på en gang — ingen minnelekkasjer
+
+  // Nullstiller all tilstand
+  _hintIndex = 0; _selectedTopicIndex = 0; _nrNodeId = 1;
+  _nrWires.length = 0;
+  Broker.clear();
+
+  // Injiserer simulator-HTML
+  root.innerHTML = `<div class="nr-app">
+    <div class="nr-topbar">
+      <div class="nr-brand"><span>${t('nr_brand')}</span></div>
+      <div class="nr-actions">
+        <button class="nr-btn" id="btn-hint">${t('nr_hint')}</button>
+        <button class="nr-btn" id="btn-check">${t('nr_check')}</button>
+        <button class="nr-btn" id="btn-reset">${t('nr_reset')}</button>
+        <button class="nr-btn" id="btn-sim">${t('nr_simulate')}</button>
+      </div>
+    </div>
+    <div class="nr-main">
+      <aside class="nr-left">
+        <div class="nr-panel-title">${t('nr_nodes')}</div>
+        <div class="nr-node-list" id="node-list">
+          ${nrNodeTile('Inject',       'input')}
+          ${nrNodeTile('MQTT Out',     'output')}
+          ${nrNodeTile('MQTT In',      'input')}
+          ${nrNodeTile('Debug',        'viewer')}
+          ${nrNodeTile('Filter',       'function')}
+          ${nrNodeTile('HTTP Request', 'function')}
+        </div>
+      </aside>
+      <section class="nr-canvas-wrap">
+        <div class="nr-canvas" id="canvas">
+          <svg class="nr-wires" id="wires" width="100%" height="100%"></svg>
+          <div class="nr-drop-hint">${t('nr_dropHint')}</div>
+        </div>
+      </section>
+      <aside class="nr-right" id="debug-pane">
+        <div class="nr-debug-header">
+          <div class="nr-debug-title">${t('nr_debug')}</div>
+          <button class="nr-btn nr-btn-small" id="btn-clear">${t('nr_clear')}</button>
+        </div>
+        <div class="nr-debug-body">
+          <div class="nr-debug-bubble">${t('nr_ready')}</div>
+          <div class="nr-debug-lines" id="debug-lines"></div>
+        </div>
+      </aside>
+    </div>
+  </div>`;
+
+  const canvas = root.querySelector('#canvas');
+  const svg    = root.querySelector('#wires');
+
+  // Tegner ledninger på nytt når vindusbredden endres
+  window.addEventListener('resize', () => nrRedrawWires(root), { signal });
+
+  // ── Dra fra palette til lerret ──
+
+  // Lagrer node-tittelen i drag-dataen så drop-hendelsen vet hva som slippes
+  root.querySelector('#node-list').addEventListener('dragstart', e => {
+    const tile = e.target.closest('.nr-node');
+    if (!tile) return;
+    e.dataTransfer.setData('text/plain', tile.dataset.title);
+    e.dataTransfer.effectAllowed = 'copy';
+  }, { signal });
+
+  // dragover må kalle preventDefault() ellers vil ikke 'drop'-hendelsen utløses
+  canvas.addEventListener('dragover', e => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+  }, { signal });
+
+  // Oppretter en nodeinstans der brukeren slipper
+  canvas.addEventListener('drop', e => {
+    e.preventDefault();
+    const title = e.dataTransfer.getData('text/plain');
+    if (!title) return;
+    const cr = canvas.getBoundingClientRect();
+    canvas.appendChild(nrCreateNodeInst(title, e.clientX - cr.left - 70, e.clientY - cr.top - 24));
+    nrRedrawWires(root);
+  }, { signal });
+
+  // ── Topic-velger (event delegation) ──
+  canvas.addEventListener('click', e => {
+    const arrow = e.target.closest('.nr-topic-arrow');
+    if (!arrow) return;
+    // + TOPIC_OPTIONS.length før modulo sikrer at resultatet aldri blir negativt
+    _selectedTopicIndex = (_selectedTopicIndex + parseInt(arrow.dataset.dir) + TOPIC_OPTIONS.length) % TOPIC_OPTIONS.length;
+    nrUpdateTopicSliders(root);
+  }, { signal });
+
+  // ── Dra noder rundt på lerretet ──
+  let dragNode = null, dragOffset = { x: 0, y: 0 };
+
+  canvas.addEventListener('pointerdown', e => {
+    if (e.target.closest('.nr-port') || e.target.closest('.nr-topic-arrow')) return;
+    const node = e.target.closest('.nr-node-inst');
+    if (!node) return;
+    dragNode = node;
+    const r = node.getBoundingClientRect();
+    dragOffset = { x: e.clientX - r.left, y: e.clientY - r.top };
+    node.setPointerCapture(e.pointerId);
+    // setPointerCapture fortsetter å sende hendelser selv om musepekeren beveger seg utenfor noden
+  }, { signal });
+
+  canvas.addEventListener('pointermove', e => {
+    if (!dragNode || _rafMove) return;
+    // _rafMove !== 0 betyr en frame er allerede planlagt — hopp over denne hendelsen
+    // pointermove kan utløses 1000+ ganger i sekundet, men skjermen oppdateres bare ~60 ganger
+    // requestAnimationFrame begrenser oppdateringene til skjermens refresh-rate
+    const target = dragNode;
+    _rafMove = requestAnimationFrame(() => {
+      _rafMove = 0;
+      if (!dragNode || dragNode !== target || !target.isConnected) return;
+      const cr = canvas.getBoundingClientRect();
+      target.style.left = (e.clientX - cr.left - dragOffset.x) + 'px';
+      target.style.top  = (e.clientY - cr.top  - dragOffset.y) + 'px';
+      nrRedrawWires(root);
+    });
+  }, { signal });
+
+  canvas.addEventListener('pointerup', e => {
+    if (dragNode) {
+      try { dragNode.releasePointerCapture(e.pointerId); } catch(ex) {}
+      // try/catch fordi releasePointerCapture kan kaste feil om pekeren allerede er frigjort
+    }
+    dragNode = null;
+  }, { signal });
+
+  // ── Tegne koblinger mellom porter ──
+  let wiring = null;
+
+  canvas.addEventListener('pointerdown', e => {
+    const port = e.target.closest('.nr-port');
+    if (!port || port.dataset.port !== 'out') return;  // bare start fra utporter
+    const cr = canvas.getBoundingClientRect();
+    const a  = nrGetPortCenter(port, cr);
+
+    // Lager en stiplet midlertidig linje som følger musepekeren
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('class',          'nr-wire nr-wire-temp');
+    path.setAttribute('fill',           'none');
+    path.setAttribute('stroke-width',   '4');
+    path.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(path);
+
+    wiring = { fromPortEl: port, tempPath: path, a };
+    canvas.setPointerCapture(e.pointerId);
+    e.preventDefault();
+    e.stopPropagation();  // hindrer at node-drag-lytteren utløses samtidig
+  }, { signal });
+
+  // Oppdaterer den stiplede linjen mens brukeren drar
+  canvas.addEventListener('pointermove', e => {
+    if (!wiring) return;
+    const cr = canvas.getBoundingClientRect();
+    wiring.tempPath.setAttribute('d', nrSvgPath(wiring.a, { x: e.clientX - cr.left, y: e.clientY - cr.top }));
+  }, { signal });
+
+  // Fjerner midlertidig linje og oppretter permanent kobling om sluppet på input
+  canvas.addEventListener('pointerup', e => {
+    if (!wiring) return;
+    const from = wiring.fromPortEl;
+    wiring.tempPath.remove();  // fjern alltid den midlertidige linjen
+    wiring = null;
+    const el     = document.elementFromPoint(e.clientX, e.clientY);
+    const target = el ? el.closest('.nr-port') : null;
+    if (target && target.dataset.port === 'in') nrAddWire(root, from, target);
+  }, { signal });
+
+  // ── Play-knapp på Inject-node (event delegation) ──
+  canvas.addEventListener('click', e => {
+    if (!e.target.closest('.nr-play')) return;
+    nrHandlePlay(root);
+  }, { signal });
+
+  // ── Verktøylinje-knapper ──
+
+  // Hint — viser hint ett om gangen i rekkefølge
+  root.querySelector('#btn-hint').addEventListener('click', () => {
+    const hints = t('nr_hints');
+    nrDebugLog(root, _hintIndex < hints.length ? hints[_hintIndex++] : t('nr_noMore'));
+  }, { signal });
+
+  // Tøm — sletter debug-loggen uten å nullstille flyten
+  root.querySelector('#btn-clear').addEventListener('click', () => {
+    root.querySelector('#debug-lines').innerHTML = '';
+  }, { signal });
+
+  // Sjekk flyt — logger første problem som finnes
+  root.querySelector('#btn-check').addEventListener('click', () => nrCheckFlow(root), { signal });
+
+  // Reset — fjerner alle noder og koblinger, nullstiller alt
+  // Setter _nrInit = false så initNodeRed kjører på nytt neste gang
+  root.querySelector('#btn-reset').addEventListener('click', () => {
+    root.querySelectorAll('.nr-node-inst').forEach(n => n.remove());
+    nrClearWires(root);
+    root.querySelector('#debug-lines').innerHTML = '';
+    _hintIndex = 0; _selectedTopicIndex = 0;
+    root._nrInit = false;
+    Broker.clear();
+    nrDebugLog(root, t('nr_resetOk'));
+  }, { signal });
+
+  // Simuler sensor — i tilfelle sensor blir ødelagt etc.
+  // Bruker nrSimLog slik at gjentatte trykk erstatter forrige resultat
+  root.querySelector('#btn-sim').addEventListener('click', async () => {
+    if (!nrFlowValid(root)) { nrDebugLog(root, t('nr_simInvalid')); return; }
+    const topic = nrGetTopic();
+    const val   = (20 + Math.random() * 10).toFixed(2);  // tilfeldig 20–30°C
+    const unsub = Broker.sub(topic, m => {
+      unsub();  // éngangsabonnement
+      const raw = m.payload.toString().replace(/temp=/i, '');
+      const v   = parseFloat(raw);
+      const msg = !isNaN(v)
+        ? t('nr_tempResult').replace('{value}', v.toFixed(2))
+        : t('nr_msgReceived') + m.payload;
+      nrSimLog(root, msg);
+    });
+    Broker.pub(topic, 'temp=' + val);
+  }, { signal });
+
+  // Første tegning (tomt lerret) og klar-melding i debug-loggen
+  nrRedrawWires(root);
+  nrDebugLog(root, t('nr_initOk'));
+}
+
+</script>
+</body>
+</html>
