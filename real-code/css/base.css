@@ -1,0 +1,65 @@
+/* Nullstiller standard marg og padding på alle elementer så siden ser lik ut i alle nettlesere */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/*
+  box-sizing: border-box gjør at padding og border er inkludert i bredden/høyden,
+  i stedet for å legge seg utenpå og gjøre elementer større enn forventet
+*/
+
+/* ── Farger, størrelser og skrifttyper lagres som variabler her så de er enkle å endre ── */
+:root {
+  --bg:         #0d1b2a;   /* hovedbakgrunn, mørk marineblå */
+  --bg2:        #111f30;   /* litt lysere bakgrunn for nestede områder */
+  --card:       #1a2e42;   /* bakgrunn for kort */
+  --text:       #E8D0A8;   /* hovedtekst, varm pergamentfarge */
+  --muted:      #8fa3b3;   /* sekundærtekst og etiketter */
+  --gold:       #E8D0A8;   /* samme som --text, holdt separat for fleksibilitet */
+  --cyan:       #38B8D0;   /* aksentfarge for aktive elementer og lenker */
+
+  /* Gjennomsiktige overlegg — tilpasser seg automatisk om bakgrunnsfargen endres */
+  --border:     rgba(232,208,168,.13);
+  --panel:      rgba(255,255,255,.05);
+  --panel2:     rgba(255,255,255,.09);
+
+  --sidebar-w:  240px;
+  --sidebar-bg: linear-gradient(180deg, #061730 0%, #1a0535 100%);
+  /* Gradient fra mørk blå øverst til mørk lilla nederst i sidepanelet */
+
+  --shadow:     0 10px 30px rgba(0,0,0,.45);
+  --radius:     13px;   /* brukes på alle kort og knapper for konsistente avrundede hjørner */
+
+  /* Node-RED simulator-mål lagret som variabler for enkel justering */
+  --topbar-h:   52px;
+  --left-w:     182px;
+  --right-w:    300px;
+  --node-w:     142px;
+  --port:       13px;
+
+  /* clamp(min, foretrukket, maks) — skalerer padding basert på skjermbredde */
+  --pad: clamp(14px, 2.2vw, 24px);
+
+  /* Systemskrifttyper — ingen internettforbindelse nødvendig */
+  --font-mono: 'Consolas', 'Menlo', 'DejaVu Sans Mono', 'Courier New', monospace;
+  --font-ui:   'Segoe UI', system-ui, -apple-system, 'Ubuntu', sans-serif;
+}
+
+html, body {
+  height: 100%;
+  /* Både html og body trenger height: 100% — hvis bare body har det fungerer det ikke */
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+}
+
+/* ── Typografi ── */
+.page-title {
+  font-family: var(--font-ui);
+  font-size: clamp(22px, 2.4vw, 30px);
+  /* Aldri mindre enn 22px, aldri større enn 30px, skalerer jevnt imellom */
+  font-weight: 900;
+  margin: 14px 0 6px; color: var(--gold);
+}
+.page-sub {
+  font-size: 12px; color: var(--muted);
+  line-height: 1.6; margin-bottom: 22px;
+  max-width: 600px;  /* hindrer for lange linjer som er vanskelige å lese */
+}

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<!-- Forteller nettleseren at dette er moderne HTML5 -->
+<html lang="no">
+<!-- lang="no" settes til norsk som standard, oppdateres når brukeren bytter språk -->
+<head>
+  <meta charset="UTF-8">
+  <!-- Uten denne vil norske tegn som æ, ø, å vises feil -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Får innholdet til å tilpasse seg skjermen -->
+
+  <title>ARTIFICER</title>
+
+  <!--
+    Bruker systemfonter som allerede er installert på datamaskinen:
+      Monospace: Consolas (Windows), Menlo (Mac), DejaVu Sans Mono (Linux)
+      UI/overskrifter: Segoe UI (Windows), system-ui (Mac), Ubuntu (Linux)
+  -->
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/sensors.css">
+  <link rel="stylesheet" href="css/task3.css">
+  <link rel="stylesheet" href="css/nodered.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ══ SIDEPANEL ══ -->
+  <!-- Bruker nav-tag for semantisk HTML — skjermlesere gjenkjenner dette som navigasjon -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span data-i18n="brand">ARTIFICER</span>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label" data-i18n="nav_home">Hjem</div>
+
+      <!-- Bruker button i stedet for a-tag fordi vi ikke skifter url bare div -->
+      <!-- data-page leses av go() for å markere riktig menyvalg som aktivt -->
+      <button class="nav-link active" data-page="home"     onclick="go('home')">
+        <span class="nav-icon"></span><span data-i18n="nav_home">Hjem</span>
+      </button>
+      <button class="nav-link"        data-page="sensors"  onclick="go('sensors')">
+        <span class="nav-icon"></span><span data-i18n="nav_sensors">Sensordata</span>
+      </button>
+      <button class="nav-link"        data-page="role"     onclick="go('role')">
+        <span class="nav-icon"></span><span data-i18n="role_title">Velg rolle</span>
+      </button>
+      <button class="nav-link"        data-page="settings" onclick="go('settings')">
+        <span class="nav-icon"></span><span data-i18n="settings_title">Innstillinger</span>
+      </button>
+
+      <div class="nav-label" style="margin-top:6px" data-i18n="nav_tasks">Oppgaver</div>
+
+      <button class="nav-link" data-page="ming" onclick="go('ming')">
+        <span class="nav-icon"></span>MING
+      </button>
+
+      <!-- nav-sub gir innrykk og en vertikal linje som viser hierarki -->
+      <div class="nav-sub">
+        <button class="nav-link" data-page="mqtt" onclick="go('mqtt')">
+          <span class="nav-icon"></span>MQTT
+        </button>
+        <div class="nav-sub">
+          <button class="nav-link" data-page="mqtt-t1" onclick="go('mqtt-t1')"><span class="nav-icon"></span><span data-i18n="mqtt_task1">Oppgave 1</span></button>
+          <button class="nav-link" data-page="mqtt-t2" onclick="go('mqtt-t2')"><span class="nav-icon"></span><span data-i18n="mqtt_task2">Oppgave 2</span></button>
+          <button class="nav-link" data-page="task3"   onclick="go('task3')"  ><span class="nav-icon"></span><span data-i18n="mqtt_task3">Oppgave 3</span></button>
+          <button class="nav-link" data-page="task4"   onclick="go('task4')"  ><span class="nav-icon"></span><span data-i18n="mqtt_task4">Oppgave 4</span></button>
+        </div>
+        <button class="nav-link" data-page="influx"  onclick="go('influx')" ><span class="nav-icon"></span>InfluxDB</button>
+        <div class="nav-sub">
+          <button class="nav-link" data-page="influx-t1"  onclick="go('influx-t1')" ><span class="nav-icon"></span><span data-i18n="influx_task1">Oppgave 1</span></button>
+          <button class="nav-link" data-page="influx-t2"  onclick="go('influx-t2')" ><span class="nav-icon"></span><span data-i18n="influx_task2">Oppgave 2</span></button>
+        </div>
+        <button class="nav-link" data-page="nodered" onclick="go('nodered')"><span class="nav-icon"></span>Node-RED</button>
+        <div class="nav-sub">
+          <button class="nav-link" data-page="nodered-t1" onclick="go('nodered-t1')"><span class="nav-icon"></span><span data-i18n="nodered_task1">Oppgave 1</span></button>
+          <button class="nav-link" data-page="nodered-t2" onclick="go('nodered-t2')"><span class="nav-icon"></span><span data-i18n="nodered_task2">Oppgave 2</span></button>
+        </div>
+        <button class="nav-link" data-page="grafana" onclick="go('grafana')"><span class="nav-icon"></span>Grafana</button>
+        <div class="nav-sub">
+          <button class="nav-link" data-page="grafana-t1" onclick="go('grafana-t1')"><span class="nav-icon"></span><span data-i18n="grafana_task1">Oppgave 1</span></button>
+          <button class="nav-link" data-page="grafana-t2" onclick="go('grafana-t2')"><span class="nav-icon"></span><span data-i18n="grafana_task2">Oppgave 2</span></button>
+        </div>
+      </div>
+
+      <div class="nav-label" style="margin-top:6px" data-i18n="nav_manual">Manual</div>
+      <button class="nav-link" data-page="student" onclick="go('student')"><span class="nav-icon"></span><span data-i18n="role_student">Elev</span></button>
+      <button class="nav-link" data-page="teacher" onclick="go('teacher')"><span class="nav-icon"></span><span data-i18n="role_teacher">Lærer</span></button>
+    </div>
+  </nav>
+
+  <!-- ══ HOVEDINNHOLD ══ -->
+  <main>
+    <div class="topbar">
+      <div id="breadcrumb"><span data-i18n="nav_home">Hjem</span></div>
+      <!-- Viser hvilken "versjon" av språket -->
+      <button id="lang-toggle" onclick="toggleLang()">🇬🇧 EN</button>
+    </div>
+
+    <div class="content">
+
+      <!-- ══ HJEMSIDE ══ -->
+      <!-- "active" er hardkodet her så hjemesiden vises uten å vente på JavaScript -->
+      <div id="page-home" class="page-view active">
+        <h1 class="page-title" data-i18n="home_headline">IIoT i en skoeske</h1>
+        <p  class="page-sub"   data-i18n="home_sub">En kompakt undervisningsplattform.</p>
+        <div class="grid-auto">
+          <button class="card" onclick="go('sensors')">
+            <div class="card-icon"></div>
+            <strong data-i18n="home_card_sensors_title">Live sensordata</strong>
+            <span   data-i18n="home_card_sensors_desc">Se sanntidsavlesninger.</span>
+          </button>
+          <button class="card" onclick="go('ming')">
+            <div class="card-icon"></div>
+            <strong>MING</strong>
+            <span data-i18n="ming_sub">Velg en modul.</span>
+          </button>
+          <button class="card" onclick="go('task3')">
+            <div class="card-icon"></div>
+            <strong data-i18n="home_card_t3_title">MQTT Oppgave 3</strong>
+            <span   data-i18n="home_card_t3_desc">Klikk og plasser piler.</span>
+          </button>
+          <button class="card" onclick="go('task4')">
+            <div class="card-icon"></div>
+            <strong data-i18n="home_card_t4_title">Node-RED Simulator</strong>
+            <span   data-i18n="home_card_t4_desc">Bygg en Node-RED-flyt.</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ ROLLEVALG ══ -->
+      <div id="page-role" class="page-view">
+        <h1 class="page-title" data-i18n="role_title">Velg rolle</h1>
+        <p  class="page-sub"   data-i18n="role_sub">Velg om du er elev eller lærer.</p>
+        <div class="grid">
+          <button class="card" onclick="go('student')">
+            <strong data-i18n="role_student">Elev</strong>
+            <span   data-i18n="role_studentSub">Elevveiledning og oppgaver.</span>
+          </button>
+          <button class="card" onclick="go('teacher')">
+            <strong data-i18n="role_teacher">Lærer</strong>
+            <span   data-i18n="role_teacherSub">Lærerveiledning og støtte.</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ ELEVVEILEDNING ══ -->
+      <div id="page-student" class="page-view">
+        <h1 class="page-title" data-i18n="student_title">Elevveiledning</h1>
+        <p  class="page-sub"   data-i18n="student_sub">Din guide til MING-oppgavene.</p>
+        <div class="grid">
+          <button class="card" onclick="go('ming')">
+            <strong data-i18n="manual_openMING">Åpne MING-oppgaver</strong>
+            <span   data-i18n="manual_openMINGsub">MQTT, InfluxDB, Node-RED, Grafana</span>
+          </button>
+          <button class="card" onclick="go('role')">
+            <strong data-i18n="manual_back">Tilbake</strong>
+            <span   data-i18n="manual_backSub">Til rollevalg.</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ LÆRERVEILEDNING ══ -->
+      <div id="page-teacher" class="page-view">
+        <h1 class="page-title" data-i18n="teacher_title">Lærerveiledning</h1>
+        <p  class="page-sub"   data-i18n="teacher_sub">Din guide til undervisning med MING-plattformen.</p>
+        <div class="grid">
+          <button class="card" onclick="go('ming')">
+            <strong data-i18n="manual_openMING">Åpne MING-oppgaver</strong>
+            <span   data-i18n="manual_openMINGsub">MQTT, InfluxDB, Node-RED, Grafana</span>
+          </button>
+          <button class="card" onclick="go('role')">
+            <strong data-i18n="manual_back">Tilbake</strong>
+            <span   data-i18n="manual_backSub">Til rollevalg.</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ INNSTILLINGER ══ -->
+      <div id="page-settings" class="page-view">
+        <h1 class="page-title" data-i18n="settings_title">Innstillinger</h1>
+        <p  class="page-sub"   data-i18n="settings_sub">Konfigurer preferansene dine her.</p>
+        <div class="card" style="max-width:420px;cursor:default;display:block;">
+          <strong style="margin-bottom:12px;display:block;">Language / Språk</strong>
+          <div style="display:flex;gap:10px;">
+            <button onclick="setLang('en')" style="flex:1;padding:10px;background:var(--panel);border:1px solid var(--border);color:var(--gold);border-radius:8px;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:700;" data-i18n="langEN">English</button>
+            <button onclick="setLang('no')" style="flex:1;padding:10px;background:var(--panel);border:1px solid var(--border);color:var(--gold);border-radius:8px;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:700;" data-i18n="langNO">Norsk</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ MING-HUB ══ -->
+      <div id="page-ming" class="page-view">
+        <h1 class="page-title" data-i18n="ming_title">MING</h1>
+        <p  class="page-sub"   data-i18n="ming_sub">Velg en modul.</p>
+        <div class="grid">
+          <button class="card" onclick="go('mqtt')"   ><strong>MQTT</strong>    <span data-i18n="ming_mqttSub">Meldingsprotokoll.</span></button>
+          <button class="card" onclick="go('influx')" ><strong>InfluxDB</strong> <span data-i18n="ming_influxSub">Tidsserie-database.</span></button>
+          <button class="card" onclick="go('nodered')"><strong>Node-RED</strong> <span data-i18n="ming_noderedSub">Visuelle flyter.</span></button>
+          <button class="card" onclick="go('grafana')"><strong>Grafana</strong>  <span data-i18n="ming_grafanaSub">Visualisering.</span></button>
+        </div>
+      </div>
+
+      <!-- ══ MQTT — oppgavevalg ══ -->
+      <div id="page-mqtt" class="page-view">
+        <h1 class="page-title" data-i18n="mqtt_title">MQTT</h1>
+        <p  class="page-sub"   data-i18n="mqtt_sub">Velg en oppgave.</p>
+        <div class="grid">
+          <button class="card" onclick="go('mqtt-t1')"><strong data-i18n="mqtt_task1">Oppgave 1</strong><span data-i18n="mqtt_task1sub">Enkel testflyt.</span></button>
+          <button class="card" onclick="go('mqtt-t2')"><strong data-i18n="mqtt_task2">Oppgave 2</strong><span data-i18n="mqtt_task2sub">Utforsk videre.</span></button>
+          <button class="card" onclick="go('task3')"  ><strong data-i18n="mqtt_task3">Oppgave 3</strong><span data-i18n="mqtt_task3sub">Klikk og plasser.</span></button>
+          <button class="card" onclick="go('task4')"  ><strong>Oppgave 4</strong><span data-i18n="home_card_t4_desc">Node-RED simulator.</span></button>
+        </div>
+        <button class="small-link" onclick="go('ming')">← MING</button>
+      </div>
+
+      <!-- ══ MQTT OPPGAVE 1 — plassholder, innhold legges til senere ══ -->
+      <div id="page-mqtt-t1" class="page-view">
+        <h1 class="page-title" data-i18n="mqtt_t1_title">MQTT – Oppgave 1</h1>
+        <p  class="page-sub"   data-i18n="mqtt_t1_placeholder">[ Sett inn oppgaveinnhold her ]</p>
+        <button class="small-link" onclick="go('mqtt')" data-i18n="mqtt_t1_back">← Tilbake til MQTT-oppgaver</button>
+      </div>
+
+      <!-- ══ MQTT OPPGAVE 2 — plassholder ══ -->
+      <div id="page-mqtt-t2" class="page-view">
+        <h1 class="page-title" data-i18n="mqtt_t2_title">MQTT – Oppgave 2</h1>
+        <p  class="page-sub"   data-i18n="mqtt_t2_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('mqtt')" data-i18n="mqtt_t2_back">← Tilbake til MQTT-oppgaver</button>
+      </div>
+
+      <!-- ══ INFLUXDB — oppgavevalg + plassholdere ══ -->
+      <div id="page-influx" class="page-view">
+        <h1 class="page-title" data-i18n="influx_title">InfluxDB</h1>
+        <p  class="page-sub"   data-i18n="influx_sub">Velg en oppgave.</p>
+        <div class="grid">
+          <button class="card" onclick="go('influx-t1')"><strong data-i18n="influx_task1">Oppgave 1</strong><span data-i18n="influx_task1sub">Kom i gang.</span></button>
+          <button class="card" onclick="go('influx-t2')"><strong data-i18n="influx_task2">Oppgave 2</strong><span data-i18n="influx_task2sub">Spørringer på data.</span></button>
+        </div>
+        <button class="small-link" onclick="go('ming')">← MING</button>
+      </div>
+      <div id="page-influx-t1" class="page-view">
+        <h1 class="page-title" data-i18n="influx_t1_title">InfluxDB – Oppgave 1</h1>
+        <p  class="page-sub"   data-i18n="influx_t1_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('influx')" data-i18n="influx_t1_back">← Tilbake</button>
+      </div>
+      <div id="page-influx-t2" class="page-view">
+        <h1 class="page-title" data-i18n="influx_t2_title">InfluxDB – Oppgave 2</h1>
+        <p  class="page-sub"   data-i18n="influx_t2_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('influx')" data-i18n="influx_t2_back">← Tilbake</button>
+      </div>
+
+      <!-- ══ NODE-RED — oppgavevalg + plassholdere ══ -->
+      <div id="page-nodered" class="page-view">
+        <h1 class="page-title" data-i18n="nodered_title">Node-RED</h1>
+        <p  class="page-sub"   data-i18n="nodered_sub">Velg en oppgave.</p>
+        <div class="grid">
+          <button class="card" onclick="go('nodered-t1')"><strong data-i18n="nodered_task1">Oppgave 1</strong><span data-i18n="nodered_task1sub">Kom i gang.</span></button>
+          <button class="card" onclick="go('nodered-t2')"><strong data-i18n="nodered_task2">Oppgave 2</strong><span data-i18n="nodered_task2sub">Avanserte flyter.</span></button>
+        </div>
+        <button class="small-link" onclick="go('ming')">← MING</button>
+      </div>
+      <div id="page-nodered-t1" class="page-view">
+        <h1 class="page-title" data-i18n="nodered_t1_title">Node-RED – Oppgave 1</h1>
+        <p  class="page-sub"   data-i18n="nodered_t1_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t1_back">← Tilbake</button>
+      </div>
+      <div id="page-nodered-t2" class="page-view">
+        <h1 class="page-title" data-i18n="nodered_t2_title">Node-RED – Oppgave 2</h1>
+        <p  class="page-sub"   data-i18n="nodered_t2_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t2_back">← Tilbake</button>
+      </div>
+
+      <!-- ══ GRAFANA — oppgavevalg + plassholdere ══ -->
+      <div id="page-grafana" class="page-view">
+        <h1 class="page-title" data-i18n="grafana_title">Grafana</h1>
+        <p  class="page-sub"   data-i18n="grafana_sub">Velg en oppgave.</p>
+        <div class="grid">
+          <button class="card" onclick="go('grafana-t1')"><strong data-i18n="grafana_task1">Oppgave 1</strong><span data-i18n="grafana_task1sub">Første dashboard.</span></button>
+          <button class="card" onclick="go('grafana-t2')"><strong data-i18n="grafana_task2">Oppgave 2</strong><span data-i18n="grafana_task2sub">Avanserte visualiseringer.</span></button>
+        </div>
+        <button class="small-link" onclick="go('ming')">← MING</button>
+      </div>
+      <div id="page-grafana-t1" class="page-view">
+        <h1 class="page-title" data-i18n="grafana_t1_title">Grafana – Oppgave 1</h1>
+        <p  class="page-sub"   data-i18n="grafana_t1_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t1_back">← Tilbake</button>
+      </div>
+      <div id="page-grafana-t2" class="page-view">
+        <h1 class="page-title" data-i18n="grafana_t2_title">Grafana – Oppgave 2</h1>
+        <p  class="page-sub"   data-i18n="grafana_t2_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t2_back">← Tilbake</button>
+      </div>
+
+      <!-- ══ SENSORSIDE ══ -->
+      <!-- Henter live data fra ESP32, faller tilbake til simulerte verdier om enheten er offline -->
+      <div id="page-sensors" class="page-view">
+        <h1 class="page-title" data-i18n="sensors_title">Live sensordata</h1>
+        <p  class="page-sub"   data-i18n="sensors_sub">Sanntidsavlesninger.</p>
+        <div class="sensor-grid">
+          <div class="sensor-card">
+            <div class="sensor-label" data-i18n="sensors_pot">Potensiometer</div>
+            <div>
+              <!-- Oppdateres hvert sekund av JavaScript-pollingsløkken -->
+              <span class="sensor-value" id="pot-value">—</span>
+              <span class="sensor-unit">V</span>
+            </div>
+            <!-- Viser ● LIVE eller ◌ simulert avhengig av om ESP32 svarer -->
+            <div class="sensor-status" id="pot-status"></div>
+          </div>
+          <div class="sensor-card">
+            <div class="sensor-label" data-i18n="sensors_dist">Avstand (VL53L0X)</div>
+            <div>
+              <span class="sensor-value" id="dist-value">—</span>
+              <span class="sensor-unit">mm</span>
+            </div>
+            <div class="sensor-status" id="dist-status"></div>
+          </div>
+        </div>
+        <div class="sensor-log">
+          <div class="sensor-log-title" data-i18n="sensors_log">Logg</div>
+          <!-- Nye logginnlegg legges øverst, maks 10 innlegg om gangen -->
+          <div id="sensor-log-lines"></div>
+        </div>
+      </div>
+
+      <!-- ══ MQTT OPPGAVE 3 — Klikk og Plasser ══ -->
+      <div id="page-task3" class="page-view">
+        <h1 class="page-title" data-i18n="t3_header">MQTT – Oppgave 3</h1>
+
+        <!-- Infoboks som vises før oppgaven starter, skjules av t3Start() -->
+        <div id="t3-infobox" class="infobox">
+          <h4 data-i18n="t3_infoTitle">Forklaring av MQTT-flyt</h4>
+          <p  data-i18n="t3_infoBody">Forklaringstekst.</p>
+          <button class="startbtn" onclick="t3Start()" data-i18n="t3_startBtn">Start oppgave</button>
+        </div>
+
+        <!-- Vises kun når alle 8 soner er riktig fylt -->
+        <div id="t3-complete-banner" class="complete-banner" style="display:none" data-i18n="t3_complete">✓ Fullført!</div>
+        <!-- Kort riktig/feil-tilbakemelding, skjules automatisk etter 1 sekund -->
+        <div id="t3-message" class="messagebox" style="display:none"></div>
+        <!-- Instruksjonsboks, skjult til oppgaven starter -->
+        <div class="taskbox" id="t3-taskbox" style="display:none" data-i18n="t3_taskbox">Instruksjoner.</div>
+
+        <!-- Tre-kolonne diagram: skjult til t3Start() kalles -->
+        <div class="mqtt-layout" id="t3-layout" style="display:none">
+
+          <!-- VENSTRE: sensorer som publiserer -->
+          <div class="mqtt-side">
+            <div class="device-row">
+              <div class="circle"></div>
+              <!-- Etiketter settes av t3RefreshLabels() så de oppdateres ved språkbytte -->
+              <div class="dev-label" id="t3-lbl-temp"></div>
+              <!-- data-expected leses av t3Place() for å sjekke om pilen er riktig -->
+              <div class="dropzone" data-expected="TempPublish" onclick="t3Place(this)">
+                <div data-i18n="t3_clickPlace">Klikk for å plassere</div>
+                <div class="dropzone-hint" data-i18n="t3_hintPublish">Send melding til utgiver</div>
+              </div>
+            </div>
+            <div class="device-row">
+              <div class="circle"></div>
+              <div class="dev-label" id="t3-lbl-hum"></div>
+              <div class="dropzone" data-expected="HumPublish" onclick="t3Place(this)">
+                <div data-i18n="t3_clickPlace">Klikk for å plassere</div>
+                <div class="dropzone-hint" data-i18n="t3_hintPublish">Send melding til utgiver</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MIDTEN: megler-sirkel og pilvelger -->
+          <div class="mqtt-center">
+            <!-- Tekst settes av t3RefreshLabels() — \n blir linjeskift pga white-space:pre-line -->
+            <div class="broker-circle" id="t3-broker-lbl"></div>
+            <div class="arrow-select-box">
+              <div class="arrow-select-title" data-i18n="t3_select">Velg</div>
+              <!-- Pilknapper bygges dynamisk av t3Start() -->
+              <div class="arrow-list" id="t3-arrows"></div>
+            </div>
+          </div>
+
+          <!-- HØYRE: abonnerende klienter -->
+          <div class="mqtt-side">
+            <!-- Klient 1 — abonnerer på Temp -->
+            <div class="device-row">
+              <div class="circle"></div>
+              <div class="dev-label" id="t3-lbl-c1"></div>
+              <div class="dropzone" data-expected="SubTemp"     onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintSubscribe">Motta meldinger fra utgiver</div></div>
+              <div class="dropzone" data-expected="TempPublish" onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintForward">Send melding til abonnent</div></div>
+            </div>
+            <!-- Klient 2 — abonnerer kun på Hum -->
+            <div class="device-row">
+              <div class="circle"></div>
+              <div class="dev-label" id="t3-lbl-c2"></div>
+              <div class="dropzone" data-expected="SubHum"      onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintSubscribe">Motta meldinger fra utgiver</div></div>
+              <div class="dropzone" data-expected="HumPublish"  onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintForward">Send melding til abonnent</div></div>
+            </div>
+            <!-- Klient 3 — abonnerer på Temp -->
+            <div class="device-row">
+              <div class="circle"></div>
+              <div class="dev-label" id="t3-lbl-c3"></div>
+              <div class="dropzone" data-expected="SubTemp"     onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintSubscribe">Motta meldinger fra utgiver</div></div>
+              <div class="dropzone" data-expected="TempPublish" onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintForward">Send melding til abonnent</div></div>
+            </div>
+          </div>
+        </div>
+
+        <button class="small-link" onclick="go('mqtt')">← MQTT</button>
+      </div>
+
+      <!-- ══ NODE-RED OPPGAVE 4 ══ -->
+      <!-- #nr-root er tom — initNodeRed() fyller den med simulator-UI når brukeren navigerer hit -->
+      <div id="page-task4" class="page-view">
+        <div style="margin-bottom:12px">
+          <div class="task-header" data-i18n="nr_title">Sette opp MQTT i Node-RED</div>
+          <div class="task-desc"   data-i18n="nr_desc">Oppgavebeskrivelse.</div>
+        </div>
+        <div id="nr-root"></div>
+        <button class="small-link" style="margin-top:8px" onclick="go('mqtt')">← MQTT</button>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div><!-- /app-shell -->
+
+<!-- JS — i18n først (alt avhenger av t()), så router, så features -->
+<script src="js/i18n.js"></script>
+<script src="js/router.js"></script>
+<script src="js/sensors.js"></script>
+<script src="js/task3.js"></script>
+<script src="js/nodered.js"></script>
+
+</body>
+</html>

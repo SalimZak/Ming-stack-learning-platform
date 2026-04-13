@@ -1,0 +1,123 @@
+/* ── Ytre ramme — sidebar til venstre, innhold til høyre ── */
+.app-shell {
+  display: flex;
+  height: 100vh;        /* fyller hele skjermhøyden */
+  overflow: hidden;     /* bare innholdsområdet skal scrolle, ikke hele siden */
+}
+
+/* ── Sidepanel ── */
+.sidebar {
+  width: var(--sidebar-w);
+  flex: 0 0 var(--sidebar-w);
+  /* flex: 0 0 240px betyr: ikke voks, ikke krymp, hold alltid 240px bred */
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+  transition: transform .25s ease;  /* klar for slide-in animasjon om det legges til later */
+  z-index: 100;
+}
+
+.sidebar-brand {
+  padding: 18px 16px 14px;
+  font-family: var(--font-ui);
+  font-size: 15px; font-weight: 900; letter-spacing: .8px;
+  /* letter-spacing gjør at logotekst ser mer gjennomtenkt ut */
+  color: var(--gold);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+
+.nav-section {
+  padding: 10px 8px;
+  flex: 1;          /* fyller resten av sidepanelets høyde */
+  overflow-y: auto; /* scrollbar kun om nødvendig */
+}
+
+.nav-label {
+  font-size: 9px; font-weight: 800; color: var(--muted);
+  letter-spacing: 1.3px; text-transform: uppercase; padding: 10px 8px 4px;
+}
+
+.nav-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 10px; border-radius: 9px;
+  color: rgba(232,208,168,.65);  /* gull med 65% gjennomsiktighet for inaktiv tilstand */
+  text-decoration: none;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  transition: background .14s, color .14s;
+  /* Nullstiller standard knapp-stiler fra nettleseren */
+  border: none; background: none; width: 100%; text-align: left;
+}
+.nav-link:hover  { background: rgba(255,255,255,.07); color: var(--gold); }
+.nav-link.active {
+  background: rgba(56,184,208,.15);
+  color: var(--cyan);
+  border-left: 2px solid var(--cyan);
+  /* 2px venstre-kant viser hvilken side som er aktiv — vanlig mønster i moderne UI */
+}
+.nav-link .nav-icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+
+.nav-sub {
+  margin-left: 14px;
+  border-left: 1px solid var(--border);
+  /* Venstre-kanten tegner en vertikal linje som kobler undermenyer til sin forelder */
+  padding-left: 6px;
+}
+.nav-sub .nav-link { font-size: 11px; padding: 7px 8px; border-radius: 7px; }
+
+/* ── Språkbytte-knapp ── */
+#lang-toggle {
+  padding: 6px 14px;
+  background: rgba(56,184,208,.08);
+  border: 1px solid rgba(56,184,208,.3);
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 800;
+  border-radius: 9px; cursor: pointer;
+  transition: background .14s; letter-spacing: .5px;
+  flex-shrink: 0;  /* knappen skal ikke krympe om topbaren er smal */
+}
+#lang-toggle:hover { background: rgba(56,184,208,.18); }
+
+/* ── Hovedinnhold ── */
+main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+/* flex: 1 fyller all horisontal plass som ikke er tatt av sidepanelet */
+
+.topbar {
+  height: 44px;
+  flex-shrink: 0;  /* holder topbaren på nøyaktig 44px, krymp aldri */
+  background: rgba(0,0,0,.25); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 20px; gap: 16px;
+}
+
+#breadcrumb { flex: 1; font-size: 11px; color: var(--muted); font-weight: 700; }
+#breadcrumb span { color: var(--cyan); }
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  /* Dette er det eneste elementet som scroller — sidepanel og topbar forblir faste */
+  padding: var(--pad) calc(var(--pad) * 1.4);
+}
+
+/* ── Sidevisninger — SPA-mønster ──
+   Alle sider ligger alltid i DOM-en, men er skjult med display:none.
+   Bare den med .active vises. Ingen HTTP-forespørsler ved navigering. */
+.page-view { display: none; }
+.page-view.active {
+  display: block;
+  animation: fadeSlideIn .22s ease;  /* kort inngangsanimasjon */
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsiv layout ── */
+@media (max-width: 600px) {
+  /* To-kolonne kortgitter kollapser til én kolonne */
+  .grid { grid-template-columns: 1fr; }
+}
