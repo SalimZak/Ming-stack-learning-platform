@@ -265,7 +265,7 @@ function openInfo(){
   document.getElementById('infoPopup').style.display = 'flex';
 }
 
-let score = 0;
+let cardScore = 0;
 function startGame(){
   document.getElementById("startScreen").style.display = "none";
   document.getElementById("task5Page").style.display = "block";
@@ -329,16 +329,17 @@ function handleClick(kort, data){
   setTimeout(function(){
     if(data.correct){
       kort.querySelector(".back").classList.add("correct");
-      score++;
+      cardScore++;
     } else {
       kort.querySelector(".back").classList.add("wrong");
     }
 
     //oppdaterer poenget
-    document.getElementById("score").innerText = score;
+    document.getElementById("score").innerText = cardScore;
     // fullført oppgave etter 7
-    if(score === 7){
+    if(cardScore === 7){
       document.getElementById("completeBanner").style.display = "block";
+      pointSystem("cards", cardScore);
     }
   }, 400);
 }

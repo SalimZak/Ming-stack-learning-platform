@@ -1,8 +1,12 @@
 // ── MQTT OPPGAVE 3 ───────────────────────────────────────────
 
+//lagret med localstorage
+
+
 let t3Selected = null;  // pilen brukeren har valgt
 let t3Correct  = 0;     // antall riktig plasserte piler
 const T3_REQUIRED = 8;  // oppgaven er ferdig når alle 8 soner er fylt
+let score = 0;
 
 // Oppdaterer etiketter i diagrammet — kalles også ved språkbytte
 function t3RefreshLabels() {
@@ -22,6 +26,12 @@ function t3RefreshLabels() {
 
 // Kalles av Start-knappen — skjuler infoboks og viser diagrammet
 function t3Start() {
+
+    //hente lagret data når siden refreasher
+  let data = readData();
+  score = data.tasks["task3"] || 0;
+  scoreT3();
+
   document.getElementById('t3-infobox').style.display = 'none';
   document.getElementById('t3-taskbox').style.display = 'block';
   document.getElementById('t3-layout').style.display  = 'flex';
@@ -29,6 +39,15 @@ function t3Start() {
   t3Correct  = 0;
   t3Selected = null;
   document.getElementById('t3-complete-banner').style.display = 'none';
+
+  // nullstiller dropzones
+  document.querySelectorAll('.dropzone').forEach(z => {
+  z.dataset.tried = ""; // reaster første forsøk
+  z.classList.remove('zone-correct', 'zone-wrong'); // reseter farger
+  z.innerHTML = t('t3_clickPlace'); // tekst blir plassert tilbake
+
+});
+
 
   // Pilene inkluderer duplikater — TempPublish finnes to ganger fordi
   // samme temperaturmelding videresendes til Klient 1 og Klient 3
@@ -63,7 +82,10 @@ function t3SelectArrow(btn, arrow) {
 // Kalles når brukeren klikker en dropsone
 function t3Place(zone) {
   if (zone.classList.contains('zone-correct')) return;  // allerede fylt, ignorer
-  if (!t3Selected) return;                              // ingen pil valgt, ignorer
+  if (!t3Selected) return;  // ingen pil valgt, ignorer
+  //Sjekk om det er riktig på første forsøk
+  const correctFirst = !zone.dataset.tried;
+  zone.dataset.tried = "correct";
 
   const ok = t3Selected.type === zone.dataset.expected;
 
@@ -73,6 +95,13 @@ function t3Place(zone) {
   if (ok) {
     zone.classList.add('zone-correct');
     t3Correct++;
+    //sette poengene i localstorage sitt system
+    if (correctFirst) {
+    score++;
+    // lagre pointsystem
+    pointSystem("task3", score);
+    scoreT3();
+}
     t3ShowMsg(t('t3_valid'), true);
     if (t3Correct >= T3_REQUIRED) {
       document.getElementById('t3-complete-banner').style.display = 'block';
@@ -108,3 +137,9 @@ function t3ShowMsg(text, ok) {
   el.style.display = 'block';
   setTimeout(() => { el.style.display = 'none'; }, 1000);
 }
+
+  //oppdaterer poenget for oppgaven
+  function scoreT3() {
+  document.getElementById("t3-score").textContent = "Poeng: " + score;
+}
+

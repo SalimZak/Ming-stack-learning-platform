@@ -102,6 +102,18 @@ main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
   /* Dette er det eneste elementet som scroller — sidepanel og topbar forblir faste */
   padding: var(--pad) calc(var(--pad) * 1.4);
 }
+.reset-btn {
+  flex: 1;
+  padding: 10px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--gold);
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+}
 
 /* ── Sidevisninger — SPA-mønster ──
    Alle sider ligger alltid i DOM-en, men er skjult med display:none.

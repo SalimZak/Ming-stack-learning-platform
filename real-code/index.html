@@ -99,6 +99,8 @@
       <div id="breadcrumb"><span data-i18n="nav_home">Hjem</span></div>
       <!-- Viser hvilken "versjon" av språket -->
       <button id="lang-toggle" onclick="toggleLang()">🇬🇧 EN</button>
+      <!-- Score fra menyen -->
+      <div id="fellesScore">0</div>
     </div>
 
     <div class="content">
@@ -153,7 +155,7 @@
         <h1 class="page-title" data-i18n="student_title">Elevveiledning</h1>
         <p  class="page-sub"   data-i18n="student_sub">Din guide til MING-oppgavene.</p>
         <div class="grid">
-          <button class="card" onclick="go('ming')">
+          <button class="card" onclick="setManual('student'); go('ming')">
             <strong data-i18n="manual_openMING">Åpne MING-oppgaver</strong>
             <span   data-i18n="manual_openMINGsub">MQTT, InfluxDB, Node-RED, Grafana</span>
           </button>
@@ -169,7 +171,7 @@
         <h1 class="page-title" data-i18n="teacher_title">Lærerveiledning</h1>
         <p  class="page-sub"   data-i18n="teacher_sub">Din guide til undervisning med MING-plattformen.</p>
         <div class="grid">
-          <button class="card" onclick="go('ming')">
+          <button class="card" onclick="setManual('teacher'); go('ming')">
             <strong data-i18n="manual_openMING">Åpne MING-oppgaver</strong>
             <span   data-i18n="manual_openMINGsub">MQTT, InfluxDB, Node-RED, Grafana</span>
           </button>
@@ -189,6 +191,7 @@
           <div style="display:flex;gap:10px;">
             <button onclick="setLang('en')" style="flex:1;padding:10px;background:var(--panel);border:1px solid var(--border);color:var(--gold);border-radius:8px;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:700;" data-i18n="langEN">English</button>
             <button onclick="setLang('no')" style="flex:1;padding:10px;background:var(--panel);border:1px solid var(--border);color:var(--gold);border-radius:8px;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:700;" data-i18n="langNO">Norsk</button>
+            <button class="reset-btn" onclick="resetData()">Reset saved data</button>
           </div>
         </div>
       </div>
@@ -337,7 +340,8 @@
           <p  data-i18n="t3_infoBody">Forklaringstekst.</p>
           <button class="startbtn" onclick="t3Start()" data-i18n="t3_startBtn">Start oppgave</button>
         </div>
-
+        <!-- poeng score -->
+        <div id="t3-score">Score: 0</div>
         <!-- Vises kun når alle 8 soner er riktig fylt -->
         <div id="t3-complete-banner" class="complete-banner" style="display:none" data-i18n="t3_complete">✓ Fullført!</div>
         <!-- Kort riktig/feil-tilbakemelding, skjules automatisk etter 1 sekund -->
@@ -431,6 +435,68 @@
 <script src="js/sensors.js"></script>
 <script src="js/task3.js"></script>
 <script src="js/nodered.js"></script>
+
+<script>
+//local storage
+const mainData = {
+  highscore: 0, currentPage: "home", manual: "student", tasks: {}
+};
+//laste data
+function readData() {
+  return JSON.parse(localStorage.getItem("artificer_data")) || mainData;
+}
+//lagre data
+function writeData(data) {
+  localStorage.setItem("artificer_data", JSON.stringify(data));
+}
+// lagrer poeng score og sette de sammen
+function pointSystem(task, points) {
+  let data = readData();
+  data.tasks[task] = points; // lagerer poeng fra oppgaven
+
+  //summerer
+  let totalPoints = 0;
+  Object.values(data.tasks).forEach(value => {
+    totalPoints += value; // legger til poengene
+  });
+  data.highscore = totalPoints; 
+  writeData(data);
+
+  //oppdaterer score i menyen
+  menyScore();
+}
+//felles poengscore i menybaren
+function menyScore() {
+  let el = readData();
+  let data = document.getElementById("fellesScore");
+
+  if (data) {
+    data.textContent = el.highscore;
+  }
+}
+
+
+// lagrer siden brukeren jobber på
+function savePage(page) {
+  let data = readData();
+  data.currentPage = page; // lagrer side
+  writeData(data);
+}
+
+// lagrer manualvalg
+function setManual(type) {
+  let data = readData();
+  data.manual = type; //lagrer manual
+  writeData(data);
+}
+
+//reaster lagret data 
+function resetData() {
+  localStorage.removeItem("artificer_data");
+  location.reload();
+}
+</script>
+
 
 </body>
 </html>

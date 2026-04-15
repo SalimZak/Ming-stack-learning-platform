@@ -102,12 +102,9 @@ canvas{
 <div id="start" class="container">
   <h2>Catch the object game</h2>
   </p>Fang så mange sensorverdier som mulig innen 60 sekunder ved hjelp av venstre og høyre piltast</p>
-  </p>Grønne verdier er akseptable og skal fanges, mens røde verdier representerer støy og bør unngås</p>
-  </p>Gyldige verdier: Temperatur: 9–27°C, Fuktighet: 40–60 %RH, Vibrasjon: 0–5 mm/s</p>
-  </p>Ugyldige verdier inkluderer "ERROR", "NaN" og ekstreme målinger</p>
-  </p>Vær obs på at noen ugyldige verdier(Røde) kan være makert som gyldige (Grønne)</p>
-  </p>Det er +3 poeng for å fange riktige objekter og -1 poeng for å fange feil objekter</p>
-  </p>Resultatet vil bli visualisert som kakediagram og stolpediagram. Der brukeren kan analysere resultatet</p>
+  </p>Gyldige verdier: Fuktighet: 40–60 %RH, alt utenfor er ugyldige</p>
+  </p>Det er +2 poeng for å fange riktige objekter og -1 poeng for å fange feil objekter</p>
+  </p>Resultatet vil bli visualisert som kakediagram, stolpediagram og graf. Der du kan analysere resultatet</p>
   <button class="startbtn" onclick="startSpill()">Start</button>
 </div>
 
@@ -131,7 +128,7 @@ canvas{
 <script>
 
 // variabler
-let tid=20;
+let tid=60;
 let score=0;
 let spillerX=100; // start posisjon
 let spillStarter=false; 
@@ -187,8 +184,22 @@ function lagObjekt(){
   const el = document.createElement("div"); // lag nytt div-element og legg til CSS-klasse
   el.classList.add("objekt");
 
-  let verdi = Math.floor(Math.random()*101);; // gi random verdi
-  let gyldig = (verdi >= 40 && verdi <= 60);  // starter med å sette grense for gyldig verdi
+  let gyldig = Math.random() < 0.6; // 60% gyldige verdier
+  let verdi; 
+
+  if(gyldig){
+    verdi = Math.floor(Math.random() * (60 - 40 + 1)) + 40; // 40–60, (maks - min + 1) + min
+  } else {
+    verdi = Math.floor(Math.random()*101); // alle tall mellom 0-100
+
+    //ugyldige verdier mellom 40 til 60 ikke blir markert som feil
+    while(verdi >= 40 && verdi <= 60){
+      verdi = Math.floor(Math.random()*101);
+    }
+  }
+
+
+
   let timeString = timeNow.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true});  // lag tiden US time
   timeNow.setMinutes(timeNow.getMinutes()+1); // objektene sin tid øker med 1 minutt
 
@@ -216,19 +227,23 @@ function lagObjekt(){
       let verdi = parseInt(el.dataset.verdi); //konverterert string til heltall
       let time = el.dataset.time; // tiden på objektet
 
-      if(el.dataset.gyldig==="true"){
-        score += 2; //riktig er 2 poeng
+      if(gyldig){
+        //riktig er 2 poeng 
+        score += 2;
         validCaptured++;
       } else {
-        score-=1; //feil mister poeng
+        score = Math.max(0, score - 1);; //feil, ikke negativ tall, tar minste poeng emmlom 0 og feil.
         invalidCaptured++;
       }
+      //blir sendt til fellesscoren
+      //pointSystem("grafana-t3", score);
+      //document.getElementById("score").textContent = score;
 
 
       // lagre tid verdi på graf
       timeValues.push(time); //tiden på grafen (x-aksen)
       objectValues.push(verdi); // objekt verdiene på grafene (y-aksene)
-      objects.push(gyldig); // lagrer om punktene er gyldige eller ugyldige (for å gjøre de grønn/rød punkter)
+      objects.push(el.dataset.gyldig === "true"); // lagrer om punktene er gyldige eller ugyldige (for å gjøre de grønn/rød punkter)
 
       document.getElementById("score").textContent=score;
       el.remove(); // fjern objekt og beveglese hvis den faller ut
@@ -250,7 +265,7 @@ function stoppSpill(){
   document.getElementById("spill").style.display="none";
   document.getElementById("tid").textContent="-";
   document.getElementById("resultat").style.display="block";
-  kakeDiagram(); //start direkte med kakediagrammet
+  grafDiagram(); //start direkte med graf
 }
 
 // kake
@@ -323,8 +338,8 @@ function grafDiagram(){
     data:{
       labels: timeValues,
       datasets:[
-        {label:"Valid", data: validPoints, borderColor:"green", backgroundColor:"green", showLine:true, tension:0.3, pointRadius: 5},
-        {label:"Unvalid", data: invalidPoints, backgroundColor:"red",showLine:false, pointRadius: 5}
+        {label:"Riktig", data: validPoints, borderColor:"green", backgroundColor:"green", showLine:true, tension:0.3, pointRadius: 5},
+        {label:"Feil", data: invalidPoints, backgroundColor:"red",showLine:false, pointRadius: 5}
       ]
     },
     // utenfor grafen, x-aksen og y aksen

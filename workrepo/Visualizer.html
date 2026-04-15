@@ -325,13 +325,13 @@
     .arrow-btn.selected { background: rgba(56,184,208,.25); border-color: #fff; color: #fff; }
 
     /* Legger til pil-tegn med CSS uten å trenge ekstra HTML-elementer */
-    .arrow-btn.right::after  { content: "▶"; position: absolute; top: 50%; right: 8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
-    .arrow-btn.left::before  { content: "◀"; position: absolute; top: 50%; left:  8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
+    .arrow-btn.right::after  { content: "->"; position: absolute; top: 50%; right: 8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
+    .arrow-btn.left::before  { content: "<-"; position: absolute; top: 50%; left:  8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
     .arrow-btn.selected.right::after  { color: #fff; }
     .arrow-btn.selected.left::before  { color: #fff; }
     .arrow-btn.both  { padding-left: 26px; padding-right: 26px; }
-    .arrow-btn.both::before  { content: "◀"; position: absolute; top: 50%; left:  8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
-    .arrow-btn.both::after   { content: "▶"; position: absolute; top: 50%; right: 8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
+    .arrow-btn.both::before  { content: "<-"; position: absolute; top: 50%; left:  8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
+    .arrow-btn.both::after   { content: "->"; position: absolute; top: 50%; right: 8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
     .arrow-btn.selected.both::before  { color: #fff; }
     .arrow-btn.selected.both::after   { color: #fff; }
 
