@@ -73,8 +73,8 @@ function nrSimLog(root, msg) {
 function nrNodeTile(title, kind) {
   return `<div class="nr-node" draggable="true" data-title="${title}" data-kind="${kind}">
     <div class="nr-node-title">${title}</div>
-    <div class="nr-node-sub">${kind}</div>
-    <div class="nr-node-drag">drag</div>
+    <div class="nr-node-sub">${t('nr_kind_' + kind)}</div>
+    <div class="nr-node-drag">${t('nr_drag')}</div>
   </div>`;
 }
 
@@ -107,7 +107,7 @@ function nrCreateNodeInst(title, x, y) {
   const hasIn   = title !== 'Inject';  // Inject har ingen innport — den starter kjeden
   const hasOut  = title !== 'Debug';   // Debug har ingen utport — den avslutter kjeden
 
-  const bodyHtml = isMQTT  ? `<div class="nr-field"><span>Topic</span>${nrTopicSliderHtml()}</div>` : '';
+  const bodyHtml = isMQTT  ? `<div class="nr-field"><span>${t('nr_topicLabel')}</span>${nrTopicSliderHtml()}</div>` : '';
   const playBtn  = hasPlay ? '<button class="nr-play" title="Inject">&#9654;</button>' : '';
   // &#9654; er HTML-koden for ▶-tegnet
 

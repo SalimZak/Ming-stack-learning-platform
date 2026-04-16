@@ -23,6 +23,9 @@
   <link rel="stylesheet" href="css/sensors.css">
   <link rel="stylesheet" href="css/task3.css">
   <link rel="stylesheet" href="css/nodered.css">
+  <link rel="stylesheet" href="css/grafana-t3.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -84,6 +87,7 @@
         <div class="nav-sub">
           <button class="nav-link" data-page="grafana-t1" onclick="go('grafana-t1')"><span class="nav-icon"></span><span data-i18n="grafana_task1">Oppgave 1</span></button>
           <button class="nav-link" data-page="grafana-t2" onclick="go('grafana-t2')"><span class="nav-icon"></span><span data-i18n="grafana_task2">Oppgave 2</span></button>
+          <button class="nav-link" data-page="grafana-t3" onclick="go('grafana-t3')"><span class="nav-icon"></span><span data-i18n="grafana_task3">Oppgave 3</span></button>
         </div>
       </div>
 
@@ -284,6 +288,7 @@
         <div class="grid">
           <button class="card" onclick="go('grafana-t1')"><strong data-i18n="grafana_task1">Oppgave 1</strong><span data-i18n="grafana_task1sub">Første dashboard.</span></button>
           <button class="card" onclick="go('grafana-t2')"><strong data-i18n="grafana_task2">Oppgave 2</strong><span data-i18n="grafana_task2sub">Avanserte visualiseringer.</span></button>
+          <button class="card" onclick="go('grafana-t3')"><strong data-i18n="grafana_task3">Oppgave 3</strong><span data-i18n="grafana_task3sub">Fang objektet-spill.</span></button>
         </div>
         <button class="small-link" onclick="go('ming')">← MING</button>
       </div>
@@ -296,6 +301,39 @@
         <h1 class="page-title" data-i18n="grafana_t2_title">Grafana – Oppgave 2</h1>
         <p  class="page-sub"   data-i18n="grafana_t2_desc">Fyll inn her.</p>
         <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t2_back">← Tilbake</button>
+      </div>
+
+      <!-- ══ GRAFANA OPPGAVE 3 — Catch the Object ══ -->
+      <div id="page-grafana-t3" class="page-view">
+        <h1 class="page-title" data-i18n="grafana_t3_title">Grafana – Oppgave 3</h1>
+
+        <div id="start" class="container">
+          <h2 data-i18n="gt3_gameTitle">Catch the object game</h2>
+          <p data-i18n="gt3_desc1">Fang så mange sensorverdier som mulig innen 60 sekunder ved hjelp av venstre og høyre piltast</p>
+          <p data-i18n="gt3_desc2">Gyldige verdier: Fuktighet: 40–60 %RH, alt utenfor er ugyldige</p>
+          <p data-i18n="gt3_desc3">Det er +2 poeng for å fange riktige objekter og -1 poeng for å fange feil objekter</p>
+          <p data-i18n="gt3_desc4">Resultatet vil bli visualisert som kakediagram, stolpediagram og graf. Der du kan analysere resultatet</p>
+          <button class="startbtn" onclick="startSpill()" data-i18n="gt3_startBtn">Start</button>
+        </div>
+
+        <div id="topbar">
+          <span data-i18n="gt3_timeLabel">Tid</span>: <span id="tid">60</span> /
+          <span data-i18n="gt3_scoreLabel">Score</span>: <span id="score">0</span>
+        </div>
+
+        <div id="spill">
+          <div id="bruker"></div>
+        </div>
+
+        <div id="resultat">
+          <h2 data-i18n="gt3_dashboard">Dashboard</h2>
+          <button class="resbtn" onclick="kakeDiagram()" data-i18n="gt3_pie">Kakediagram</button>
+          <button class="resbtn" onclick="stolpeDiagram()" data-i18n="gt3_bar">Stolpediagram</button>
+          <button class="resbtn" onclick="grafDiagram()" data-i18n="gt3_graph">Graf</button>
+          <canvas id="chart"></canvas>
+        </div>
+
+        <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t3_back">← Tilbake</button>
       </div>
 
       <!-- ══ SENSORSIDE ══ -->
@@ -435,6 +473,7 @@
 <script src="js/sensors.js"></script>
 <script src="js/task3.js"></script>
 <script src="js/nodered.js"></script>
+<script src="js/grafana-t3.js"></script>
 
 <script>
 //local storage

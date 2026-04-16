@@ -1,0 +1,72 @@
+/* ── Grafana Oppgave 3 — Catch the Object ── */
+
+/* startside */
+#page-grafana-t3 .container {
+  border: 1px solid var(--cyan);
+  background: var(--card);
+  padding: 20px;
+  margin: 20px;
+}
+
+/* knapper */
+.resbtn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: var(--cyan);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* spillet */
+#spill {
+  width: 400px;
+  height: 500px;
+  margin: auto;
+  background: var(--bg2);
+  position: relative;
+  overflow: hidden;
+  display: none;
+}
+
+/* brukeren */
+#bruker {
+  width: 80px;
+  height: 10px;
+  background: var(--cyan);
+  position: absolute;
+  bottom: 10px;
+  left: 140px;
+}
+
+/* objektet */
+.objekt {
+  width: 60px;
+  height: 25px;
+  position: absolute;
+  top: 0;
+  text-align: center;
+  line-height: 25px;
+  font-weight: bold;
+  font-size: 10px;
+}
+
+/* top */
+#topbar {
+  display: none;
+  text-align: center;
+}
+
+/* resultat */
+#resultat {
+  display: none;
+  text-align: center;
+}
+
+/* graf størrelse */
+#page-grafana-t3 canvas {
+  width: 900px;
+  height: 450px;
+  margin: auto;
+  display: block;
+}

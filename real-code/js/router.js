@@ -24,6 +24,7 @@ const BREADCRUMBS = {
   grafana:      () => 'MING → Grafana',
   'grafana-t1': () => `MING → Grafana → ${t('grafana_task1')}`,
   'grafana-t2': () => `MING → Grafana → ${t('grafana_task2')}`,
+  'grafana-t3': () => `MING → Grafana → ${t('grafana_task3')}`,
 };
 
 // Holder styr på hvilken side som vises — brukes av sensor-pollingsløkken
@@ -64,4 +65,7 @@ function toggleLang() {
   setLang(getLang() === 'no' ? 'en' : 'no');
   t3RefreshLabels();   // disse elementene har ikke data-i18n, må oppdateres manuelt
   updateBreadcrumb();
+  // Tilbakestiller Node-RED simulator slik at nodeetiketter bygges på nytt med nytt språk
+  const nrRoot = document.getElementById('nr-root');
+  if (nrRoot && nrRoot._nrInit) { nrRoot._nrInit = false; initNodeRed('nr-root'); }
 }
