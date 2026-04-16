@@ -195,6 +195,7 @@ body {
 <body>
 
 <!-- Task 1 multiplechoice --> 
+ <!--
 <div id="page-mqtt-t1">
 
 <h1 class="page-title">Task 1 Multiplechoice</h1>
@@ -295,6 +296,8 @@ body {
 </div>
 </div>
 
+-->
+
 <!-- Task 2 True/False -->
 <div id="page-mqtt-t2">
 
@@ -376,7 +379,6 @@ body {
 </div>
 </div>
 
-
 <!-- informasjon knapp -->
 <span class="info-box" onclick="openInfo()">i</span>
 
@@ -394,15 +396,15 @@ body {
 function openInfo(){
 
   let text = ""; // tekst i popup
-  if(document.getElementById('page-mqtt-t1').style.display !== 'none'){
-    text = "Dette er en Multiple Choice oppgave for MQTT. Velg riktig svar og lever når du føler deg ferdig. Lykke til!";
-  }
-  else if(document.getElementById('page-mqtt-t2').style.display !== 'none'){
+  //if(document.getElementById('page-mqtt-t1').style.display !== 'none'){
+  //  text = "Dette er en Multiple Choice oppgave for MQTT. Velg riktig svar og lever når du føler deg ferdig. Lykke til!";
+  //}
+  if(document.getElementById('page-mqtt-t2').style.display !== 'none'){
     text = "Dette er en True/False oppgave. Velg riktig svar og lever når du føler deg ferdig. Lykke til!";
   }
-  else if(document.getElementById('task5Page') && document.getElementById('task5Page').style.display !== 'none'){
-    text = "Her skal du finne relevante begreper ved å klikke på kortene.";
-  }
+  //else if(document.getElementById('task5Page') && document.getElementById('task5Page').style.display !== 'none'){
+  //  text = "Her skal du finne relevante begreper ved å klikke på kortene.";
+  //}
 
   // setter teksten i popup
   document.getElementById('popupText').innerText = text;
@@ -502,7 +504,7 @@ function mqttT2Start(){
 //skjuler infoside og mc, og viser mc oppgave. nullstiller valgte svar
   document.getElementById('mqttT2-infobox').style.display='none'; 
   document.getElementById('mqttT2-taskbox').style.display='block'; 
-  document.getElementById('page-mqtt-t1').style.display='none'; 
+  // document.getElementById('page-mqtt-t1').style.display='none'; 
   selectedAnswersTF = [];
   taskFinishedTF = false;
 }
