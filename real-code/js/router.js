@@ -25,6 +25,7 @@ const BREADCRUMBS = {
   'grafana-t1': () => `MING → Grafana → ${t('grafana_task1')}`,
   'grafana-t2': () => `MING → Grafana → ${t('grafana_task2')}`,
   'grafana-t3': () => `MING → Grafana → ${t('grafana_task3')}`,
+  'grafana-t4': () => `MING → Grafana → ${t('grafana_task4')}`,
 };
 
 // Holder styr på hvilken side som vises — brukes av sensor-pollingsløkken

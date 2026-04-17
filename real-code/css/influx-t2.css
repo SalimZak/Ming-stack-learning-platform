@@ -1,0 +1,109 @@
+/* ── InfluxDB Oppgave 2 — Sensor Measurement ── */
+
+/* Prompt-rad med de tre kortene side om side */
+#it2-prompt {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+/* Felles stil for alle tre kortene */
+.it2-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  min-width: 160px;
+  flex: 1 1 160px;
+}
+
+.it2-box-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .9px;
+  margin-bottom: 8px;
+}
+
+/* Målområde-kortet — fremhevet med cyan kant */
+#it2-target-box {
+  border-color: var(--cyan);
+}
+
+#it2-range {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--cyan);
+}
+
+/* Live avlesning-kortet */
+#it2-live-value {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--gold);
+}
+
+#it2-live-status {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  font-weight: 700;
+}
+
+/* Nedtellingskortet */
+#it2-timer-val {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--cyan);
+  transition: color .3s;
+}
+
+/* Runde-etikett over prompt-kortene */
+#it2-round {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+/* Databasetabell */
+#it2-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+#it2-table th {
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  font-size: 11px;
+  background: rgba(0,0,0,.18);
+}
+
+#it2-table td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+#it2-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Vellykket rad — status-kolonne er grønn */
+.it2-status-ok {
+  color: #4ade80;
+  font-weight: 700;
+}

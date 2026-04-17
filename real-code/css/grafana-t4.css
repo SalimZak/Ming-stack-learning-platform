@@ -1,0 +1,117 @@
+/* ── Grafana Oppgave 4 — Live Dashboard Simulation ── */
+
+/* Grafana-panel-wrapper — mørk bakgrunn med cyan kant, ligner ekte Grafana */
+#gt4-panel {
+  background: var(--bg2);
+  border: 1px solid var(--cyan);
+  border-radius: var(--radius);
+  padding: 14px 18px 18px;
+  margin-bottom: 20px;
+}
+
+#gt4-panel-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .9px;
+  margin-bottom: 10px;
+}
+
+/* Graf-canvas inne i panelet */
+#gt4-chart {
+  width: 100%;
+  max-height: 260px;
+}
+
+/* Instruksjonsboks under panelet */
+#gt4-instr {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.gt4-instr-col {
+  flex: 1 1 160px;
+}
+
+.gt4-instr-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .9px;
+  margin-bottom: 6px;
+}
+
+#gt4-instr-range {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--cyan);
+}
+
+#gt4-live-value {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--gold);
+}
+
+#gt4-live-src {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* Hold-fremdriftslinje */
+#gt4-hold-bar {
+  height: 8px;
+  background: rgba(255,255,255,.08);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+#gt4-hold-fill {
+  height: 100%;
+  width: 0%;
+  background: #38B8D0;
+  border-radius: 4px;
+  transition: width .3s, background .3s;
+}
+
+#gt4-status {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-top: 6px;
+  min-height: 16px;
+}
+
+/* InfluxDB skrivelogg */
+#gt4-write-log {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 20px;
+  max-height: 120px;
+  overflow: auto;
+}
+
+.gt4-write-line {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #4ade80;
+  padding: 5px 10px;
+  background: rgba(74,222,128,.06);
+  border: 1px solid rgba(74,222,128,.15);
+  border-radius: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

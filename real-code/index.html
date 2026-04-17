@@ -24,6 +24,8 @@
   <link rel="stylesheet" href="css/task3.css">
   <link rel="stylesheet" href="css/nodered.css">
   <link rel="stylesheet" href="css/grafana-t3.css">
+  <link rel="stylesheet" href="css/influx-t2.css">
+  <link rel="stylesheet" href="css/grafana-t4.css">
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -88,6 +90,7 @@
           <button class="nav-link" data-page="grafana-t1" onclick="go('grafana-t1')"><span class="nav-icon"></span><span data-i18n="grafana_task1">Oppgave 1</span></button>
           <button class="nav-link" data-page="grafana-t2" onclick="go('grafana-t2')"><span class="nav-icon"></span><span data-i18n="grafana_task2">Oppgave 2</span></button>
           <button class="nav-link" data-page="grafana-t3" onclick="go('grafana-t3')"><span class="nav-icon"></span><span data-i18n="grafana_task3">Oppgave 3</span></button>
+          <button class="nav-link" data-page="grafana-t4" onclick="go('grafana-t4')"><span class="nav-icon"></span><span data-i18n="grafana_task4">Oppgave 4</span></button>
         </div>
       </div>
 
@@ -256,7 +259,54 @@
       </div>
       <div id="page-influx-t2" class="page-view">
         <h1 class="page-title" data-i18n="influx_t2_title">InfluxDB – Oppgave 2</h1>
-        <p  class="page-sub"   data-i18n="influx_t2_desc">Fyll inn her.</p>
+
+        <!-- Infobox — vises før oppgaven starter, skjules av it2Start() -->
+        <div id="it2-infobox" class="infobox">
+          <h4 data-i18n="it2_infoTitle">Simuler skriving av sensordata til InfluxDB</h4>
+          <p  data-i18n="it2_infoBody">Oppgavebeskrivelse.</p>
+          <button class="startbtn" onclick="it2Start()" data-i18n="it2_startBtn">Start</button>
+        </div>
+
+        <!-- Spillområde — skjult til it2Start() kalles -->
+        <div id="it2-game" style="display:none">
+
+          <!-- Runde-etikett -->
+          <div id="it2-round"></div>
+
+          <!-- Tre kort side om side: målområde, live avlesning, nedtelling -->
+          <div id="it2-prompt">
+            <div class="it2-box" id="it2-target-box">
+              <div class="it2-box-label" data-i18n="it2_targetLabel">Målområde</div>
+              <div id="it2-range">— mm</div>
+            </div>
+            <div class="it2-box">
+              <div class="it2-box-label" data-i18n="it2_liveLabel">Live avlesning</div>
+              <div id="it2-live-value">— mm</div>
+              <div id="it2-live-status"></div>
+            </div>
+            <div class="it2-box">
+              <div class="it2-box-label" data-i18n="it2_timerLabel">Tid igjen</div>
+              <div id="it2-timer-val">10</div>
+            </div>
+          </div>
+
+          <!-- Databasetabell — fyller seg opp etter hvert som målinger lykkes -->
+          <table id="it2-table">
+            <thead>
+              <tr>
+                <th data-i18n="it2_colTime">Tidsstempel</th>
+                <th data-i18n="it2_colValue">Verdi</th>
+                <th data-i18n="it2_colStatus">Status</th>
+              </tr>
+            </thead>
+            <tbody id="it2-tbody"></tbody>
+          </table>
+
+        </div><!-- /it2-game -->
+
+        <!-- Vises når alle 5 målinger er fullført -->
+        <div id="it2-complete" class="complete-banner" style="display:none" data-i18n="it2_complete">✓ Alle 5 målinger skrevet til InfluxDB!</div>
+
         <button class="small-link" onclick="go('influx')" data-i18n="influx_t2_back">← Tilbake</button>
       </div>
 
@@ -289,6 +339,7 @@
           <button class="card" onclick="go('grafana-t1')"><strong data-i18n="grafana_task1">Oppgave 1</strong><span data-i18n="grafana_task1sub">Første dashboard.</span></button>
           <button class="card" onclick="go('grafana-t2')"><strong data-i18n="grafana_task2">Oppgave 2</strong><span data-i18n="grafana_task2sub">Avanserte visualiseringer.</span></button>
           <button class="card" onclick="go('grafana-t3')"><strong data-i18n="grafana_task3">Oppgave 3</strong><span data-i18n="grafana_task3sub">Fang objektet-spill.</span></button>
+          <button class="card" onclick="go('grafana-t4')"><strong data-i18n="grafana_task4">Oppgave 4</strong><span data-i18n="grafana_task4sub">Live dashbord-simulering.</span></button>
         </div>
         <button class="small-link" onclick="go('ming')">← MING</button>
       </div>
@@ -334,6 +385,58 @@
         </div>
 
         <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t3_back">← Tilbake</button>
+      </div>
+
+      <!-- ══ GRAFANA OPPGAVE 4 — Live Dashboard Simulation ══ -->
+      <div id="page-grafana-t4" class="page-view">
+        <h1 class="page-title" data-i18n="grafana_t4_title">Grafana – Oppgave 4</h1>
+
+        <!-- Infobox — vises før oppgaven starter, skjules av gt4Start() -->
+        <div id="gt4-infobox" class="infobox">
+          <h4 data-i18n="gt4_infoTitle">Live dashbord-simulering</h4>
+          <p  data-i18n="gt4_infoBody">Oppgavebeskrivelse.</p>
+          <button class="startbtn" onclick="gt4Start()" data-i18n="gt4_startBtn">Start</button>
+        </div>
+
+        <!-- Spillområde — skjult til gt4Start() kalles -->
+        <div id="gt4-game" style="display:none">
+
+          <!-- Grafana-panel med linjediagram -->
+          <div id="gt4-panel">
+            <div id="gt4-panel-title" data-i18n="gt4_panelLabel">Avstandssensor (mm)</div>
+            <canvas id="gt4-chart"></canvas>
+          </div>
+
+          <!-- InfluxDB skrivelogg — nye linjer legges øverst -->
+          <div class="taskbox" style="margin-bottom:12px">
+            <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;margin-bottom:6px" data-i18n="gt4_writeLog">InfluxDB skrivelogg</div>
+            <div id="gt4-write-log"></div>
+          </div>
+
+          <!-- Instruksjonsboks: målområde, live avlesning, hold-fremgang -->
+          <div id="gt4-instr">
+            <div class="gt4-instr-col">
+              <div class="gt4-instr-label" data-i18n="gt4_targetLabel">Målområde</div>
+              <div id="gt4-instr-range">— mm</div>
+            </div>
+            <div class="gt4-instr-col">
+              <div class="gt4-instr-label" data-i18n="gt4_liveLabel">Live avlesning</div>
+              <div id="gt4-live-value">— mm</div>
+              <div id="gt4-live-src"></div>
+            </div>
+            <div class="gt4-instr-col">
+              <div class="gt4-instr-label" data-i18n="gt4_holdLabel">Hold-fremgang</div>
+              <div id="gt4-hold-bar"><div id="gt4-hold-fill"></div></div>
+              <div id="gt4-status"></div>
+            </div>
+          </div>
+
+        </div><!-- /gt4-game -->
+
+        <!-- Vises når alle 8 datapunkter er plottet -->
+        <div id="gt4-complete" class="complete-banner" style="display:none" data-i18n="gt4_complete">✓ Dashbordet er fullført!</div>
+
+        <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t4_back">← Tilbake</button>
       </div>
 
       <!-- ══ SENSORSIDE ══ -->
@@ -474,6 +577,9 @@
 <script src="js/task3.js"></script>
 <script src="js/nodered.js"></script>
 <script src="js/grafana-t3.js"></script>
+<script src="js/sensor-task.js"></script>
+<script src="js/InfluxDBT-2.js"></script>
+<script src="js/GrafanaT-4.js"></script>
 
 <script>
 //local storage
