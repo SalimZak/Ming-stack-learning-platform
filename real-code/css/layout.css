@@ -40,6 +40,28 @@
   letter-spacing: 1.3px; text-transform: uppercase; padding: 10px 8px 4px;
 }
 
+/* standard oppgave farge */
+.nav-link {
+  color: white;
+}
+
+/* enklere oppgaver er ikke fullført */
+.nav-link.open {
+  color: red;
+}
+
+/* enklere oppgave er fullført */
+.nav-link.completed {
+  color: white;
+}
+
+/* låst */
+.nav-link.locked {
+  color: gray;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .nav-link {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 10px; border-radius: 9px;

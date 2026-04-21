@@ -162,7 +162,7 @@
         <h1 class="page-title" data-i18n="student_title">Elevveiledning</h1>
         <p  class="page-sub"   data-i18n="student_sub">Din guide til MING-oppgavene.</p>
         <div class="grid">
-          <button class="card" onclick="setManual('student'); go('ming')">
+          <button class="card" onclick="setRole('student'); go('ming')">
             <strong data-i18n="manual_openMING">Åpne MING-oppgaver</strong>
             <span   data-i18n="manual_openMINGsub">MQTT, InfluxDB, Node-RED, Grafana</span>
           </button>
@@ -178,7 +178,7 @@
         <h1 class="page-title" data-i18n="teacher_title">Lærerveiledning</h1>
         <p  class="page-sub"   data-i18n="teacher_sub">Din guide til undervisning med MING-plattformen.</p>
         <div class="grid">
-          <button class="card" onclick="setManual('teacher'); go('ming')">
+          <button class="card" onclick="setRole('teacher'); go('ming')">
             <strong data-i18n="manual_openMING">Åpne MING-oppgaver</strong>
             <span   data-i18n="manual_openMINGsub">MQTT, InfluxDB, Node-RED, Grafana</span>
           </button>
@@ -198,7 +198,10 @@
           <div style="display:flex;gap:10px;">
             <button onclick="setLang('en')" style="flex:1;padding:10px;background:var(--panel);border:1px solid var(--border);color:var(--gold);border-radius:8px;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:700;" data-i18n="langEN">English</button>
             <button onclick="setLang('no')" style="flex:1;padding:10px;background:var(--panel);border:1px solid var(--border);color:var(--gold);border-radius:8px;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:700;" data-i18n="langNO">Norsk</button>
-            <button class="reset-btn" onclick="resetData()">Reset saved data</button>
+          </div>
+          <strong style="margin-bottom:12px;display:block;">Reset saved data</strong>
+          <div style="display:flex;gap:10px;">
+            <button class="reset-btn" onclick="resetData()">Reset</button>
           </div>
         </div>
       </div>
@@ -584,7 +587,7 @@
 <script>
 //local storage
 const mainData = {
-  highscore: 0, currentPage: "home", manual: "student", tasks: {}
+  highscore: 0, role: "student", manual: "student", tasks: {}
 };
 //laste data
 function readData() {
@@ -597,18 +600,23 @@ function writeData(data) {
 // lagrer poeng score og sette de sammen
 function pointSystem(task, points) {
   let data = readData();
-  data.tasks[task] = points; // lagerer poeng fra oppgaven
+
+  //viser statusen i localstroage dersom oppgaven er open og poengene
+  data.tasks[task] = {open: true, points: points};
 
   //summerer
   let totalPoints = 0;
   Object.values(data.tasks).forEach(value => {
-    totalPoints += value; // legger til poengene
+    totalPoints += value.points || 0; // legger til poengene og starter som 0
   });
   data.highscore = totalPoints; 
   writeData(data);
 
   //oppdaterer score i menyen
   menyScore();
+
+  //låste oppgaver funksjonen
+  statusTasks();
 }
 //felles poengscore i menybaren
 function menyScore() {
@@ -620,19 +628,14 @@ function menyScore() {
   }
 }
 
-
-// lagrer siden brukeren jobber på
-function savePage(page) {
-  let data = readData();
-  data.currentPage = page; // lagrer side
-  writeData(data);
-}
-
 // lagrer manualvalg
-function setManual(type) {
+function setRole(type) {
   let data = readData();
+  data.role = type; //lagrer rolle
   data.manual = type; //lagrer manual
   writeData(data);
+  menyScore();
+  statusTasks();
 }
 
 //reaster lagret data 
@@ -640,6 +643,98 @@ function resetData() {
   localStorage.removeItem("artificer_data");
   location.reload();
 }
+
+//sjekker om alle de enklere oppgavene er fullført
+function basicTasks() {
+  let data = readData();
+  const requiredTasks = ["mqtt-t1","mqtt-t2","influx-t1","influx-t2",
+    "nodered-t1","nodered-t2", "grafana-t1","grafana-t2"];
+  //sjekker dersom alle enklere oppgavene er utført
+  const basicCompleted = requiredTasks.every(function(task) {
+    const basicTask = data.tasks[task];
+    return basicTask && basicTask.open; //finnes oppgaven og er den fulført
+  });
+  return basicCompleted;
+}
+
+//låse sider
+function isLocked(page) {
+  let data = readData();
+  if (data.role === "teacher") return false; //læreren har tilgang til alle oppgaver
+
+  //hvis de enklere oppgavene ikke er fullført er vanskligere låst
+  if (!basicTasks()) {
+    return page.includes("task3") || page.includes("task4") || page.endsWith("-t3") || page.endsWith("-t4");
+  }
+  return false;
+}
+
+//oppdater ikonet for låste oppgaver
+function updateIconLock(btn, page, data) {
+  if (isLocked(page)) {
+    // lås for låste oppgaver
+    btn.querySelector(".nav-icon").textContent = "\uD83D\uDD12";
+    // åpen lås når de enklere er fullført
+  } else if (data.tasks[page] && data.tasks[page].open) {
+    btn.querySelector(".nav-icon").textContent = "\uD83D\uDD13";
+
+  } else {
+    // ingen ikon på enklere oppgaver
+    btn.querySelector(".nav-icon").textContent = "";
+  }
+}
+
+//om oppgaven er låst eller ikke gjort eller er ferdig
+function statusTasks() {
+  let data = readData();
+
+  //går gjennom meny knappene med oppgavene
+  document.querySelectorAll(".nav-link").forEach(btn => {
+    let page = btn.dataset.page; //henter siden til knappen
+    if (!page) return; //hopper over siden sin knapp
+    //reseter listen
+    btn.classList.remove("locked", "completed", "open");
+
+    // hvis siden er låst så blir den markert som det
+    if (isLocked(page)) {
+      btn.classList.add("locked");
+      updateIconLock(btn, page, data);
+      return;
+    }
+
+    // sjekker om oppgaven er fullført
+    let basicTask = data.tasks[page];
+    let taskCompleted = basicTask && basicTask.open;
+
+    if (taskCompleted) { //oppgaven er fullført
+      btn.classList.add("completed");
+
+    } else if ((page.includes("-t1") || page.includes("-t2")) && !taskCompleted){ //en av oppgavene i temaet fullført
+      btn.classList.add("open");
+    }
+  
+    updateIconLock(btn, page, data);
+  });
+}
+
+function go(page) {
+  if (isLocked(page)) {
+    alert("Låst oppgave, fullfør de enklere for å få tilgang");
+    return;
+  }
+  // skjuler alle sidene
+  document.querySelectorAll(".page-view").forEach(p => p.classList.remove("active"));
+  // viser kun den siden du klikket på
+  const el = document.getElementById("page-" + page);
+  if (el) el.classList.add("active");
+  statusTasks();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  menyScore();
+  statusTasks();
+});
+
 </script>
 
 

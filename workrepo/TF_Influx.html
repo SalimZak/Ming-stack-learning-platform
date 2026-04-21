@@ -3,7 +3,7 @@
 
 <head>
 <meta charset="UTF-8">
-<title>MQTT Oppgaver</title>
+<title>InfluxDB Oppgave</title>
 
 <style>
 
@@ -299,20 +299,20 @@ body {
 -->
 
 <!-- Task 2 True/False -->
-<div id="page-mqtt-t2">
+<div id="page-influxDB-t2">
 
 <h1 class="page-title">Task 2 True or False</h1>
 
-<div id="mqttT2-infobox" class="infobox">
+<div id="influxDBT2-infobox" class="infobox">
   <h3>True / False Oppgave</h3>
   <p>Informasjon om temaet før oppgaven starter.</p>
   <p>Dette er er true or false oppgave med 10 spørsmål. Kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
-  <button class="startbtn" onclick="mqttT2Start()">Start</button>
+  <button class="startbtn" onclick="influxDBT2Start()">Start</button>
 </div>
 
-<div id="mqttT2-taskbox" style="display:none;">
+<div id="influxDBT2-taskbox" style="display:none;">
 
-<div id="mqttT2-score" class="scoreBox">Poeng Score: 0 / 10</div>
+<div id="influxDBT2-score" class="scoreBox">Poeng Score: 0 / 10</div>
 
 <div class="TFbox" data-correct="1">
   <p>Spørsmål 1?</p>
@@ -374,7 +374,7 @@ body {
   <button onclick="quizSelect(this,0)">False</button>
 </div>
 
-<button class="finishButton" onclick="quizFinish('.TFbox','mqttT2-score')">Lever</button>
+<button class="finishButton" onclick="quizFinish('.TFbox','influxDBT2-score')">Lever</button>
 
 </div>
 </div>
@@ -399,7 +399,7 @@ function openInfo(){
   //if(document.getElementById('page-mqtt-t1').style.display !== 'none'){
   //  text = "Dette er en Multiple Choice oppgave for MQTT. Velg riktig svar og lever når du føler deg ferdig. Lykke til!";
   //}
-  if(document.getElementById('page-mqtt-t2').style.display !== 'none'){
+  if(document.getElementById('page-influxDB-t2').style.display !== 'none'){
     text = "Dette er en True/False oppgave. Velg riktig svar og lever når du føler deg ferdig. Lykke til!";
   }
   //else if(document.getElementById('task5Page') && document.getElementById('task5Page').style.display !== 'none'){
@@ -490,21 +490,21 @@ function quizFinish(boxClass, scoreId){
 }
 
 /* MC oppgave */
-function mqttT1Start(){
+function influxDBT1Start(){
 //skjuler infoside og tf, og viser mc oppgave. nullstiller valgte svar
-  document.getElementById('mqttT1-infobox').style.display='none';
-  document.getElementById('mqttT1-taskbox').style.display='block';
-  document.getElementById('page-mqtt-t2').style.display='none'; 
+  document.getElementById('influxDBT1-infobox').style.display='none';
+  document.getElementById('influxDBT1-taskbox').style.display='block';
+  document.getElementById('page-influxDB-t2').style.display='none'; 
   selectedAnswersMC = [];
   taskFinishedMC = false;
 }
 
 /* TF oppgave */
-function mqttT2Start(){
+function influxDBT2Start(){
 //skjuler infoside og mc, og viser mc oppgave. nullstiller valgte svar
-  document.getElementById('mqttT2-infobox').style.display='none'; 
-  document.getElementById('mqttT2-taskbox').style.display='block'; 
-  // document.getElementById('page-mqtt-t1').style.display='none'; 
+  document.getElementById('influxDBT2-infobox').style.display='none'; 
+  document.getElementById('influxDBT2-taskbox').style.display='block'; 
+  // document.getElementById('page-influxDB-t1').style.display='none'; 
   selectedAnswersTF = [];
   taskFinishedTF = false;
 }
