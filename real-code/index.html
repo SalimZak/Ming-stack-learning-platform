@@ -589,27 +589,27 @@
 const mainData = {
   highscore: 0, role: "student", manual: "student", tasks: {}
 };
-//laste data
+//laste lagret data, tekst til objekt
 function readData() {
-  return JSON.parse(localStorage.getItem("artificer_data")) || mainData;
+  return JSON.parse(localStorage.getItem("artificer_data")) || mainData;//lagret data eller default values
 }
-//lagre data
+//lagrer data, objekt til tekst
 function writeData(data) {
   localStorage.setItem("artificer_data", JSON.stringify(data));
 }
 // lagrer poeng score og sette de sammen
 function pointSystem(task, points) {
-  let data = readData();
+  let data = readData(); //henter lagret data
 
-  //viser statusen i localstroage dersom oppgaven er open og poengene
+  //viser statusen om oppgaven er open/låst og poengene
   data.tasks[task] = {open: true, points: points};
 
-  //summerer
+  //summerer poengene fra de andre oppgavene
   let totalPoints = 0;
-  Object.values(data.tasks).forEach(value => {
-    totalPoints += value.points || 0; // legger til poengene og starter som 0
+  Object.values(data.tasks).forEach(value => { //henter all verdiene fra task
+    totalPoints += value.points || 0; // legger til poengene og 0 som default
   });
-  data.highscore = totalPoints; 
+  data.highscore = totalPoints; //skrevet til og lagrer felles highscoren
   writeData(data);
 
   //oppdaterer score i menyen
@@ -620,9 +620,9 @@ function pointSystem(task, points) {
 }
 //felles poengscore i menybaren
 function menyScore() {
-  let el = readData();
-  let data = document.getElementById("fellesScore");
-
+  let el = readData(); //henter data
+  let data = document.getElementById("fellesScore"); //finne hvor på siden poengene skrives(HTML)
+  // sjekker om elemente finnes og viser totalscore i meny
   if (data) {
     data.textContent = el.highscore;
   }
@@ -640,8 +640,8 @@ function setRole(type) {
 
 //reaster lagret data 
 function resetData() {
-  localStorage.removeItem("artificer_data");
-  location.reload();
+  localStorage.removeItem("artificer_data"); //sletter data
+  location.reload(); //laster siden på nytt
 }
 
 //sjekker om alle de enklere oppgavene er fullført
@@ -650,11 +650,11 @@ function basicTasks() {
   const requiredTasks = ["mqtt-t1","mqtt-t2","influx-t1","influx-t2",
     "nodered-t1","nodered-t2", "grafana-t1","grafana-t2"];
   //sjekker dersom alle enklere oppgavene er utført
-  const basicCompleted = requiredTasks.every(function(task) {
-    const basicTask = data.tasks[task];
+  const basicCompleted = requiredTasks.every(function(task) { //går gjennom listen og sjekker om alle er fullført
+    const basicTask = data.tasks[task]; //henter oppgave fra listen
     return basicTask && basicTask.open; //finnes oppgaven og er den fulført
   });
-  return basicCompleted;
+  return basicCompleted; //sender true dersom alle er fullført og motsatt hvis ikke
 }
 
 //låse sider
@@ -670,6 +670,7 @@ function isLocked(page) {
 }
 
 //oppdater ikonet for låste oppgaver
+//ikon på knapp, sjekker om siden er låst, henter data for status
 function updateIconLock(btn, page, data) {
   if (isLocked(page)) {
     // lås for låste oppgaver
@@ -705,14 +706,14 @@ function statusTasks() {
     // sjekker om oppgaven er fullført
     let basicTask = data.tasks[page];
     let taskCompleted = basicTask && basicTask.open;
-
+    //endrer csss
     if (taskCompleted) { //oppgaven er fullført
       btn.classList.add("completed");
 
     } else if ((page.includes("-t1") || page.includes("-t2")) && !taskCompleted){ //en av oppgavene i temaet fullført
       btn.classList.add("open");
     }
-  
+    // gir riktig ikon
     updateIconLock(btn, page, data);
   });
 }
@@ -729,7 +730,7 @@ function go(page) {
   if (el) el.classList.add("active");
   statusTasks();
 }
-
+// viser riktig status når siden åpner
 document.addEventListener("DOMContentLoaded", () => {
   menyScore();
   statusTasks();

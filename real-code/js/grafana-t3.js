@@ -107,8 +107,7 @@ function lagObjekt(){
         invalidCaptured++;
       }
       //blir sendt til fellesscoren
-      //pointSystem("grafana-t3", score);
-      //document.getElementById("score").textContent = score;
+      pointSystem("grafana-t3", score);;
 
 
       // lagre tid verdi på graf
