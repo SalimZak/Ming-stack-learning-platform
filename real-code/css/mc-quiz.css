@@ -1,0 +1,161 @@
+/* ══════════════════════════════════════════════════════════
+   MC-QUIZ — Delt stilark for alle Multiple Choice oppgaver
+   Brukes av: MQTT T1, InfluxDB T1, Node-RED T1, Grafana T1
+   ══════════════════════════════════════════════════════════ */
+
+/* score boks øverst */
+.mc-score-box {
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+/* spørsmålsboks (MC og TF deler stilen) */
+.MCbox, .TFbox {
+  width: 500px;
+  margin: 20px auto;
+  padding: 25px;
+  border: 2px solid var(--cyan);
+  border-radius: 12px;
+  background: var(--panel);
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.15);
+}
+
+/* spørsmålstekst */
+.MCbox p, .TFbox p {
+  margin-bottom: 15px;
+  font-weight: bold;
+  color: var(--text);
+}
+
+/* svaralternativer */
+.MCbox button, .TFbox button {
+  width: 100%;
+  margin: 8px 0;
+  padding: 12px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--cyan);
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+
+.MCbox button:hover:not(:disabled),
+.TFbox button:hover:not(:disabled) {
+  background: var(--cyan);
+  color: #000;
+}
+
+/* valgt svar (før innlevering) */
+.MCbox button.selected,
+.TFbox button.selected {
+  background: var(--cyan) !important;
+  color: #000 !important;
+}
+
+/* riktig svar (etter innlevering) */
+.MCbox button.correct,
+.TFbox button.correct {
+  background: #1a6b2a !important;
+  color: #fff !important;
+  border-color: #2ecc71;
+}
+
+/* feil valgt svar (etter innlevering) */
+.MCbox button.wrong,
+.TFbox button.wrong {
+  background: #7a1a1a !important;
+  color: #fff !important;
+  border-color: #e74c3c;
+}
+
+/* lever-knapp */
+.mc-finish-btn {
+  display: block;
+  margin: 30px auto;
+  padding: 14px 36px;
+  background: var(--cyan);
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.mc-finish-btn:hover {
+  opacity: 0.85;
+}
+
+/* info-knapp nede til høyre */
+.mc-info-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  border: 2px solid var(--cyan);
+  color: var(--cyan);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  z-index: 100;
+}
+
+/* popup-overlay */
+.mc-popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+}
+
+.mc-popup-overlay.visible {
+  display: flex;
+}
+
+.mc-popup-box {
+  background: var(--panel);
+  padding: 25px;
+  border: 2px solid var(--cyan);
+  border-radius: 10px;
+  width: 350px;
+  text-align: center;
+  color: var(--text);
+}
+
+.mc-popup-box h3 {
+  margin-top: 0;
+  color: var(--cyan);
+}
+
+.mc-popup-close {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: var(--cyan);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 12px;
+}

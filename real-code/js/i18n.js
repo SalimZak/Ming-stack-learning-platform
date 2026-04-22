@@ -128,6 +128,26 @@ const LANGUAGES = {
     home_card_t3_title: 'MQTT Task 3', home_card_t3_desc: 'Click and place arrows to simulate the MQTT publish/subscribe flow.',
     home_card_t4_title: 'Node-RED Simulator', home_card_t4_desc: 'Build a Node-RED flow by dragging nodes onto the canvas and wiring them together.',
     back: 'Back', fillIn: 'Fill in here.',
+    // ── MC Quiz shared ──
+    mc_startBtn: 'Start', mc_finishBtn: 'Submit',
+    mc_score: 'Score',
+    mc_popupTitle: 'Explanation', mc_popupClose: 'Close',
+    // ── MQTT T1 ──
+    mc_mqtt_infoTitle: 'MQTT – Multiple Choice',
+    mc_mqtt_infoBody: 'This is a multiple choice quiz with 10 questions. Each question has 4 options — only one is correct. 1 point per correct answer.',
+    mc_mqtt_info: 'This is a Multiple Choice task for MQTT. Select the correct answer and submit when you are ready. Good luck!',
+    // ── InfluxDB T1 ──
+    mc_influx_infoTitle: 'InfluxDB – Multiple Choice',
+    mc_influx_infoBody: 'This is a multiple choice quiz with 10 questions. Each question has 4 options — only one is correct. 1 point per correct answer.',
+    mc_influx_info: 'This is a Multiple Choice task for InfluxDB. Select the correct answer and submit when you are ready. Good luck!',
+    // ── Node-RED T1 ──
+    mc_nodered_infoTitle: 'Node-RED – Multiple Choice',
+    mc_nodered_infoBody: 'This is a multiple choice quiz with 10 questions. Each question has 4 options — only one is correct. 1 point per correct answer.',
+    mc_nodered_info: 'This is a Multiple Choice task for Node-RED. Select the correct answer and submit when you are ready. Good luck!',
+    // ── Grafana T1 ──
+    mc_grafana_infoTitle: 'Grafana – Multiple Choice',
+    mc_grafana_infoBody: 'This is a multiple choice quiz with 10 questions. Each question has 4 options — only one is correct. 1 point per correct answer.',
+    mc_grafana_info: 'This is a Multiple Choice task for Grafana. Select the correct answer and submit when you are ready. Good luck!',
   },
 
   no: {
@@ -250,6 +270,26 @@ const LANGUAGES = {
     home_card_t3_title: 'MQTT Oppgave 3', home_card_t3_desc: 'Klikk og plasser piler for å simulere MQTT publish/subscribe-flyten.',
     home_card_t4_title: 'Node-RED Simulator', home_card_t4_desc: 'Bygg en Node-RED-flyt ved å dra noder inn på lerretet og koble dem sammen.',
     back: 'Tilbake', fillIn: 'Fyll inn her.',
+    // ── MC Quiz delt ──
+    mc_startBtn: 'Start', mc_finishBtn: 'Lever',
+    mc_score: 'Poeng Score',
+    mc_popupTitle: 'Forklaring', mc_popupClose: 'Lukk',
+    // ── MQTT T1 ──
+    mc_mqtt_infoTitle: 'MQTT – Multiple Choice',
+    mc_mqtt_infoBody: 'Dette er en multiplechoice oppgave med 10 spørsmål. Hvert spørsmål har 4 svaralternativer — kun ett er korrekt. 1 poeng per korrekt svar.',
+    mc_mqtt_info: 'Dette er en Multiple Choice oppgave for MQTT. Velg riktig svar og lever når du føler deg ferdig. Lykke til!',
+    // ── InfluxDB T1 ──
+    mc_influx_infoTitle: 'InfluxDB – Multiple Choice',
+    mc_influx_infoBody: 'Dette er en multiplechoice oppgave med 10 spørsmål. Hvert spørsmål har 4 svaralternativer — kun ett er korrekt. 1 poeng per korrekt svar.',
+    mc_influx_info: 'Dette er en Multiple Choice oppgave for InfluxDB. Velg riktig svar og lever når du føler deg ferdig. Lykke til!',
+    // ── Node-RED T1 ──
+    mc_nodered_infoTitle: 'Node-RED – Multiple Choice',
+    mc_nodered_infoBody: 'Dette er en multiplechoice oppgave med 10 spørsmål. Hvert spørsmål har 4 svaralternativer — kun ett er korrekt. 1 poeng per korrekt svar.',
+    mc_nodered_info: 'Dette er en Multiple Choice oppgave for Node-RED. Velg riktig svar og lever når du føler deg ferdig. Lykke til!',
+    // ── Grafana T1 ──
+    mc_grafana_infoTitle: 'Grafana – Multiple Choice',
+    mc_grafana_infoBody: 'Dette er en multiplechoice oppgave med 10 spørsmål. Hvert spørsmål har 4 svaralternativer — kun ett er korrekt. 1 poeng per korrekt svar.',
+    mc_grafana_info: 'Dette er en Multiple Choice oppgave for Grafana. Velg riktig svar og lever når du føler deg ferdig. Lykke til!',
   }
 };
 
