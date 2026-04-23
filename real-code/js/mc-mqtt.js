@@ -62,12 +62,11 @@ MCQuiz.create = function(namespace) {
 
       if (state.selectedAnswers[i] === correct) score++;
     });
+    pointSystem(mqtt_t1,score);
 
     document.getElementById(scoreElId).textContent =
       `${t('mc_score')}: ${score} / ${qBoxes.length}`;
 
-    // Meld poeng til felles poengsystem
-    pointSystem(ns, score);
   }
 
   /** Starter oppgaven (skjuler infobox, viser taskbox) */
