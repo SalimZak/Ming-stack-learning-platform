@@ -99,15 +99,15 @@ function lagObjekt(){
       let time = el.dataset.time; // tiden på objektet
 
       if(gyldig){
-        //riktig er 2 poeng 
-        score += 2;
+        //riktig er 1 poeng 
+        score += 1;
         validCaptured++;
       } else {
         score = Math.max(0, score - 1);; //feil, ikke negativ tall, tar minste poeng emmlom 0 og feil.
         invalidCaptured++;
       }
       //blir sendt til fellesscoren
-      pointSystem("grafana-t3", score);;
+      pointSystem("grafana-t3", score);
 
 
       // lagre tid verdi på graf
