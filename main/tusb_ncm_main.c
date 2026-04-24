@@ -28,12 +28,16 @@
 #include "tusb_ncm_demo.h"
 #include "driver/i2c_master.h"
 #include "vl53l1x.h"
+#include "led_control.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-ESP_LOGI(TAG, "=== SENSOR TEST START ===");
+
+//ESP_LOGI(TAG, "starting app for RNDIS and webusb");
+//ESP_LOGI(TAG, "=== SENSOR TEST START ===");
 
 static const char *TAG = "NCM/RNDIS";
+
 #define DEF_IP "192.168.4.1"
 static void tinyusb_netif_free_buffer_cb(void *buffer, void *ctx)
 {
@@ -216,7 +220,7 @@ static esp_err_t init_fs(void)
     return ESP_OK;
 }
 
-
+/*
 #define I2C_SCL_GPIO      9
 #define I2C_SDA_GPIO      8
 #define VL53L1X_ADDR_7BIT 0x29
@@ -258,11 +262,11 @@ void app_main(void)
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
+*/
 
 
 
-
-/*void app_main(void)
+void app_main(void)
 {
     ESP_LOGI(TAG, "starting app for RNDIS and webusb");
 
@@ -278,10 +282,13 @@ void app_main(void)
 
     // Initialize SPIFFS
     init_fs();
+
+    // Initialize LED control
+    led_control_init();
     
     ESP_ERROR_CHECK(resetful_server_start(CONFIG_EXAMPLE_WEB_MOUNT_POINT));
 
     tusb_cdc_handler_init();
     
 }
-    */
+    
