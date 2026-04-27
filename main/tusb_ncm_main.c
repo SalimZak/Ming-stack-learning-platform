@@ -29,6 +29,7 @@
 #include "driver/i2c_master.h"
 #include "vl53l1x.h"
 #include "led_control.h"
+#include "sensorer.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -282,6 +283,12 @@ void app_main(void)
 
     // Initialize SPIFFS
     init_fs();
+
+    // initialize i2c og task for senssorer som bruker i2c
+    ESP_ERROR_CHECK(sensors_init());
+    xTaskCreate(tof_sensor, "tof_task", 4096, NULL, 4, NULL);
+    xTaskCreate(press_sensor, "press_task", 4096, NULL, 4, NULL);
+
 
     // Initialize LED control
     led_control_init();
