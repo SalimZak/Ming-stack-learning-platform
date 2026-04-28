@@ -1,6 +1,5 @@
 //  MQTT task 1
 
-
 /* MC oppgave */
 function mqttT1Start(){
   infoBoxText("Dette er en Multiple Choice oppgave for MQTT. Velg riktig svar og lever når du føler deg ferdig. Lykke til!");
