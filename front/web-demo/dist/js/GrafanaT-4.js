@@ -9,6 +9,7 @@ const GT4_POLL        = 500;  // avlesningsintervall i ms
 let _gt4Task      = null;  // aktiv SensorTask-instans
 let _gt4Chart     = null;  // Chart.js-instans for dashbord-panelet
 let _gt4Count     = 0;     // antall datapunkter lagt til grafen
+let _gt4Score     = 0;     // poeng for denne oppgaven
 let _gt4Labels    = [];    // tidsstempler på x-aksen
 let _gt4Values    = [];    // sensorverdier på y-aksen
 
@@ -141,6 +142,11 @@ function gt4StartRound() {
       gt4AddPoint(reading.timestamp, reading.value);
       _gt4Count++;
 
+      // Oppdater poeng
+      _gt4Score++;
+      pointSystem('grafana-t4', Math.min(_gt4Score, GT4_REQUIRED));
+      scoreGt4();
+
       // Vis InfluxDB-skrivebekreftelse
       gt4ShowWriteConfirm(reading);
 
@@ -183,11 +189,18 @@ function gt4Finish() {
   if (doneEl) doneEl.style.display = 'block';
 }
 
+// Oppdaterer poenget for oppgaven
+function scoreGt4() {
+  const el = document.getElementById('gt4-score');
+  if (el) el.textContent = 'Poeng: ' + _gt4Score;
+}
+
 // Kalles av Start-knappen
 function gt4Start() {
   _gt4Count  = 0;
   _gt4Labels = [];
   _gt4Values = [];
+  _gt4Score  = 0;
 
   const infoEl = document.getElementById('gt4-infobox');
   if (infoEl) infoEl.style.display = 'none';
@@ -197,6 +210,7 @@ function gt4Start() {
   if (gameEl) gameEl.style.display = 'block';
 
   gt4BuildChart();
+  scoreGt4();
   gt4StartRound();
 }
 

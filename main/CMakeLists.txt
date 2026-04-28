@@ -1,4 +1,4 @@
-idf_component_register(SRCS "tusb_ncm_main.c" "tusb_cdc_handler.c" "resetful_server.c" "potmeter.cpp" "led_control.c"
+idf_component_register(SRCS "sensorer.c" "tusb_ncm_main.c" "tusb_cdc_handler.c" "resetful_server.c" "potmeter.cpp" "led_control.c"
                        INCLUDE_DIRS ""
                        PRIV_REQUIRES vl53l1x_uld_esp_wrapper esp_driver_gpio vfs spiffs esp_netif esp_http_server json driver
                        )
