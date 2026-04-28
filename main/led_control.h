@@ -6,10 +6,10 @@ extern "C" {
 #endif
 
 // GPIO pins for each LED
-#define LED_M_GPIO  10  // MQTT
-#define LED_I_GPIO  11  // InfluxDB
-#define LED_N_GPIO  12  // Node-RED
-#define LED_G_GPIO  13  // Grafana
+#define LED_M_GPIO  4   // MQTT
+#define LED_I_GPIO  5   // InfluxDB
+#define LED_N_GPIO  6   // Node-RED
+#define LED_G_GPIO  7   // Grafana
 
 // Call once at startup (in app_main)
 void led_control_init(void);

@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<!-- Forteller nettleseren at dette er moderne HTML5 -->
+<html lang="no">
+<!-- lang="no" settes til norsk som standard, oppdateres når brukeren bytter språk -->
+<head>
+  <meta charset="UTF-8">
+  <!-- Uten denne vil norske tegn som æ, ø, å vises feil -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Får innholdet til å tilpasse seg skjermen -->
+
+  <title>ARTIFICER</title>
+
+  <!--
+    Bruker systemfonter som allerede er installert på datamaskinen:
+      Monospace: Consolas (Windows), Menlo (Mac), DejaVu Sans Mono (Linux)
+      UI/overskrifter: Segoe UI (Windows), system-ui (Mac), Ubuntu (Linux)
+  -->
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/sensors.css">
+  <link rel="stylesheet" href="css/task3.css">
+  <link rel="stylesheet" href="css/nodered.css">
+  <link rel="stylesheet" href="css/grafana-t3.css">
+  <link rel="stylesheet" href="css/influx-t2.css">
+  <link rel="stylesheet" href="css/grafana-t4.css">
+  <link rel="stylesheet" href="css/mc-quiz.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ══ SIDEPANEL ══ -->
+  <!-- Bruker nav-tag for semantisk HTML — skjermlesere gjenkjenner dette som navigasjon -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span data-i18n="brand">ARTIFICER</span>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label" data-i18n="nav_home">Hjem</div>
+
+      <!-- Bruker button i stedet for a-tag fordi vi ikke skifter url bare div -->
+      <!-- data-page leses av go() for å markere riktig menyvalg som aktivt -->
+      <button class="nav-link active" data-page="home"     onclick="go('home')">
+        <span class="nav-icon"></span><span data-i18n="nav_home">Hjem</span>
+      </button>
+      <button class="nav-link"        data-page="sensors"  onclick="go('sensors')">
+        <span class="nav-icon"></span><span data-i18n="nav_sensors">Sensordata</span>
+      </button>
+      <button class="nav-link"        data-page="role"     onclick="go('role')">
+        <span class="nav-icon"></span><span data-i18n="role_title">Velg rolle</span>
+      </button>
+      <button class="nav-link"        data-page="settings" onclick="go('settings')">
+        <span class="nav-icon"></span><span data-i18n="settings_title">Innstillinger</span>
+      </button>
+
+      <div class="nav-label" style="margin-top:6px" data-i18n="nav_tasks">Oppgaver</div>
+
+      <button class="nav-link" data-page="ming" onclick="go('ming')">
+        <span class="nav-icon"></span>MING
+      </button>
+
+      <!-- nav-sub gir innrykk og en vertikal linje som viser hierarki -->
+      <div class="nav-sub">
+        <button class="nav-link" data-page="mqtt" onclick="go('mqtt')">
+          <span class="nav-icon"></span>MQTT
+        </button>
+        <div class="nav-sub">
+          <button class="nav-link" data-page="mqtt-t1" onclick="go('mqtt-t1')"><span class="nav-icon"></span><span data-i18n="mqtt_task1">Oppgave 1</span></button>
+          <button class="nav-link" data-page="mqtt-t2" onclick="go('mqtt-t2')"><span class="nav-icon"></span><span data-i18n="mqtt_task2">Oppgave 2</span></button>
+          <button class="nav-link" data-page="task3"   onclick="go('task3')"  ><span class="nav-icon"></span><span data-i18n="mqtt_task3">Oppgave 3</span></button>
+          <button class="nav-link" data-page="task4"   onclick="go('task4')"  ><span class="nav-icon"></span><span data-i18n="mqtt_task4">Oppgave 4</span></button>
+        </div>
+        <button class="nav-link" data-page="influx"  onclick="go('influx')" ><span class="nav-icon"></span>InfluxDB</button>
+        <div class="nav-sub">
+          <button class="nav-link" data-page="influx-t1"  onclick="go('influx-t1')" ><span class="nav-icon"></span><span data-i18n="influx_task1">Oppgave 1</span></button>
+          <button class="nav-link" data-page="influx-t2"  onclick="go('influx-t2')" ><span class="nav-icon"></span><span data-i18n="influx_task2">Oppgave 2</span></button>
+        </div>
+        <button class="nav-link" data-page="nodered" onclick="go('nodered')"><span class="nav-icon"></span>Node-RED</button>
+        <div class="nav-sub">
+          <button class="nav-link" data-page="nodered-t1" onclick="go('nodered-t1')"><span class="nav-icon"></span><span data-i18n="nodered_task1">Oppgave 1</span></button>
+          <button class="nav-link" data-page="nodered-t2" onclick="go('nodered-t2')"><span class="nav-icon"></span><span data-i18n="nodered_task2">Oppgave 2</span></button>
+        </div>
+        <button class="nav-link" data-page="grafana" onclick="go('grafana')"><span class="nav-icon"></span>Grafana</button>
+        <div class="nav-sub">
+          <button class="nav-link" data-page="grafana-t1" onclick="go('grafana-t1')"><span class="nav-icon"></span><span data-i18n="grafana_task1">Oppgave 1</span></button>
+          <button class="nav-link" data-page="grafana-t2" onclick="go('grafana-t2')"><span class="nav-icon"></span><span data-i18n="grafana_task2">Oppgave 2</span></button>
+          <button class="nav-link" data-page="grafana-t3" onclick="go('grafana-t3')"><span class="nav-icon"></span><span data-i18n="grafana_task3">Oppgave 3</span></button>
+          <button class="nav-link" data-page="grafana-t4" onclick="go('grafana-t4')"><span class="nav-icon"></span><span data-i18n="grafana_task4">Oppgave 4</span></button>
+        </div>
+      </div>
+
+      <div class="nav-label" style="margin-top:6px" data-i18n="nav_manual">Manual</div>
+      <button class="nav-link" data-page="student" onclick="go('student')"><span class="nav-icon"></span><span data-i18n="role_student">Elev</span></button>
+      <button class="nav-link" data-page="teacher" onclick="go('teacher')"><span class="nav-icon"></span><span data-i18n="role_teacher">Lærer</span></button>
+    </div>
+  </nav>
+
+  <!-- ══ HOVEDINNHOLD ══ -->
+  <main>
+    <div class="topbar">
+      <div id="breadcrumb"><span data-i18n="nav_home">Hjem</span></div>
+      <!-- Viser hvilken "versjon" av språket -->
+      <button id="lang-toggle" onclick="toggleLang()">🇬🇧 EN</button>
+      <!-- Score fra menyen -->
+      <div id="fellesScore">0</div>
+    </div>
+
+    <div class="content">
+
+      <!-- ══ HJEMSIDE ══ -->
+      <!-- "active" er hardkodet her så hjemesiden vises uten å vente på JavaScript -->
+      <div id="page-home" class="page-view active">
+        <h1 class="page-title" data-i18n="home_headline">IIoT i en skoeske</h1>
+        <p  class="page-sub"   data-i18n="home_sub">En kompakt undervisningsplattform.</p>
+        <div class="grid-auto">
+          <button class="card" onclick="go('sensors')">
+            <div class="card-icon"></div>
+            <strong data-i18n="home_card_sensors_title">Live sensordata</strong>
+            <span   data-i18n="home_card_sensors_desc">Se sanntidsavlesninger.</span>
+          </button>
+          <button class="card" onclick="go('ming')">
+            <div class="card-icon"></div>
+            <strong>MING</strong>
+            <span data-i18n="ming_sub">Velg en modul.</span>
+          </button>
+          <button class="card" onclick="go('task3')">
+            <div class="card-icon"></div>
+            <strong data-i18n="home_card_t3_title">MQTT Oppgave 3</strong>
+            <span   data-i18n="home_card_t3_desc">Klikk og plasser piler.</span>
+          </button>
+          <button class="card" onclick="go('task4')">
+            <div class="card-icon"></div>
+            <strong data-i18n="home_card_t4_title">Node-RED Simulator</strong>
+            <span   data-i18n="home_card_t4_desc">Bygg en Node-RED-flyt.</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ ROLLEVALG ══ -->
+      <div id="page-role" class="page-view">
+        <h1 class="page-title" data-i18n="role_title">Velg rolle</h1>
+        <p  class="page-sub"   data-i18n="role_sub">Velg om du er elev eller lærer.</p>
+        <div class="grid">
+          <button class="card" onclick="go('student')">
+            <strong data-i18n="role_student">Elev</strong>
+            <span   data-i18n="role_studentSub">Elevveiledning og oppgaver.</span>
+          </button>
+          <button class="card" onclick="go('teacher')">
+            <strong data-i18n="role_teacher">Lærer</strong>
+            <span   data-i18n="role_teacherSub">Lærerveiledning og støtte.</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ ELEVVEILEDNING ══ -->
+      <div id="page-student" class="page-view">
+        <h1 class="page-title" data-i18n="student_title">Elevveiledning</h1>
+        <p  class="page-sub"   data-i18n="student_sub">Din guide til MING-oppgavene.</p>
+        <div class="grid">
+          <button class="card" onclick="setRole('student'); go('ming')">
+            <strong data-i18n="manual_openMING">Åpne MING-oppgaver</strong>
+            <span   data-i18n="manual_openMINGsub">MQTT, InfluxDB, Node-RED, Grafana</span>
+          </button>
+          <button class="card" onclick="go('role')">
+            <strong data-i18n="manual_back">Tilbake</strong>
+            <span   data-i18n="manual_backSub">Til rollevalg.</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ LÆRERVEILEDNING ══ -->
+      <div id="page-teacher" class="page-view">
+        <h1 class="page-title" data-i18n="teacher_title">Lærerveiledning</h1>
+        <p  class="page-sub"   data-i18n="teacher_sub">Din guide til undervisning med MING-plattformen.</p>
+        <div class="grid">
+          <button class="card" onclick="setRole('teacher'); go('ming')">
+            <strong data-i18n="manual_openMING">Åpne MING-oppgaver</strong>
+            <span   data-i18n="manual_openMINGsub">MQTT, InfluxDB, Node-RED, Grafana</span>
+          </button>
+          <button class="card" onclick="go('role')">
+            <strong data-i18n="manual_back">Tilbake</strong>
+            <span   data-i18n="manual_backSub">Til rollevalg.</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ INNSTILLINGER ══ -->
+      <div id="page-settings" class="page-view">
+        <h1 class="page-title" data-i18n="settings_title">Innstillinger</h1>
+        <p  class="page-sub"   data-i18n="settings_sub">Konfigurer preferansene dine her.</p>
+        <div class="card" style="max-width:420px;cursor:default;display:block;">
+          <strong style="margin-bottom:12px;display:block;">Language / Språk</strong>
+          <div style="display:flex;gap:10px;">
+            <button onclick="setLang('en')" style="flex:1;padding:10px;background:var(--panel);border:1px solid var(--border);color:var(--gold);border-radius:8px;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:700;" data-i18n="langEN">English</button>
+            <button onclick="setLang('no')" style="flex:1;padding:10px;background:var(--panel);border:1px solid var(--border);color:var(--gold);border-radius:8px;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:700;" data-i18n="langNO">Norsk</button>
+          </div>
+          <strong style="margin-bottom:12px;display:block;">Reset saved data</strong>
+          <div style="display:flex;gap:10px;">
+            <button class="reset-btn" onclick="resetData()">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ MING-HUB ══ -->
+      <div id="page-ming" class="page-view">
+        <h1 class="page-title" data-i18n="ming_title">MING</h1>
+        <p  class="page-sub"   data-i18n="ming_sub">Velg en modul.</p>
+        <div class="grid">
+          <button class="card" onclick="go('mqtt')"   ><strong>MQTT</strong>    <span data-i18n="ming_mqttSub">Meldingsprotokoll.</span></button>
+          <button class="card" onclick="go('influx')" ><strong>InfluxDB</strong> <span data-i18n="ming_influxSub">Tidsserie-database.</span></button>
+          <button class="card" onclick="go('nodered')"><strong>Node-RED</strong> <span data-i18n="ming_noderedSub">Visuelle flyter.</span></button>
+          <button class="card" onclick="go('grafana')"><strong>Grafana</strong>  <span data-i18n="ming_grafanaSub">Visualisering.</span></button>
+        </div>
+      </div>
+
+      <!-- ══ MQTT — oppgavevalg ══ -->
+      <div id="page-mqtt" class="page-view">
+        <h1 class="page-title" data-i18n="mqtt_title">MQTT</h1>
+        <p  class="page-sub"   data-i18n="mqtt_sub">Velg en oppgave.</p>
+        <div class="grid">
+          <button class="card" onclick="go('mqtt-t1')"><strong data-i18n="mqtt_task1">Oppgave 1</strong><span data-i18n="mqtt_task1sub">Enkel testflyt.</span></button>
+          <button class="card" onclick="go('mqtt-t2')"><strong data-i18n="mqtt_task2">Oppgave 2</strong><span data-i18n="mqtt_task2sub">Utforsk videre.</span></button>
+          <button class="card" onclick="go('task3')"  ><strong data-i18n="mqtt_task3">Oppgave 3</strong><span data-i18n="mqtt_task3sub">Klikk og plasser.</span></button>
+          <button class="card" onclick="go('task4')"  ><strong>Oppgave 4</strong><span data-i18n="home_card_t4_desc">Node-RED simulator.</span></button>
+        </div>
+        <button class="small-link" onclick="go('ming')">← MING</button>
+      </div>
+
+      <!-- ══ MQTT OPPGAVE 1 — Multiple Choice ══ -->
+      <div id="page-mqtt-t1" class="page-view">
+        <h1 class="page-title" data-i18n="mqtt_t1_title">MQTT – Oppgave 1</h1>
+
+        <div id="mqttT1-infobox" class="infobox">
+          <h4 data-i18n="mc_mqtt_infoTitle">Multiple Choice</h4>
+          <p  data-i18n="mc_mqtt_infoBody">Oppgavebeskrivelse.</p>
+          <button class="startbtn" onclick="mqttT1Start()" data-i18n="mc_startBtn">Start</button>
+        </div>
+
+        <div id="mqttT1-taskbox" style="display:none">
+          <div id="mqttT1-score" class="mc-score-box"></div>
+
+          <div class="MCbox" data-correct="1"><p data-i18n="mc_mqttT1_q1">Spørsmål 1?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q1a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q1a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q1a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q1a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="0"><p data-i18n="mc_mqttT1_q2">Spørsmål 2?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q2a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q2a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q2a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q2a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="0"><p data-i18n="mc_mqttT1_q3">Spørsmål 3?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q3a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q3a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q3a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q3a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="3"><p data-i18n="mc_mqttT1_q4">Spørsmål 4?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q4a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q4a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q4a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q4a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="2"><p data-i18n="mc_mqttT1_q5">Spørsmål 5?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q5a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q5a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q5a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q5a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="1"><p data-i18n="mc_mqttT1_q6">Spørsmål 6?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q6a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q6a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q6a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q6a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="1"><p data-i18n="mc_mqttT1_q7">Spørsmål 7?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q7a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q7a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q7a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q7a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="3"><p data-i18n="mc_mqttT1_q8">Spørsmål 8?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q8a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q8a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q8a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q8a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="0"><p data-i18n="mc_mqttT1_q9">Spørsmål 9?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q9a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q9a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q9a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q9a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="2"><p data-i18n="mc_mqttT1_q10">Spørsmål 10?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q10a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q10a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q10a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q10a3">Valg 4</button></div>
+
+          <button class="mc-finish-btn" onclick="mqttT1Finish()" data-i18n="mc_finishBtn">Lever</button>
+        </div>
+
+        <button class="mc-info-btn" onclick="mqttT1OpenInfo()">i</button>
+        <div id="mqttT1-popup" class="mc-popup-overlay">
+          <div class="mc-popup-box">
+            <h3 data-i18n="mc_popupTitle">Forklaring</h3>
+            <p id="mqttT1-popup-text"></p>
+            <button class="mc-popup-close" onclick="mqttT1CloseInfo()" data-i18n="mc_popupClose">Lukk</button>
+          </div>
+        </div>
+
+        <button class="small-link" onclick="go('mqtt')" data-i18n="mqtt_t1_back">← Tilbake til MQTT-oppgaver</button>
+      </div>
+
+      <!-- ══ MQTT OPPGAVE 2 — plassholder ══ -->
+      <div id="page-mqtt-t2" class="page-view">
+        <h1 class="page-title" data-i18n="mqtt_t2_title">MQTT – Oppgave 2</h1>
+        <p  class="page-sub"   data-i18n="mqtt_t2_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('mqtt')" data-i18n="mqtt_t2_back">← Tilbake til MQTT-oppgaver</button>
+      </div>
+
+      <!-- ══ INFLUXDB — oppgavevalg + plassholdere ══ -->
+      <div id="page-influx" class="page-view">
+        <h1 class="page-title" data-i18n="influx_title">InfluxDB</h1>
+        <p  class="page-sub"   data-i18n="influx_sub">Velg en oppgave.</p>
+        <div class="grid">
+          <button class="card" onclick="go('influx-t1')"><strong data-i18n="influx_task1">Oppgave 1</strong><span data-i18n="influx_task1sub">Kom i gang.</span></button>
+          <button class="card" onclick="go('influx-t2')"><strong data-i18n="influx_task2">Oppgave 2</strong><span data-i18n="influx_task2sub">Spørringer på data.</span></button>
+        </div>
+        <button class="small-link" onclick="go('ming')">← MING</button>
+      </div>
+      <!-- ══ INFLUXDB OPPGAVE 1 — Multiple Choice ══ -->
+      <div id="page-influx-t1" class="page-view">
+        <h1 class="page-title" data-i18n="influx_t1_title">InfluxDB – Oppgave 1</h1>
+
+        <div id="influxT1-infobox" class="infobox">
+          <h4 data-i18n="mc_influx_infoTitle">Multiple Choice</h4>
+          <p  data-i18n="mc_influx_infoBody">Oppgavebeskrivelse.</p>
+          <button class="startbtn" onclick="influxT1Start()" data-i18n="mc_startBtn">Start</button>
+        </div>
+
+        <div id="influxT1-taskbox" style="display:none">
+          <div id="influxT1-score" class="mc-score-box"></div>
+
+          <div class="MCbox" data-correct="1"><p data-i18n="mc_influxT1_q1">Spørsmål 1?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q1a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q1a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q1a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q1a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="0"><p data-i18n="mc_influxT1_q2">Spørsmål 2?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q2a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q2a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q2a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q2a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="0"><p data-i18n="mc_influxT1_q3">Spørsmål 3?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q3a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q3a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q3a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q3a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="3"><p data-i18n="mc_influxT1_q4">Spørsmål 4?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q4a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q4a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q4a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q4a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="2"><p data-i18n="mc_influxT1_q5">Spørsmål 5?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q5a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q5a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q5a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q5a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="1"><p data-i18n="mc_influxT1_q6">Spørsmål 6?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q6a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q6a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q6a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q6a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="1"><p data-i18n="mc_influxT1_q7">Spørsmål 7?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q7a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q7a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q7a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q7a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="3"><p data-i18n="mc_influxT1_q8">Spørsmål 8?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q8a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q8a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q8a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q8a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="0"><p data-i18n="mc_influxT1_q9">Spørsmål 9?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q9a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q9a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q9a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q9a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="2"><p data-i18n="mc_influxT1_q10">Spørsmål 10?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q10a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q10a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q10a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q10a3">Valg 4</button></div>
+
+          <button class="mc-finish-btn" onclick="influxT1Finish()" data-i18n="mc_finishBtn">Lever</button>
+        </div>
+
+        <button class="mc-info-btn" onclick="influxT1OpenInfo()">i</button>
+        <div id="influxT1-popup" class="mc-popup-overlay">
+          <div class="mc-popup-box">
+            <h3 data-i18n="mc_popupTitle">Forklaring</h3>
+            <p id="influxT1-popup-text"></p>
+            <button class="mc-popup-close" onclick="influxT1CloseInfo()" data-i18n="mc_popupClose">Lukk</button>
+          </div>
+        </div>
+
+        <button class="small-link" onclick="go('influx')" data-i18n="influx_t1_back">← Tilbake</button>
+      </div>
+      <div id="page-influx-t2" class="page-view">
+        <h1 class="page-title" data-i18n="influx_t2_title">InfluxDB – Oppgave 2</h1>
+
+        <!-- Infobox — vises før oppgaven starter, skjules av it2Start() -->
+        <div id="it2-infobox" class="infobox">
+          <h4 data-i18n="it2_infoTitle">Simuler skriving av sensordata til InfluxDB</h4>
+          <p  data-i18n="it2_infoBody">Oppgavebeskrivelse.</p>
+          <button class="startbtn" onclick="it2Start()" data-i18n="it2_startBtn">Start</button>
+        </div>
+
+        <!-- Spillområde — skjult til it2Start() kalles -->
+        <div id="it2-game" style="display:none">
+          <!-- poeng score -->
+          <div id="it2-score">Poeng: 0</div>
+
+          <!-- Runde-etikett -->
+          <div id="it2-round"></div>
+
+          <!-- Tre kort side om side: målområde, live avlesning, nedtelling -->
+          <div id="it2-prompt">
+            <div class="it2-box" id="it2-target-box">
+              <div class="it2-box-label" data-i18n="it2_targetLabel">Målområde</div>
+              <div id="it2-range">— mm</div>
+            </div>
+            <div class="it2-box">
+              <div class="it2-box-label" data-i18n="it2_liveLabel">Live avlesning</div>
+              <div id="it2-live-value">— mm</div>
+              <div id="it2-live-status"></div>
+            </div>
+            <div class="it2-box">
+              <div class="it2-box-label" data-i18n="it2_timerLabel">Tid igjen</div>
+              <div id="it2-timer-val">10</div>
+            </div>
+          </div>
+
+          <!-- Databasetabell — fyller seg opp etter hvert som målinger lykkes -->
+          <table id="it2-table">
+            <thead>
+              <tr>
+                <th data-i18n="it2_colTime">Tidsstempel</th>
+                <th data-i18n="it2_colValue">Verdi</th>
+                <th data-i18n="it2_colStatus">Status</th>
+              </tr>
+            </thead>
+            <tbody id="it2-tbody"></tbody>
+          </table>
+
+        </div><!-- /it2-game -->
+
+        <!-- Vises når alle 5 målinger er fullført -->
+        <div id="it2-complete" class="complete-banner" style="display:none" data-i18n="it2_complete">✓ Alle 5 målinger skrevet til InfluxDB!</div>
+
+        <button class="small-link" onclick="go('influx')" data-i18n="influx_t2_back">← Tilbake</button>
+      </div>
+
+      <!-- ══ NODE-RED — oppgavevalg + plassholdere ══ -->
+      <div id="page-nodered" class="page-view">
+        <h1 class="page-title" data-i18n="nodered_title">Node-RED</h1>
+        <p  class="page-sub"   data-i18n="nodered_sub">Velg en oppgave.</p>
+        <div class="grid">
+          <button class="card" onclick="go('nodered-t1')"><strong data-i18n="nodered_task1">Oppgave 1</strong><span data-i18n="nodered_task1sub">Kom i gang.</span></button>
+          <button class="card" onclick="go('nodered-t2')"><strong data-i18n="nodered_task2">Oppgave 2</strong><span data-i18n="nodered_task2sub">Avanserte flyter.</span></button>
+        </div>
+        <button class="small-link" onclick="go('ming')">← MING</button>
+      </div>
+      <!-- ══ NODE-RED OPPGAVE 1 — Multiple Choice ══ -->
+      <div id="page-nodered-t1" class="page-view">
+        <h1 class="page-title" data-i18n="nodered_t1_title">Node-RED – Oppgave 1</h1>
+
+        <div id="noderedT1-infobox" class="infobox">
+          <h4 data-i18n="mc_nodered_infoTitle">Multiple Choice</h4>
+          <p  data-i18n="mc_nodered_infoBody">Oppgavebeskrivelse.</p>
+          <button class="startbtn" onclick="noderedT1Start()" data-i18n="mc_startBtn">Start</button>
+        </div>
+
+        <div id="noderedT1-taskbox" style="display:none">
+          <div id="noderedT1-score" class="mc-score-box"></div>
+
+          <div class="MCbox" data-correct="1"><p data-i18n="mc_noderedT1_q1">Spørsmål 1?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q1a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q1a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q1a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q1a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="0"><p data-i18n="mc_noderedT1_q2">Spørsmål 2?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q2a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q2a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q2a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q2a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="0"><p data-i18n="mc_noderedT1_q3">Spørsmål 3?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q3a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q3a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q3a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q3a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="3"><p data-i18n="mc_noderedT1_q4">Spørsmål 4?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q4a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q4a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q4a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q4a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="2"><p data-i18n="mc_noderedT1_q5">Spørsmål 5?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q5a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q5a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q5a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q5a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="1"><p data-i18n="mc_noderedT1_q6">Spørsmål 6?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q6a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q6a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q6a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q6a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="1"><p data-i18n="mc_noderedT1_q7">Spørsmål 7?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q7a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q7a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q7a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q7a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="3"><p data-i18n="mc_noderedT1_q8">Spørsmål 8?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q8a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q8a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q8a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q8a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="0"><p data-i18n="mc_noderedT1_q9">Spørsmål 9?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q9a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q9a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q9a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q9a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="2"><p data-i18n="mc_noderedT1_q10">Spørsmål 10?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q10a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q10a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q10a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q10a3">Valg 4</button></div>
+
+          <button class="mc-finish-btn" onclick="noderedT1Finish()" data-i18n="mc_finishBtn">Lever</button>
+        </div>
+
+        <button class="mc-info-btn" onclick="noderedT1OpenInfo()">i</button>
+        <div id="noderedT1-popup" class="mc-popup-overlay">
+          <div class="mc-popup-box">
+            <h3 data-i18n="mc_popupTitle">Forklaring</h3>
+            <p id="noderedT1-popup-text"></p>
+            <button class="mc-popup-close" onclick="noderedT1CloseInfo()" data-i18n="mc_popupClose">Lukk</button>
+          </div>
+        </div>
+
+        <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t1_back">← Tilbake</button>
+      </div>
+      <div id="page-nodered-t2" class="page-view">
+        <h1 class="page-title" data-i18n="nodered_t2_title">Node-RED – Oppgave 2</h1>
+        <p  class="page-sub"   data-i18n="nodered_t2_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t2_back">← Tilbake</button>
+      </div>
+
+      <!-- ══ GRAFANA — oppgavevalg + plassholdere ══ -->
+      <div id="page-grafana" class="page-view">
+        <h1 class="page-title" data-i18n="grafana_title">Grafana</h1>
+        <p  class="page-sub"   data-i18n="grafana_sub">Velg en oppgave.</p>
+        <div class="grid">
+          <button class="card" onclick="go('grafana-t1')"><strong data-i18n="grafana_task1">Oppgave 1</strong><span data-i18n="grafana_task1sub">Første dashboard.</span></button>
+          <button class="card" onclick="go('grafana-t2')"><strong data-i18n="grafana_task2">Oppgave 2</strong><span data-i18n="grafana_task2sub">Avanserte visualiseringer.</span></button>
+          <button class="card" onclick="go('grafana-t3')"><strong data-i18n="grafana_task3">Oppgave 3</strong><span data-i18n="grafana_task3sub">Fang objektet-spill.</span></button>
+          <button class="card" onclick="go('grafana-t4')"><strong data-i18n="grafana_task4">Oppgave 4</strong><span data-i18n="grafana_task4sub">Live dashbord-simulering.</span></button>
+        </div>
+        <button class="small-link" onclick="go('ming')">← MING</button>
+      </div>
+      <!-- ══ GRAFANA OPPGAVE 1 — Multiple Choice ══ -->
+      <div id="page-grafana-t1" class="page-view">
+        <h1 class="page-title" data-i18n="grafana_t1_title">Grafana – Oppgave 1</h1>
+
+        <div id="grafanaT1-infobox" class="infobox">
+          <h4 data-i18n="mc_grafana_infoTitle">Multiple Choice</h4>
+          <p  data-i18n="mc_grafana_infoBody">Oppgavebeskrivelse.</p>
+          <button class="startbtn" onclick="grafanaT1Start()" data-i18n="mc_startBtn">Start</button>
+        </div>
+
+        <div id="grafanaT1-taskbox" style="display:none">
+          <div id="grafanaT1-score" class="mc-score-box"></div>
+
+          <div class="MCbox" data-correct="1"><p data-i18n="mc_grafanaT1_q1">Spørsmål 1?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q1a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q1a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q1a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q1a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="0"><p data-i18n="mc_grafanaT1_q2">Spørsmål 2?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q2a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q2a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q2a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q2a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="0"><p data-i18n="mc_grafanaT1_q3">Spørsmål 3?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q3a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q3a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q3a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q3a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="3"><p data-i18n="mc_grafanaT1_q4">Spørsmål 4?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q4a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q4a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q4a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q4a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="2"><p data-i18n="mc_grafanaT1_q5">Spørsmål 5?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q5a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q5a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q5a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q5a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="1"><p data-i18n="mc_grafanaT1_q6">Spørsmål 6?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q6a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q6a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q6a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q6a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="1"><p data-i18n="mc_grafanaT1_q7">Spørsmål 7?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q7a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q7a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q7a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q7a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="3"><p data-i18n="mc_grafanaT1_q8">Spørsmål 8?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q8a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q8a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q8a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q8a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="0"><p data-i18n="mc_grafanaT1_q9">Spørsmål 9?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q9a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q9a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q9a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q9a3">Valg 4</button></div>
+          <div class="MCbox" data-correct="2"><p data-i18n="mc_grafanaT1_q10">Spørsmål 10?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q10a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q10a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q10a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q10a3">Valg 4</button></div>
+
+          <button class="mc-finish-btn" onclick="grafanaT1Finish()" data-i18n="mc_finishBtn">Lever</button>
+        </div>
+
+        <button class="mc-info-btn" onclick="grafanaT1OpenInfo()">i</button>
+        <div id="grafanaT1-popup" class="mc-popup-overlay">
+          <div class="mc-popup-box">
+            <h3 data-i18n="mc_popupTitle">Forklaring</h3>
+            <p id="grafanaT1-popup-text"></p>
+            <button class="mc-popup-close" onclick="grafanaT1CloseInfo()" data-i18n="mc_popupClose">Lukk</button>
+          </div>
+        </div>
+
+        <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t1_back">← Tilbake</button>
+      </div>
+      <div id="page-grafana-t2" class="page-view">
+        <h1 class="page-title" data-i18n="grafana_t2_title">Grafana – Oppgave 2</h1>
+        <p  class="page-sub"   data-i18n="grafana_t2_desc">Fyll inn her.</p>
+        <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t2_back">← Tilbake</button>
+      </div>
+
+      <!-- ══ GRAFANA OPPGAVE 3 — Catch the Object ══ -->
+      <div id="page-grafana-t3" class="page-view">
+        <h1 class="page-title" data-i18n="grafana_t3_title">Grafana – Oppgave 3</h1>
+
+        <div id="start" class="container">
+          <h2 data-i18n="gt3_gameTitle">Catch the object game</h2>
+          <p data-i18n="gt3_desc1">Fang så mange sensorverdier som mulig innen 60 sekunder ved hjelp av venstre og høyre piltast</p>
+          <p data-i18n="gt3_desc2">Gyldige verdier: Fuktighet: 40–60 %RH, alt utenfor er ugyldige</p>
+          <p data-i18n="gt3_desc3">Det er +1 poeng for å fange riktige objekter og -1 poeng for å fange feil objekter</p>
+          <p data-i18n="gt3_desc4">Resultatet vil bli visualisert som kakediagram, stolpediagram og graf. Der du kan analysere resultatet</p>
+          <button class="startbtn" onclick="startSpill()" data-i18n="gt3_startBtn">Start</button>
+        </div>
+
+        <div id="topbar">
+          <span data-i18n="gt3_timeLabel">Tid</span>: <span id="tid">60</span> /
+          <span data-i18n="gt3_scoreLabel">Score</span>: <span id="score">0</span>
+        </div>
+
+        <div id="spill">
+          <div id="bruker"></div>
+        </div>
+
+        <div id="resultat">
+          <h2 data-i18n="gt3_dashboard">Dashboard</h2>
+          <button class="resbtn" onclick="kakeDiagram()" data-i18n="gt3_pie">Kakediagram</button>
+          <button class="resbtn" onclick="stolpeDiagram()" data-i18n="gt3_bar">Stolpediagram</button>
+          <button class="resbtn" onclick="grafDiagram()" data-i18n="gt3_graph">Graf</button>
+          <canvas id="chart"></canvas>
+        </div>
+
+        <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t3_back">← Tilbake</button>
+      </div>
+
+      <!-- ══ GRAFANA OPPGAVE 4 — Live Dashboard Simulation ══ -->
+      <div id="page-grafana-t4" class="page-view">
+        <h1 class="page-title" data-i18n="grafana_t4_title">Grafana – Oppgave 4</h1>
+
+        <!-- Infobox — vises før oppgaven starter, skjules av gt4Start() -->
+        <div id="gt4-infobox" class="infobox">
+          <h4 data-i18n="gt4_infoTitle">Live dashbord-simulering</h4>
+          <p  data-i18n="gt4_infoBody">Oppgavebeskrivelse.</p>
+          <button class="startbtn" onclick="gt4Start()" data-i18n="gt4_startBtn">Start</button>
+        </div>
+
+        <!-- Spillområde — skjult til gt4Start() kalles -->
+        <div id="gt4-game" style="display:none">
+          <!-- poeng score -->
+          <div id="gt4-score">Poeng: 0</div>
+
+          <!-- Grafana-panel med linjediagram -->
+          <div id="gt4-panel">
+            <div id="gt4-panel-title" data-i18n="gt4_panelLabel">Avstandssensor (mm)</div>
+            <canvas id="gt4-chart"></canvas>
+          </div>
+
+          <!-- InfluxDB skrivelogg — nye linjer legges øverst -->
+          <div class="taskbox" style="margin-bottom:12px">
+            <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;margin-bottom:6px" data-i18n="gt4_writeLog">InfluxDB skrivelogg</div>
+            <div id="gt4-write-log"></div>
+          </div>
+
+          <!-- Instruksjonsboks: målområde, live avlesning, hold-fremgang -->
+          <div id="gt4-instr">
+            <div class="gt4-instr-col">
+              <div class="gt4-instr-label" data-i18n="gt4_targetLabel">Målområde</div>
+              <div id="gt4-instr-range">— mm</div>
+            </div>
+            <div class="gt4-instr-col">
+              <div class="gt4-instr-label" data-i18n="gt4_liveLabel">Live avlesning</div>
+              <div id="gt4-live-value">— mm</div>
+              <div id="gt4-live-src"></div>
+            </div>
+            <div class="gt4-instr-col">
+              <div class="gt4-instr-label" data-i18n="gt4_holdLabel">Hold-fremgang</div>
+              <div id="gt4-hold-bar"><div id="gt4-hold-fill"></div></div>
+              <div id="gt4-status"></div>
+            </div>
+          </div>
+
+        </div><!-- /gt4-game -->
+
+        <!-- Vises når alle 8 datapunkter er plottet -->
+        <div id="gt4-complete" class="complete-banner" style="display:none" data-i18n="gt4_complete">✓ Dashbordet er fullført!</div>
+
+        <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t4_back">← Tilbake</button>
+      </div>
+
+      <!-- ══ SENSORSIDE ══ -->
+      <!-- Henter live data fra ESP32, faller tilbake til simulerte verdier om enheten er offline -->
+      <div id="page-sensors" class="page-view">
+        <h1 class="page-title" data-i18n="sensors_title">Live sensordata</h1>
+        <p  class="page-sub"   data-i18n="sensors_sub">Sanntidsavlesninger.</p>
+        <div class="sensor-grid">
+          <div class="sensor-card">
+            <div class="sensor-label" data-i18n="sensors_pot">Potensiometer</div>
+            <div>
+              <!-- Oppdateres hvert sekund av JavaScript-pollingsløkken -->
+              <span class="sensor-value" id="pot-value">—</span>
+              <span class="sensor-unit">V</span>
+            </div>
+            <!-- Viser ● LIVE eller ◌ simulert avhengig av om ESP32 svarer -->
+            <div class="sensor-status" id="pot-status"></div>
+          </div>
+          <div class="sensor-card">
+            <div class="sensor-label" data-i18n="sensors_dist">Avstand (VL53L0X)</div>
+            <div>
+              <span class="sensor-value" id="dist-value">—</span>
+              <span class="sensor-unit">mm</span>
+            </div>
+            <div class="sensor-status" id="dist-status"></div>
+          </div>
+        </div>
+        <div class="sensor-log">
+          <div class="sensor-log-title" data-i18n="sensors_log">Logg</div>
+          <!-- Nye logginnlegg legges øverst, maks 10 innlegg om gangen -->
+          <div id="sensor-log-lines"></div>
+        </div>
+      </div>
+
+      <!-- ══ MQTT OPPGAVE 3 — Klikk og Plasser ══ -->
+      <div id="page-task3" class="page-view">
+        <h1 class="page-title" data-i18n="t3_header">MQTT – Oppgave 3</h1>
+
+        <!-- Infoboks som vises før oppgaven starter, skjules av t3Start() -->
+        <div id="t3-infobox" class="infobox">
+          <h4 data-i18n="t3_infoTitle">Forklaring av MQTT-flyt</h4>
+          <p  data-i18n="t3_infoBody">Forklaringstekst.</p>
+          <button class="startbtn" onclick="t3Start()" data-i18n="t3_startBtn">Start oppgave</button>
+        </div>
+        <!-- poeng score -->
+        <div id="t3-score">Score: 0</div>
+        <!-- Vises kun når alle 8 soner er riktig fylt -->
+        <div id="t3-complete-banner" class="complete-banner" style="display:none" data-i18n="t3_complete">✓ Fullført!</div>
+        <!-- Kort riktig/feil-tilbakemelding, skjules automatisk etter 1 sekund -->
+        <div id="t3-message" class="messagebox" style="display:none"></div>
+        <!-- Instruksjonsboks, skjult til oppgaven starter -->
+        <div class="taskbox" id="t3-taskbox" style="display:none" data-i18n="t3_taskbox">Instruksjoner.</div>
+
+        <!-- Tre-kolonne diagram: skjult til t3Start() kalles -->
+        <div class="mqtt-layout" id="t3-layout" style="display:none">
+
+          <!-- VENSTRE: sensorer som publiserer -->
+          <div class="mqtt-side">
+            <div class="device-row">
+              <div class="circle"></div>
+              <!-- Etiketter settes av t3RefreshLabels() så de oppdateres ved språkbytte -->
+              <div class="dev-label" id="t3-lbl-temp"></div>
+              <!-- data-expected leses av t3Place() for å sjekke om pilen er riktig -->
+              <div class="dropzone" data-expected="TempPublish" onclick="t3Place(this)">
+                <div data-i18n="t3_clickPlace">Klikk for å plassere</div>
+                <div class="dropzone-hint" data-i18n="t3_hintPublish">Send melding til utgiver</div>
+              </div>
+            </div>
+            <div class="device-row">
+              <div class="circle"></div>
+              <div class="dev-label" id="t3-lbl-hum"></div>
+              <div class="dropzone" data-expected="HumPublish" onclick="t3Place(this)">
+                <div data-i18n="t3_clickPlace">Klikk for å plassere</div>
+                <div class="dropzone-hint" data-i18n="t3_hintPublish">Send melding til utgiver</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MIDTEN: megler-sirkel og pilvelger -->
+          <div class="mqtt-center">
+            <!-- Tekst settes av t3RefreshLabels() — \n blir linjeskift pga white-space:pre-line -->
+            <div class="broker-circle" id="t3-broker-lbl"></div>
+            <div class="arrow-select-box">
+              <div class="arrow-select-title" data-i18n="t3_select">Velg</div>
+              <!-- Pilknapper bygges dynamisk av t3Start() -->
+              <div class="arrow-list" id="t3-arrows"></div>
+            </div>
+          </div>
+
+          <!-- HØYRE: abonnerende klienter -->
+          <div class="mqtt-side">
+            <!-- Klient 1 — abonnerer på Temp -->
+            <div class="device-row">
+              <div class="circle"></div>
+              <div class="dev-label" id="t3-lbl-c1"></div>
+              <div class="dropzone" data-expected="SubTemp"     onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintSubscribe">Motta meldinger fra utgiver</div></div>
+              <div class="dropzone" data-expected="TempPublish" onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintForward">Send melding til abonnent</div></div>
+            </div>
+            <!-- Klient 2 — abonnerer kun på Hum -->
+            <div class="device-row">
+              <div class="circle"></div>
+              <div class="dev-label" id="t3-lbl-c2"></div>
+              <div class="dropzone" data-expected="SubHum"      onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintSubscribe">Motta meldinger fra utgiver</div></div>
+              <div class="dropzone" data-expected="HumPublish"  onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintForward">Send melding til abonnent</div></div>
+            </div>
+            <!-- Klient 3 — abonnerer på Temp -->
+            <div class="device-row">
+              <div class="circle"></div>
+              <div class="dev-label" id="t3-lbl-c3"></div>
+              <div class="dropzone" data-expected="SubTemp"     onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintSubscribe">Motta meldinger fra utgiver</div></div>
+              <div class="dropzone" data-expected="TempPublish" onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintForward">Send melding til abonnent</div></div>
+            </div>
+          </div>
+        </div>
+
+        <button class="small-link" onclick="go('mqtt')">← MQTT</button>
+      </div>
+
+      <!-- ══ NODE-RED OPPGAVE 4 ══ -->
+      <!-- #nr-root er tom — initNodeRed() fyller den med simulator-UI når brukeren navigerer hit -->
+      <div id="page-task4" class="page-view">
+        <div style="margin-bottom:12px">
+          <div class="task-header" data-i18n="nr_title">Sette opp MQTT i Node-RED</div>
+          <div class="task-desc"   data-i18n="nr_desc">Oppgavebeskrivelse.</div>
+        </div>
+        <div id="nr-root"></div>
+        <button class="small-link" style="margin-top:8px" onclick="go('mqtt')">← MQTT</button>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div><!-- /app-shell -->
+
+<!-- JS — i18n først (alt avhenger av t()), så router, så features -->
+<script src="js/i18n.js"></script>
+<script src="js/router.js"></script>
+<script src="js/led-sync.js"></script>
+<script src="js/sensors.js"></script>
+<script src="js/task3.js"></script>
+<script src="js/nodered.js"></script>
+<script src="js/grafana-t3.js"></script>
+<script src="js/sensor-task.js"></script>
+<script src="js/InfluxDBT-2.js"></script>
+<script src="js/GrafanaT-4.js"></script>
+<script src="js/mc-mqtt.js"></script>
+<script src="js/mc-influx.js"></script>
+<script src="js/mc-nodered.js"></script>
+<script src="js/mc-grafana.js"></script>
+
+<script>
+//local storage
+const mainData = {
+  highscore: 0, role: "student", manual: "student", tasks: {}
+};
+//laste lagret data, tekst til objekt
+function readData() {
+  return JSON.parse(localStorage.getItem("artificer_data")) || mainData;//lagret data eller default values
+}
+//lagrer data, objekt til tekst
+function writeData(data) {
+  localStorage.setItem("artificer_data", JSON.stringify(data));
+}
+// lagrer poeng score og sette de sammen
+function pointSystem(task, points) {
+  let data = readData(); //henter lagret data
+
+  //viser statusen om oppgaven er open/låst og poengene
+  data.tasks[task] = {open: true, points: points};
+
+  //summerer poengene fra de andre oppgavene
+  let totalPoints = 0;
+  Object.values(data.tasks).forEach(value => { //henter all verdiene fra task
+    totalPoints += value.points || 0; // legger til poengene og 0 som default
+  });
+  data.highscore = totalPoints; //skrevet til og lagrer felles highscoren
+  writeData(data);
+
+  //oppdaterer score i menyen
+  menyScore();
+
+  //låste oppgaver funksjonen
+  statusTasks();
+}
+//felles poengscore i menybaren
+function menyScore() {
+  let el = readData(); //henter data
+  let data = document.getElementById("fellesScore"); //finne hvor på siden poengene skrives(HTML)
+  // sjekker om elemente finnes og viser totalscore i meny
+  if (data) {
+    data.textContent = el.highscore;
+  }
+}
+
+// lagrer manualvalg
+function setRole(type) {
+  let data = readData();
+  data.role = type; //lagrer rolle
+  data.manual = type; //lagrer manual
+  writeData(data);
+  menyScore();
+  statusTasks();
+}
+
+//reaster lagret data 
+function resetData() {
+  localStorage.removeItem("artificer_data"); //sletter data
+  location.reload(); //laster siden på nytt
+}
+
+//sjekker om alle de enklere oppgavene er fullført
+function basicTasks() {
+  let data = readData();
+  const requiredTasks = ["mqtt-t1","mqtt-t2","influx-t1","influx-t2",
+    "nodered-t1","nodered-t2", "grafana-t1","grafana-t2"];
+  //sjekker dersom alle enklere oppgavene er utført
+  const basicCompleted = requiredTasks.every(function(task) { //går gjennom listen og sjekker om alle er fullført
+    const basicTask = data.tasks[task]; //henter oppgave fra listen
+    return basicTask && basicTask.open; //finnes oppgaven og er den fulført
+  });
+  return basicCompleted; //sender true dersom alle er fullført og motsatt hvis ikke
+}
+
+//låse sider
+function isLocked(page) {
+  let data = readData();
+  if (data.role === "teacher") return false; //læreren har tilgang til alle oppgaver
+
+  //hvis de enklere oppgavene ikke er fullført er vanskligere låst
+  if (!basicTasks()) {
+    return page.includes("task3") || page.includes("task4") || page.endsWith("-t3") || page.endsWith("-t4");
+  }
+  return false;
+}
+
+//oppdater ikonet for låste oppgaver
+//ikon på knapp, sjekker om siden er låst, henter data for status
+function updateIconLock(btn, page, data) {
+  if (isLocked(page)) {
+    // lås for låste oppgaver
+    btn.querySelector(".nav-icon").textContent = "\uD83D\uDD12";
+    // åpen lås når de enklere er fullført
+  } else if (data.tasks[page] && data.tasks[page].open) {
+    btn.querySelector(".nav-icon").textContent = "\uD83D\uDD13";
+
+  } else {
+    // ingen ikon på enklere oppgaver
+    btn.querySelector(".nav-icon").textContent = "";
+  }
+}
+
+//om oppgaven er låst eller ikke gjort eller er ferdig
+function statusTasks() {
+  let data = readData();
+
+  //går gjennom meny knappene med oppgavene
+  document.querySelectorAll(".nav-link").forEach(btn => {
+    let page = btn.dataset.page; //henter siden til knappen
+    if (!page) return; //hopper over siden sin knapp
+    //reseter listen
+    btn.classList.remove("locked", "completed", "open");
+
+    // hvis siden er låst så blir den markert som det
+    if (isLocked(page)) {
+      btn.classList.add("locked");
+      updateIconLock(btn, page, data);
+      return;
+    }
+
+    // sjekker om oppgaven er fullført
+    let basicTask = data.tasks[page];
+    let taskCompleted = basicTask && basicTask.open;
+    //endrer csss
+    if (taskCompleted) { //oppgaven er fullført
+      btn.classList.add("completed");
+
+    } else if ((page.includes("-t1") || page.includes("-t2")) && !taskCompleted){ //en av oppgavene i temaet fullført
+      btn.classList.add("open");
+    }
+    // gir riktig ikon
+    updateIconLock(btn, page, data);
+  });
+}
+
+function go(page) {
+  if (isLocked(page)) {
+    alert("Låst oppgave, fullfør de enklere for å få tilgang");
+    return;
+  }
+  // skjuler alle sidene
+  document.querySelectorAll(".page-view").forEach(p => p.classList.remove("active"));
+  // viser kun den siden du klikket på
+  const el = document.getElementById("page-" + page);
+  if (el) el.classList.add("active");
+  statusTasks();
+}
+// viser riktig status når siden åpner
+document.addEventListener("DOMContentLoaded", () => {
+  menyScore();
+  statusTasks();
+});
+
+</script>
+
+
+</body>
+</html>

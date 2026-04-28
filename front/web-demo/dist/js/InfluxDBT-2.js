@@ -8,6 +8,7 @@ const IT2_TIMEOUT  = 10; // sekunder brukeren har per måling
 let _it2Task  = null;  // aktiv SensorTask-instans
 let _it2Timer = null;  // nedtellingsintervall-ID
 let _it2Count = 0;     // antall lagrede målinger
+let _it2Score = 0;     // poeng for denne oppgaven
 
 // Genererer en tilfeldig målsone for avstandssensoren
 function it2NewTarget() {
@@ -74,6 +75,11 @@ function it2StartRound() {
       it2AddRow(reading.timestamp, reading.value);
       _it2Count++;
 
+      // Oppdater poeng
+      _it2Score++;
+      pointSystem('influx-t2', Math.min(_it2Score, IT2_REQUIRED));
+      scoreIt2();
+
       if (_it2Count >= IT2_REQUIRED) {
         it2Finish();
       } else {
@@ -129,9 +135,16 @@ function it2Finish() {
   if (doneEl) doneEl.style.display = 'block';
 }
 
+// Oppdaterer poenget for oppgaven
+function scoreIt2() {
+  const el = document.getElementById('it2-score');
+  if (el) el.textContent = 'Poeng: ' + _it2Score;
+}
+
 // Kalles av Start-knappen
 function it2Start() {
   _it2Count = 0;
+  _it2Score = 0;
   const infoEl = document.getElementById('it2-infobox');
   if (infoEl) infoEl.style.display = 'none';
   const tbodyEl = document.getElementById('it2-tbody');
@@ -140,6 +153,7 @@ function it2Start() {
   if (doneEl) doneEl.style.display = 'none';
   const gameEl = document.getElementById('it2-game');
   if (gameEl) gameEl.style.display = 'block';
+  scoreIt2();
   it2StartRound();
 }
 

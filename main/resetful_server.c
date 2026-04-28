@@ -13,6 +13,7 @@
 #include "cJSON.h"
 #include "potmeter.h"
 #include "distance.h"
+#include "led_control.h"
 
 
 static const char *REST_TAG = "esp-rest";
@@ -187,6 +188,23 @@ static esp_err_t temperature_data_get_handler(httpd_req_t *req)
     return ESP_OK;
 }
 
+/* Handler for LED page sync */
+static esp_err_t led_set_handler(httpd_req_t *req)
+{
+    char page[64] = "";
+    // Extract 'page' query param, e.g. /led?page=mqtt
+    if (httpd_req_get_url_query_len(req) > 0) {
+        char query[128];
+        if (httpd_req_get_url_query_str(req, query, sizeof(query)) == ESP_OK) {
+            httpd_query_key_value(query, "page", page, sizeof(page));
+        }
+    }
+    led_control_set_page(page);
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_sendstr(req, "{\"ok\":true}");
+    return ESP_OK;
+}
+
 esp_err_t resetful_server_start(const char *base_path)
 {
     REST_CHECK(base_path, "wrong base path", err);
@@ -228,6 +246,15 @@ esp_err_t resetful_server_start(const char *base_path)
         .user_ctx = rest_context
     };
     httpd_register_uri_handler(server, &pot_data_get_uri);
+
+    /* URI handler for LED page sync */
+    httpd_uri_t led_set_uri = {
+        .uri = "/led",
+        .method = HTTP_GET,
+        .handler = led_set_handler,
+        .user_ctx = rest_context
+    };
+    httpd_register_uri_handler(server, &led_set_uri);
 
     /* URI handler for light brightness control */
     httpd_uri_t light_brightness_post_uri = {
