@@ -40,19 +40,19 @@
   letter-spacing: 1.3px; text-transform: uppercase; padding: 10px 8px 4px;
 }
 
-/* standard oppgave farge */
+/* standard farge som teacher */
 .nav-link {
   color: white;
 }
 
-/* enklere oppgaver er ikke fullført */
+/* åpen oppgaver, også når de låste åpnes */
 .nav-link.open {
-  color: red;
+  color: white;
 }
 
-/* enklere oppgave er fullført */
+/* fullført oppgave */
 .nav-link.completed {
-  color: white;
+  color: #4caf50;
 }
 
 /* låst */
@@ -61,6 +61,7 @@
   opacity: 0.5;
   pointer-events: none;
 }
+
 
 .nav-link {
   display: flex; align-items: center; gap: 10px;

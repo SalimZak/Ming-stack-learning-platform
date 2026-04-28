@@ -1,24 +1,4 @@
 // dette er logikken for multiplechoice task 1
-// popup system
-function openInfo(){
-
-  let text = ""; // tekst i popup
-  if(document.getElementById('page-mqtt-t1').style.display !== 'none'){
-    text = "Dette er en Multiple Choice oppgave for MQTT. Velg riktig svar og lever når du føler deg ferdig. Lykke til!";
-  }
-  //else if(document.getElementById('page-mqtt-t2').style.display !== 'none'){
-  //  text = "Dette er en True/False oppgave. Velg riktig svar og lever når du føler deg ferdig. Lykke til!";
-  //}
-  //else if(document.getElementById('task5Page') && document.getElementById('task5Page').style.display !== 'none'){
-  //  text = "Her skal du finne relevante begreper ved å klikke på kortene.";
-  //}
-
-  // setter teksten i popup
-  document.getElementById('popupText').innerText = text;
-
-  // viser popup
-  document.getElementById('infoPopup').style.display='flex';
-}
 
 // variabler
 let selectedAnswersMC = []; //lagrer valgte svar for mc i array
@@ -49,7 +29,8 @@ function quizSelect(btn, answerI){
   }
 
   if(taskFinished) return; // stopper oppgave dersom den er ferdig
-  let boxes = document.querySelectorAll(group); // henter alle spørsmålene fra den samme gruppen
+  let activePage = document.querySelector('.page-view.active');
+  let boxes = activePage.querySelectorAll(group); // henter alle spørsmålene fra den samme gruppen
   let realI = Array.from(boxes).indexOf(qBox); // finner nummer på spørsmålet, fra spørsmålsboksen
   buttons.forEach(b => b.classList.remove('selected')); // fjerner valgt og markere ny som git fritt valg av svar
   btn.classList.add('selected');
@@ -67,7 +48,8 @@ function quizFinish(boxClass, scoreId){
     selectedAnswers = selectedAnswersTF;
   }
 
-  let qBoxes = document.querySelectorAll(boxClass); // henter alle spørsmål
+  let activePage = document.querySelector('.page-view.active');
+  let qBoxes = activePage.querySelectorAll(boxClass); // henter alle spørsmål fra den siden som er aktiv
   let score = 0; // teller poeng
 
   qBoxes.forEach((box,i)=>{ // går gjennom alle spørsmålene
@@ -94,31 +76,11 @@ function quizFinish(boxClass, scoreId){
 
   document.getElementById(scoreId).innerText =
     `Poeng Score: ${score} / ${qBoxes.length}`; //oppdaterer score/spørsmåls lengden
+
+  // henter oppgave-id fra aktiv side og lagrer poeng
+  let pageId = activePage.id.replace('page-', '');
+  pointSystem(pageId, score);
 }
 
-/* MC oppgave
-function mqttT1Start(){
-//skjuler infoside og tf, og viser mc oppgave. nullstiller valgte svar
-  document.getElementById('mqttT1-infobox').style.display='none';
-  document.getElementById('mqttT1-taskbox').style.display='block';
-  //document.getElementById('page-mqtt-t2').style.display='none'; 
-  selectedAnswersMC = [];
-  taskFinishedMC = false;
-}
-*/
 
-/* TF oppgave
-function mqttT2Start(){
-//skjuler infoside og mc, og viser mc oppgave. nullstiller valgte svar
-  document.getElementById('mqttT2-infobox').style.display='none'; 
-  document.getElementById('mqttT2-taskbox').style.display='block'; 
-  document.getElementById('page-mqtt-t1').style.display='none'; 
-  selectedAnswersTF = [];
-  taskFinishedTF = false;
-}
-*/
 
-/* popup lukk */
-function closeInfo(){
-  document.getElementById('infoPopup').style.display='none';
-}
