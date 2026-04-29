@@ -3,22 +3,22 @@
 /* kortene */
 
 const cardsData = [
-  {Begrep:"Begrep 1", Forklaring:"Kort forklaring av begrepet", correct:true},
-  {Begrep:"Begrep 2", Forklaring:"Kort forklaring av begrepet", correct:false},
-  {Begrep:"Begrep 3", Forklaring:"Kort forklaring av begrepet", correct:false},
-  {Begrep:"Begrep 4", Forklaring:"Kort forklaring av begrepet", correct:false},
-  {Begrep:"Begrep 5", Forklaring:"Kort forklaring av begrepet", correct:true},
-  {Begrep:"Begrep 6", Forklaring:"Kort forklaring av begrepet", correct:false},
-  {Begrep:"Begrep 7", Forklaring:"Kort forklaring av begrepet", correct:true},
-  {Begrep:"Begrep 8", Forklaring:"Kort forklaring av begrepet", correct:false},
-  {Begrep:"Begrep 9", Forklaring:"Kort forklaring av begrepet", correct:true},
-  {Begrep:"Begrep 10", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Broker", Forklaring:"Kort forklaring av begrepet", correct:true},
+  {Begrep:"Flow", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Node", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Bucket", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Topic", Forklaring:"Kort forklaring av begrepet", correct:true},
+  {Begrep:"Measurement", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Publish", Forklaring:"Kort forklaring av begrepet", correct:true},
+  {Begrep:"Query", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Subscribe", Forklaring:"Kort forklaring av begrepet", correct:true},
+  {Begrep:"Dashboard", Forklaring:"Kort forklaring av begrepet", correct:false},
   {Begrep:"Begrep 11", Forklaring:"Kort forklaring av begrepet", correct:false},
-  {Begrep:"Begrep 12", Forklaring:"Kort forklaring av begrepet", correct:true},
-  {Begrep:"Begrep 13", Forklaring:"Kort forklaring av begrepet", correct:false},
-  {Begrep:"Begrep 14", Forklaring:"Kort forklaring av begrepet", correct:false},
-  {Begrep:"Begrep 15", Forklaring:"Kort forklaring av begrepet", correct:true},
-  {Begrep:"Begrep 16", Forklaring:"Kort forklaring av begrepet", correct:true}
+  {Begrep:"QoS (Quality of Service)", Forklaring:"Kort forklaring av begrepet", correct:true},
+  {Begrep:"Panel", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Database", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Payload", Forklaring:"Kort forklaring av begrepet", correct:true},
+  {Begrep:"Retained message", Forklaring:"Kort forklaring av begrepet", correct:true}
 ];
 
 
