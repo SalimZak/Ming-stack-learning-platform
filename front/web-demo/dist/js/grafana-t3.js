@@ -18,6 +18,7 @@ let objects = [] //lagrer verdien til gyldig og ugyldig
 
 // skjul start siden og start spill og topbar etter 2 sek
 function startSpill(){
+  infoBoxText("Fang gyldige sensorverdier mellom 40-60 %RH");
   document.getElementById("start").style.display="none";
   setTimeout(()=>{
     spillStarter=true; 
