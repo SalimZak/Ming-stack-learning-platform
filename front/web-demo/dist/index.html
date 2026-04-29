@@ -1300,6 +1300,8 @@ function statusTasks() {
     //reseter listen
     btn.classList.remove("locked", "completed", "open");
 
+    // rydde ikon
+    btn.querySelector(".nav-icon").textContent = "";
     // lærer får ingen klasse eller ikon
     if (data.role === "teacher") return;
 
