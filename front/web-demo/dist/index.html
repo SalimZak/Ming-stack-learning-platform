@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="css/influx-t2.css">
   <link rel="stylesheet" href="css/grafana-t4.css">
   <link rel="stylesheet" href="css/mc-quiz.css">
+  <link rel="stylesheet" href="css/MQTTTask5Card.css">
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -232,51 +233,149 @@
         <button class="small-link" onclick="go('ming')">← MING</button>
       </div>
 
-      <!-- ══ MQTT OPPGAVE 1 — Multiple Choice ══ -->
+
+            <!-- MQTT OPPGAVE 1 -->
       <div id="page-mqtt-t1" class="page-view">
-        <h1 class="page-title" data-i18n="mqtt_t1_title">MQTT – Oppgave 1</h1>
+        <h1 class="page-title" data-i18n="mqtt_t1_title">MQTT - Oppgave 1</h1>
 
+          <!-- infoboks-->
         <div id="mqttT1-infobox" class="infobox">
-          <h4 data-i18n="mc_mqtt_infoTitle">Multiple Choice</h4>
-          <p  data-i18n="mc_mqtt_infoBody">Oppgavebeskrivelse.</p>
-          <button class="startbtn" onclick="mqttT1Start()" data-i18n="mc_startBtn">Start</button>
+          <h3>Multiple Choice</h3>
+          <p>Informasjon om Temaet skal stå her</p>
+          <p>Dette er er multiplechoice oppgave med 10 spørsmål. Med 4 valg alternativer. kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
+          <button class="startbtn" onclick="mqttT1Start()">Start</button>
         </div>
 
-        <div id="mqttT1-taskbox" style="display:none">
-          <div id="mqttT1-score" class="mc-score-box"></div>
+        <div id="mqttT1-taskbox" style="display:none;">
+          <!-- score -->
+          <div id="mqttT1-score" class="scoreBox">Poeng Score: 0 / 10</div>
 
-          <div class="MCbox" data-correct="1"><p data-i18n="mc_mqttT1_q1">Spørsmål 1?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q1a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q1a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q1a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q1a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="0"><p data-i18n="mc_mqttT1_q2">Spørsmål 2?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q2a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q2a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q2a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q2a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="0"><p data-i18n="mc_mqttT1_q3">Spørsmål 3?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q3a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q3a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q3a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q3a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="3"><p data-i18n="mc_mqttT1_q4">Spørsmål 4?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q4a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q4a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q4a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q4a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="2"><p data-i18n="mc_mqttT1_q5">Spørsmål 5?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q5a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q5a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q5a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q5a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="1"><p data-i18n="mc_mqttT1_q6">Spørsmål 6?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q6a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q6a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q6a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q6a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="1"><p data-i18n="mc_mqttT1_q7">Spørsmål 7?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q7a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q7a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q7a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q7a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="3"><p data-i18n="mc_mqttT1_q8">Spørsmål 8?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q8a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q8a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q8a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q8a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="0"><p data-i18n="mc_mqttT1_q9">Spørsmål 9?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q9a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q9a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q9a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q9a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="2"><p data-i18n="mc_mqttT1_q10">Spørsmål 10?</p><button onclick="mqttT1Select(this,0)" data-i18n="mc_mqttT1_q10a0">Valg 1</button><button onclick="mqttT1Select(this,1)" data-i18n="mc_mqttT1_q10a1">Valg 2</button><button onclick="mqttT1Select(this,2)" data-i18n="mc_mqttT1_q10a2">Valg 3</button><button onclick="mqttT1Select(this,3)" data-i18n="mc_mqttT1_q10a3">Valg 4</button></div>
-
-          <button class="mc-finish-btn" onclick="mqttT1Finish()" data-i18n="mc_finishBtn">Lever</button>
-        </div>
-
-        <button class="mc-info-btn" onclick="mqttT1OpenInfo()">i</button>
-        <div id="mqttT1-popup" class="mc-popup-overlay">
-          <div class="mc-popup-box">
-            <h3 data-i18n="mc_popupTitle">Forklaring</h3>
-            <p id="mqttT1-popup-text"></p>
-            <button class="mc-popup-close" onclick="mqttT1CloseInfo()" data-i18n="mc_popupClose">Lukk</button>
+          <div class="MCbox" data-correct="1">
+            <p>Hva er MQTT?</p>
+            <button onclick="quizSelect(this,0)">En database</button>
+            <button onclick="quizSelect(this,1)">En måte å sende meldinger mellom systemer</button>
+            <button onclick="quizSelect(this,2)">Et grafprogram</button>
+            <button onclick="quizSelect(this,3)">En signalfilter</button>
           </div>
-        </div>
 
+          <div class="MCbox" data-correct="0">
+            <p>Hva sender sensoren i MQTT?</p>
+            <button onclick="quizSelect(this,0)">Meldinger med måledata</button>
+            <button onclick="quizSelect(this,1)">Bilder</button>
+            <button onclick="quizSelect(this,2)">Programkode</button>
+            <button onclick="quizSelect(this,3)">Sender IP-adresse</button>
+          </div>
+
+          <div class="MCbox" data-correct="0">
+            <p>I MQTT-protokollen, hva gjør 'publish'?</p>
+            <button onclick="quizSelect(this,0)">Sender en melding</button>
+            <button onclick="quizSelect(this,1)">Sletter data</button>
+            <button onclick="quizSelect(this,2)">Lagrer filer</button>
+            <button onclick="quizSelect(this,3)">Oversetter språk til filer</button>
+          </div>
+
+          <div class="MCbox" data-correct="3">
+            <p>I MQTT-protokollen, hva gjør 'subscribe'?</p>
+            <button onclick="quizSelect(this,0)">Lagrer data i en tidsserie-database</button>
+            <button onclick="quizSelect(this,1)">Skriver måledata</button>
+            <button onclick="quizSelect(this,2)">Henter historiske data</button>
+            <button onclick="quizSelect(this,3)">Mottar meldinger fra et topic</button>
+          </div>
+
+          <div class="MCbox" data-correct="2">
+            <p>Hva skjer etter at sensoren måler?</p>
+            <button onclick="quizSelect(this,0)">Systemet slår seg av</button>
+            <button onclick="quizSelect(this,1)">Internett kobles fra</button>
+            <button onclick="quizSelect(this,2)">Data sendes videre i systemet</button>
+            <button onclick="quizSelect(this,3)">Måler spenning</button>
+          </div>
+
+          <div class="MCbox" data-correct="1">
+            <p>Hva betyr datapipeline?</p>
+            <button onclick="quizSelect(this,0)">Et kabelsystem</button>
+            <button onclick="quizSelect(this,1)">Veien data tar gjennom systemet</button>
+            <button onclick="quizSelect(this,2)">En type sensor</button>
+            <button onclick="quizSelect(this,3)">At WiFi er av</button>
+          </div>
+
+          <div class="MCbox" data-correct="1">
+            <p>Hva skjer hvis filtreringen er svak?</p>
+            <button onclick="quizSelect(this,0)">Sensoren blir kaldere</button>
+            <button onclick="quizSelect(this,1)">Signal reagerer raskere</button>
+            <button onclick="quizSelect(this,2)">WiFi blir sterkere</button>
+            <button onclick="quizSelect(this,3)">Systemet slår seg av</button>
+          </div>
+
+          <div class="MCbox" data-correct="3">
+            <p>Hva skjer hvis filtreringen er veldig sterk?</p>
+            <button onclick="quizSelect(this,0)">Internett kobles fra</button>
+            <button onclick="quizSelect(this,1)">Grafen forsvinner</button>
+            <button onclick="quizSelect(this,2)">Sensoren stopper</button>
+            <button onclick="quizSelect(this,3)">Signal reagerer saktere</button>
+          </div>
+
+          <div class="MCbox" data-correct="0">
+            <p>Hva er et "topic" i MQTT?</p>
+            <button onclick="quizSelect(this,0)">En kanal som meldinger sendes på</button>
+            <button onclick="quizSelect(this,1)">En IP-adresse</button>
+            <button onclick="quizSelect(this,2)">En database</button>
+            <button onclick="quizSelect(this,3)">En sensor</button>
+          </div>
+
+          <div class="MCbox" data-correct="2">
+            <p>Hva gjør en MQTT broker?</p>
+            <button onclick="quizSelect(this,0)">Måler sensorverdier</button>
+            <button onclick="quizSelect(this,1)">Visualiserer grafer</button>
+            <button onclick="quizSelect(this,2)">Sender meldinger mellom publish og subscribe</button>
+            <button onclick="quizSelect(this,3)">Slår av systemet</button>
+          </div>
+
+          <!-- submitt-->
+          <button class="mc-finish-btn" onclick="quizFinish('.MCbox','mqttT1-score')">Lever</button>
+          </div>
         <button class="small-link" onclick="go('mqtt')" data-i18n="mqtt_t1_back">← Tilbake til MQTT-oppgaver</button>
       </div>
 
-      <!-- ══ MQTT OPPGAVE 2 — plassholder ══ -->
+      <!-- MQTT OPPGAVE 2 -->
       <div id="page-mqtt-t2" class="page-view">
-        <h1 class="page-title" data-i18n="mqtt_t2_title">MQTT – Oppgave 2</h1>
-        <p  class="page-sub"   data-i18n="mqtt_t2_desc">Fyll inn her.</p>
-        <button class="small-link" onclick="go('mqtt')" data-i18n="mqtt_t2_back">← Tilbake til MQTT-oppgaver</button>
+        <h1 class="page-title" data-i18n="mqtt_t2_title">MQTT - Oppgave 2</h1>
+        
+      <div id="startScreen">
+        <div class="infobox">
+          <h3>Task 5 - Card Flip</h3>
+          <p>Du skal klikke (flippe) kortene og finne de begrepene som er relevante for MQTT. På baksiden av hvert kort finner du en forklaring.</p>
+          <p>Riktig svar gir +1 poeng og kortet blir grønt. </p>
+          <p>Feil svar gir -1 poeng og kortet blir rødt.</p>
+          <p>Du må finne 7 riktige av 16 for å fullføre oppgaven. Lykke til!</p>
+          <button class="startbtn" onclick="startGame()">Start</button>
+        </div>
       </div>
+
+        <!-- Task 5 card flip -->
+        <div id="task5Page" style="display:none;">
+
+          <!-- fullført -->
+          <div id="completeBanner" class="complete-banner">
+            COMPLETE
+          </div>
+
+          <!-- oppgave tekst -->
+          <div class="taskbox">
+            Finn de 7 riktige begrepene ved å klikke på kortene. 
+          </div>
+
+          <!-- score -->
+          <div class="scoreBox">
+            Poengscore: <span id="score"> 0 - Found: 0/7</span>
+          </div>
+
+          <!-- utformingen -->
+          <div class="grid" id="grid"></div>
+
+        </div>
+
+          <button class="small-link" onclick="go('mqtt')" data-i18n="mqtt_t2_back">← Tilbake til MQTT-oppgaver</button>
+        </div>
 
       <!-- ══ INFLUXDB — oppgavevalg + plassholdere ══ -->
       <div id="page-influx" class="page-view">
@@ -290,42 +389,107 @@
       </div>
       <!-- ══ INFLUXDB OPPGAVE 1 — Multiple Choice ══ -->
       <div id="page-influx-t1" class="page-view">
-        <h1 class="page-title" data-i18n="influx_t1_title">InfluxDB – Oppgave 1</h1>
+        <h1 class="page-title" data-i18n="influx_t1_title">InfluxDB - Oppgave 1</h1>
 
+        <!-- infoboks-->
         <div id="influxT1-infobox" class="infobox">
-          <h4 data-i18n="mc_influx_infoTitle">Multiple Choice</h4>
-          <p  data-i18n="mc_influx_infoBody">Oppgavebeskrivelse.</p>
-          <button class="startbtn" onclick="influxT1Start()" data-i18n="mc_startBtn">Start</button>
+          <h3>Multiple Choice</h3>
+          <p>Informasjon om Temaet skal stå her</p>
+          <p>Dette er er multiplechoice oppgave med 10 spørsmål. Med 4 valg alternativer. kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
+          <button class="startbtn" onclick="influxT1Start()">Start</button>
         </div>
 
         <div id="influxT1-taskbox" style="display:none">
-          <div id="influxT1-score" class="mc-score-box"></div>
+          <!-- score -->
+          <div id="influxT1-score" class="scoreBox">Poeng Score: 0 / 10</div>
 
-          <div class="MCbox" data-correct="1"><p data-i18n="mc_influxT1_q1">Spørsmål 1?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q1a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q1a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q1a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q1a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="0"><p data-i18n="mc_influxT1_q2">Spørsmål 2?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q2a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q2a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q2a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q2a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="0"><p data-i18n="mc_influxT1_q3">Spørsmål 3?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q3a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q3a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q3a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q3a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="3"><p data-i18n="mc_influxT1_q4">Spørsmål 4?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q4a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q4a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q4a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q4a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="2"><p data-i18n="mc_influxT1_q5">Spørsmål 5?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q5a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q5a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q5a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q5a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="1"><p data-i18n="mc_influxT1_q6">Spørsmål 6?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q6a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q6a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q6a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q6a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="1"><p data-i18n="mc_influxT1_q7">Spørsmål 7?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q7a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q7a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q7a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q7a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="3"><p data-i18n="mc_influxT1_q8">Spørsmål 8?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q8a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q8a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q8a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q8a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="0"><p data-i18n="mc_influxT1_q9">Spørsmål 9?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q9a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q9a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q9a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q9a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="2"><p data-i18n="mc_influxT1_q10">Spørsmål 10?</p><button onclick="influxT1Select(this,0)" data-i18n="mc_influxT1_q10a0">Valg 1</button><button onclick="influxT1Select(this,1)" data-i18n="mc_influxT1_q10a1">Valg 2</button><button onclick="influxT1Select(this,2)" data-i18n="mc_influxT1_q10a2">Valg 3</button><button onclick="influxT1Select(this,3)" data-i18n="mc_influxT1_q10a3">Valg 4</button></div>
-
-          <button class="mc-finish-btn" onclick="influxT1Finish()" data-i18n="mc_finishBtn">Lever</button>
-        </div>
-
-        <button class="mc-info-btn" onclick="influxT1OpenInfo()">i</button>
-        <div id="influxT1-popup" class="mc-popup-overlay">
-          <div class="mc-popup-box">
-            <h3 data-i18n="mc_popupTitle">Forklaring</h3>
-            <p id="influxT1-popup-text"></p>
-            <button class="mc-popup-close" onclick="influxT1CloseInfo()" data-i18n="mc_popupClose">Lukk</button>
+          <div class="MCbox" data-correct="1">
+            <p>Spørsmål 1?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
           </div>
-        </div>
 
-        <button class="small-link" onclick="go('influx')" data-i18n="influx_t1_back">← Tilbake</button>
+          <div class="MCbox" data-correct="0">
+            <p>Spørsmål 2?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="0">
+            <p>Spørsmål 3?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="3">
+            <p>Spørsmål 4?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="2">
+            <p>Spørsmål 5?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="1">
+            <p>Spørsmål 6?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="1">
+            <p>Spørsmål 7?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="3">
+            <p>Spørsmål 8?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="0">
+            <p>Spørsmål 9?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="2">
+            <p>Spørsmål 10?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <!-- submitt-->
+          <button class="mc-finish-btn" onclick="quizFinish('.MCbox','influxT1-score')">Lever</button>
+          </div>
+        <button class="small-link" onclick="go('influx')" data-i18n="influx_t1_back">← Tilbake </button>
       </div>
+
+
       <div id="page-influx-t2" class="page-view">
         <h1 class="page-title" data-i18n="influx_t2_title">InfluxDB – Oppgave 2</h1>
 
@@ -338,6 +502,8 @@
 
         <!-- Spillområde — skjult til it2Start() kalles -->
         <div id="it2-game" style="display:none">
+          <!-- poeng score -->
+          <div id="it2-score">Poeng: 0</div>
 
           <!-- Runde-etikett -->
           <div id="it2-round"></div>
@@ -379,7 +545,7 @@
         <button class="small-link" onclick="go('influx')" data-i18n="influx_t2_back">← Tilbake</button>
       </div>
 
-      <!-- ══ NODE-RED — oppgavevalg + plassholdere ══ -->
+<!-- ══ NODE-RED — oppgavevalg + plassholdere ══ -->
       <div id="page-nodered" class="page-view">
         <h1 class="page-title" data-i18n="nodered_title">Node-RED</h1>
         <p  class="page-sub"   data-i18n="nodered_sub">Velg en oppgave.</p>
@@ -389,47 +555,186 @@
         </div>
         <button class="small-link" onclick="go('ming')">← MING</button>
       </div>
-      <!-- ══ NODE-RED OPPGAVE 1 — Multiple Choice ══ -->
+      <!-- NODE-RED OPPGAVE 1 - Multiple Choice -->
       <div id="page-nodered-t1" class="page-view">
-        <h1 class="page-title" data-i18n="nodered_t1_title">Node-RED – Oppgave 1</h1>
+        <h1 class="page-title" data-i18n="nodered_t1_title">Node-RED - Oppgave 1</h1>
 
+        <!-- infoboks-->
         <div id="noderedT1-infobox" class="infobox">
-          <h4 data-i18n="mc_nodered_infoTitle">Multiple Choice</h4>
-          <p  data-i18n="mc_nodered_infoBody">Oppgavebeskrivelse.</p>
-          <button class="startbtn" onclick="noderedT1Start()" data-i18n="mc_startBtn">Start</button>
+          <h3>Multiple Choice</h3>
+          <p>Informasjon om Temaet skal stå her</p>
+          <p>Dette er er multiplechoice oppgave med 10 spørsmål. Med 4 valg alternativer. kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
+          <button class="startbtn" onclick="nodeREDT1Start()">Start</button>
         </div>
 
-        <div id="noderedT1-taskbox" style="display:none">
-          <div id="noderedT1-score" class="mc-score-box"></div>
+        <div id="noderedT1-taskbox" style="display:none;">
+          <!-- score -->
+          <div id="noderedT1-score" class="scoreBox">Poeng Score: 0 / 10</div>
 
-          <div class="MCbox" data-correct="1"><p data-i18n="mc_noderedT1_q1">Spørsmål 1?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q1a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q1a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q1a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q1a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="0"><p data-i18n="mc_noderedT1_q2">Spørsmål 2?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q2a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q2a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q2a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q2a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="0"><p data-i18n="mc_noderedT1_q3">Spørsmål 3?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q3a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q3a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q3a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q3a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="3"><p data-i18n="mc_noderedT1_q4">Spørsmål 4?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q4a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q4a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q4a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q4a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="2"><p data-i18n="mc_noderedT1_q5">Spørsmål 5?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q5a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q5a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q5a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q5a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="1"><p data-i18n="mc_noderedT1_q6">Spørsmål 6?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q6a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q6a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q6a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q6a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="1"><p data-i18n="mc_noderedT1_q7">Spørsmål 7?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q7a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q7a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q7a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q7a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="3"><p data-i18n="mc_noderedT1_q8">Spørsmål 8?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q8a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q8a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q8a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q8a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="0"><p data-i18n="mc_noderedT1_q9">Spørsmål 9?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q9a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q9a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q9a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q9a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="2"><p data-i18n="mc_noderedT1_q10">Spørsmål 10?</p><button onclick="noderedT1Select(this,0)" data-i18n="mc_noderedT1_q10a0">Valg 1</button><button onclick="noderedT1Select(this,1)" data-i18n="mc_noderedT1_q10a1">Valg 2</button><button onclick="noderedT1Select(this,2)" data-i18n="mc_noderedT1_q10a2">Valg 3</button><button onclick="noderedT1Select(this,3)" data-i18n="mc_noderedT1_q10a3">Valg 4</button></div>
-
-          <button class="mc-finish-btn" onclick="noderedT1Finish()" data-i18n="mc_finishBtn">Lever</button>
-        </div>
-
-        <button class="mc-info-btn" onclick="noderedT1OpenInfo()">i</button>
-        <div id="noderedT1-popup" class="mc-popup-overlay">
-          <div class="mc-popup-box">
-            <h3 data-i18n="mc_popupTitle">Forklaring</h3>
-            <p id="noderedT1-popup-text"></p>
-            <button class="mc-popup-close" onclick="noderedT1CloseInfo()" data-i18n="mc_popupClose">Lukk</button>
+          <div class="MCbox" data-correct="1">
+            <p>Spørsmål 1?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
           </div>
-        </div>
 
+          <div class="MCbox" data-correct="0">
+            <p>Spørsmål 2?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="0">
+            <p>Spørsmål 3?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="3">
+            <p>Spørsmål 4?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="2">
+            <p>Spørsmål 5?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="1">
+            <p>Spørsmål 6?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="1">
+            <p>Spørsmål 7?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="3">
+            <p>Spørsmål 8?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="0">
+            <p>Spørsmål 9?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="2">
+            <p>Spørsmål 10?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <!-- submitt-->
+          <button class="mc-finish-btn" onclick="quizFinish('.MCbox','noderedT1-score')">Lever</button>
+          </div>
         <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t1_back">← Tilbake</button>
       </div>
+
+      <!-- NODE-RED OPPGAVE 2 - True/False -->
       <div id="page-nodered-t2" class="page-view">
-        <h1 class="page-title" data-i18n="nodered_t2_title">Node-RED – Oppgave 2</h1>
-        <p  class="page-sub"   data-i18n="nodered_t2_desc">Fyll inn her.</p>
+        <h1 class="page-title" data-i18n="nodered_t2_title">Node-RED - Oppgave 2</h1>
+        <!-- infoboks-->
+        <div id="noderedT2-infobox" class="infobox">
+          <h3>True or False</h3>
+          <p>Informasjon om Temaet skal stå her</p>
+          <p>Dette er er true or false oppgave med 10 spørsmål. Med 4 valg alternativer. Kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
+          <button class="startbtn" onclick="nodeREDT2Start()">Start</button>
+        </div>
+
+        <div id="noderedT2-taskbox" style="display:none;">
+          <!-- score -->
+          <div id="noderedT2-score" class="scoreBox">Poeng Score: 0 / 10</div>
+
+          <div class="TFbox" data-correct="1">
+            <p>Spørsmål 1?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="0">
+            <p>Spørsmål 2?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="0">
+            <p>Spørsmål 3?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="0">
+            <p>Spørsmål 4?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="1">
+            <p>Spørsmål 5?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="1">
+            <p>Spørsmål 6?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="1">
+            <p>Spørsmål 7?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="0">
+            <p>Spørsmål 8?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="1">
+            <p>Spørsmål 9?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="0">
+            <p>Spørsmål 10?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <!-- submitt-->
+          <button class="mc-finish-btn" onclick="quizFinish('.TFbox','noderedT2-score')">Lever</button>
+          </div>
         <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t2_back">← Tilbake</button>
       </div>
 
@@ -447,45 +752,184 @@
       </div>
       <!-- ══ GRAFANA OPPGAVE 1 — Multiple Choice ══ -->
       <div id="page-grafana-t1" class="page-view">
-        <h1 class="page-title" data-i18n="grafana_t1_title">Grafana – Oppgave 1</h1>
+        <h1 class="page-title" data-i18n="grafana_t1_title">Grafana - Oppgave 1</h1>
 
+      <!-- infoboks-->
         <div id="grafanaT1-infobox" class="infobox">
-          <h4 data-i18n="mc_grafana_infoTitle">Multiple Choice</h4>
-          <p  data-i18n="mc_grafana_infoBody">Oppgavebeskrivelse.</p>
-          <button class="startbtn" onclick="grafanaT1Start()" data-i18n="mc_startBtn">Start</button>
+          <h3>Multiple Choice</h3>
+          <p>Informasjon om Temaet skal stå her</p>
+          <p>Dette er er multiplechoice oppgave med 10 spørsmål. Med 4 valg alternativer. kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
+          <button class="startbtn" onclick="grafanaT1Start()">Start</button>
         </div>
 
         <div id="grafanaT1-taskbox" style="display:none">
-          <div id="grafanaT1-score" class="mc-score-box"></div>
+          <div id="grafanaT1-score" class="scoreBox">Poeng Score: 0 / 10</div>
 
-          <div class="MCbox" data-correct="1"><p data-i18n="mc_grafanaT1_q1">Spørsmål 1?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q1a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q1a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q1a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q1a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="0"><p data-i18n="mc_grafanaT1_q2">Spørsmål 2?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q2a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q2a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q2a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q2a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="0"><p data-i18n="mc_grafanaT1_q3">Spørsmål 3?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q3a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q3a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q3a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q3a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="3"><p data-i18n="mc_grafanaT1_q4">Spørsmål 4?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q4a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q4a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q4a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q4a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="2"><p data-i18n="mc_grafanaT1_q5">Spørsmål 5?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q5a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q5a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q5a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q5a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="1"><p data-i18n="mc_grafanaT1_q6">Spørsmål 6?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q6a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q6a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q6a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q6a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="1"><p data-i18n="mc_grafanaT1_q7">Spørsmål 7?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q7a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q7a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q7a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q7a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="3"><p data-i18n="mc_grafanaT1_q8">Spørsmål 8?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q8a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q8a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q8a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q8a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="0"><p data-i18n="mc_grafanaT1_q9">Spørsmål 9?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q9a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q9a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q9a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q9a3">Valg 4</button></div>
-          <div class="MCbox" data-correct="2"><p data-i18n="mc_grafanaT1_q10">Spørsmål 10?</p><button onclick="grafanaT1Select(this,0)" data-i18n="mc_grafanaT1_q10a0">Valg 1</button><button onclick="grafanaT1Select(this,1)" data-i18n="mc_grafanaT1_q10a1">Valg 2</button><button onclick="grafanaT1Select(this,2)" data-i18n="mc_grafanaT1_q10a2">Valg 3</button><button onclick="grafanaT1Select(this,3)" data-i18n="mc_grafanaT1_q10a3">Valg 4</button></div>
-
-          <button class="mc-finish-btn" onclick="grafanaT1Finish()" data-i18n="mc_finishBtn">Lever</button>
-        </div>
-
-        <button class="mc-info-btn" onclick="grafanaT1OpenInfo()">i</button>
-        <div id="grafanaT1-popup" class="mc-popup-overlay">
-          <div class="mc-popup-box">
-            <h3 data-i18n="mc_popupTitle">Forklaring</h3>
-            <p id="grafanaT1-popup-text"></p>
-            <button class="mc-popup-close" onclick="grafanaT1CloseInfo()" data-i18n="mc_popupClose">Lukk</button>
+          <div class="MCbox" data-correct="1">
+            <p>Spørsmål 1?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
           </div>
-        </div>
 
+          <div class="MCbox" data-correct="0">
+            <p>Spørsmål 2?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="0">
+            <p>Spørsmål 3?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="3">
+            <p>Spørsmål 4?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="2">
+            <p>Spørsmål 5?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="1">
+            <p>Spørsmål 6?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="1">
+            <p>Spørsmål 7?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="3">
+            <p>Spørsmål 8?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="0">
+            <p>Spørsmål 9?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <div class="MCbox" data-correct="2">
+            <p>Spørsmål 10?</p>
+            <button onclick="quizSelect(this,0)">Valg 1</button>
+            <button onclick="quizSelect(this,1)">Valg 2</button>
+            <button onclick="quizSelect(this,2)">Valg 3</button>
+            <button onclick="quizSelect(this,3)">Valg 4</button>
+          </div>
+
+          <!-- submitt-->
+          <button class="mc-finish-btn" onclick="quizFinish('.MCbox','grafanaT1-score')">Lever</button>
+          </div>
         <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t1_back">← Tilbake</button>
       </div>
+
+      <!-- NODE-RED OPPGAVE 2 - True/False -->
       <div id="page-grafana-t2" class="page-view">
-        <h1 class="page-title" data-i18n="grafana_t2_title">Grafana – Oppgave 2</h1>
-        <p  class="page-sub"   data-i18n="grafana_t2_desc">Fyll inn her.</p>
+        <h1 class="page-title" data-i18n="grafana_t2_title">Grafana - Oppgave 2</h1>
+      
+        <!-- startpage-->
+        <div id="grafanaT2-infobox" class="infobox">
+          <h3>True or False</h3>
+          <p>Informasjon om Temaet skal stå her</p>
+          <p>Dette er er true or false oppgave med 10 spørsmål. Med 4 valg alternativer. Kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
+          <button class="startbtn" onclick="grafanaT2Start()">Start</button>
+        </div>
+
+        <div id="grafanaT2-taskbox" style="display:none;">
+          <!-- score -->
+          <div id="grafanaT2-score" class="scoreBox">Poeng Score: 0 / 10</div>
+
+          <div class="TFbox" data-correct="1">
+            <p>Spørsmål 1?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="0">
+            <p>Spørsmål 2?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="0">
+            <p>Spørsmål 3?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="0">
+            <p>Spørsmål 4?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="1">
+            <p>Spørsmål 5?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="1">
+            <p>Spørsmål 6?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="1">
+            <p>Spørsmål 7?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="0">
+            <p>Spørsmål 8?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="1">
+            <p>Spørsmål 9?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="0">
+            <p>Spørsmål 10?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <!-- submitt-->
+          <button class="mc-finish-btn" onclick="quizFinish('.TFbox','grafanaT2-score')">Lever</button>
+          </div>
         <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t2_back">← Tilbake</button>
       </div>
 
@@ -493,18 +937,19 @@
       <div id="page-grafana-t3" class="page-view">
         <h1 class="page-title" data-i18n="grafana_t3_title">Grafana – Oppgave 3</h1>
 
-        <div id="start" class="container">
-          <h2 data-i18n="gt3_gameTitle">Catch the object game</h2>
+        <div id="start" class="infobox">
+          <h3 data-i18n="gt3_gameTitle">Catch the object game</h3>
           <p data-i18n="gt3_desc1">Fang så mange sensorverdier som mulig innen 60 sekunder ved hjelp av venstre og høyre piltast</p>
-          <p data-i18n="gt3_desc2">Gyldige verdier: Fuktighet: 40–60 %RH, alt utenfor er ugyldige</p>
+          <p data-i18n="gt3_desc2">Gyldige verdier: Fuktighet: 40-60 %RH, alt utenfor er ugyldige</p>
           <p data-i18n="gt3_desc3">Det er +1 poeng for å fange riktige objekter og -1 poeng for å fange feil objekter</p>
           <p data-i18n="gt3_desc4">Resultatet vil bli visualisert som kakediagram, stolpediagram og graf. Der du kan analysere resultatet</p>
           <button class="startbtn" onclick="startSpill()" data-i18n="gt3_startBtn">Start</button>
         </div>
+        
 
         <div id="topbar">
           <span data-i18n="gt3_timeLabel">Tid</span>: <span id="tid">60</span> /
-          <span data-i18n="gt3_scoreLabel">Score</span>: <span id="score">0</span>
+          <span data-i18n="gt3_scoreLabel">Score</span>: <span id="gt3-score">0</span>
         </div>
 
         <div id="spill">
@@ -535,6 +980,8 @@
 
         <!-- Spillområde — skjult til gt4Start() kalles -->
         <div id="gt4-game" style="display:none">
+          <!-- poeng score -->
+          <div id="gt4-score">Poeng: 0</div>
 
           <!-- Grafana-panel med linjediagram -->
           <div id="gt4-panel">
@@ -705,6 +1152,18 @@
   </main>
 </div><!-- /app-shell -->
 
+<!--infobokser-->
+<button class="mc-info-btn" onclick="openInfo()">i</button>
+
+<div id="infoPopup" class="popup-overlay mc-popup-overlay">
+  <div class="popup-box mc-popup-box">
+    <h3>Forklaring</h3>
+    <p id="popupText">Her kommer begrepsforklaring for mqtt t1.</p>
+    <button class="popup-close mc-popup-close" onclick="closeInfo()">Lukk</button>
+  </div>
+</div>
+
+
 <!-- JS — i18n først (alt avhenger av t()), så router, så features -->
 <script src="js/i18n.js"></script>
 <script src="js/router.js"></script>
@@ -718,10 +1177,15 @@
 <script src="js/sensor-task.js"></script>
 <script src="js/InfluxDBT-2.js"></script>
 <script src="js/GrafanaT-4.js"></script>
-<script src="js/mc-mqtt.js"></script>
-<script src="js/mc-influx.js"></script>
-<script src="js/mc-nodered.js"></script>
-<script src="js/mc-grafana.js"></script>
+<script src="js/MC_Influx.js"></script>
+<script src="js/MC_Grafana.js"></script>
+<script src="js/MC.js"></script>
+<script src="js/MC_MQTT.js"></script>
+<script src="js/InfoBox.js"></script>
+<script src="js/MC_NodeRED.js"></script>
+<script src="js/MQTTTask5Card.js"></script>
+<script src="js/TF_NodeRED.js"></script>
+<script src="js/TF_Grafana.js"></script>
 
 <script>
 //local storage
@@ -739,9 +1203,15 @@ function writeData(data) {
 // lagrer poeng score og sette de sammen
 function pointSystem(task, points) {
   let data = readData(); //henter lagret data
+  let oldPoints;// gammel poeng om det var noe
 
-  //viser statusen om oppgaven er open/låst og poengene
-  data.tasks[task] = {open: true, points: points};
+if (data.tasks[task]) { //hvis oppgaven finnes hent tildigere poeng
+  oldPoints = data.tasks[task].points;
+} else {
+  oldPoints = 0;} // om den ikke finnes = 0
+
+  //viser statusen om oppgaven er open/låst og poengene. Overskriver kun poeng > tidligere poeng
+  data.tasks[task] = {open: true, points: Math.max(oldPoints, points)};
 
   //summerer poengene fra de andre oppgavene
   let totalPoints = 0;
@@ -814,12 +1284,9 @@ function updateIconLock(btn, page, data) {
   if (isLocked(page)) {
     // lås for låste oppgaver
     btn.querySelector(".nav-icon").textContent = "\uD83D\uDD12";
-    // åpen lås når de enklere er fullført
-  } else if (data.tasks[page] && data.tasks[page].open) {
-    btn.querySelector(".nav-icon").textContent = "\uD83D\uDD13";
-
-  } else {
-    // ingen ikon på enklere oppgaver
+  } 
+  else {
+    // ingen ikon på enklere oppgaver, fullørte og lærer manual
     btn.querySelector(".nav-icon").textContent = "";
   }
 }
@@ -835,6 +1302,11 @@ function statusTasks() {
     //reseter listen
     btn.classList.remove("locked", "completed", "open");
 
+    // rydde ikon
+    btn.querySelector(".nav-icon").textContent = "";
+    // lærer får ingen klasse eller ikon
+    if (data.role === "teacher") return;
+
     // hvis siden er låst så blir den markert som det
     if (isLocked(page)) {
       btn.classList.add("locked");
@@ -846,12 +1318,13 @@ function statusTasks() {
     let basicTask = data.tasks[page];
     let taskCompleted = basicTask && basicTask.open;
     //endrer csss
-    if (taskCompleted) { //oppgaven er fullført
+    if (taskCompleted) { //oppgaven er fullført, grønn
       btn.classList.add("completed");
-
-    } else if ((page.includes("-t1") || page.includes("-t2")) && !taskCompleted){ //en av oppgavene i temaet fullført
-      btn.classList.add("open");
+    } 
+      else if ((page.endsWith("-t1") || page.endsWith("-t2")) && !taskCompleted){ //en av oppgavene i temaet fullført
+      btn.classList.add("open"); //resten er hvit
     }
+
     // gir riktig ikon
     updateIconLock(btn, page, data);
   });

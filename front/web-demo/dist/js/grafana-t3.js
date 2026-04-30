@@ -18,6 +18,7 @@ let objects = [] //lagrer verdien til gyldig og ugyldig
 
 // skjul start siden og start spill og topbar etter 2 sek
 function startSpill(){
+  infoBoxText("Fang gyldige sensorverdier mellom 40-60 %RH");
   document.getElementById("start").style.display="none";
   setTimeout(()=>{
     spillStarter=true; 
@@ -99,15 +100,15 @@ function lagObjekt(){
       let time = el.dataset.time; // tiden på objektet
 
       if(gyldig){
-        //riktig er 2 poeng 
-        score += 2;
+        //riktig er 1 poeng 
+        score += 1;
         validCaptured++;
       } else {
         score = Math.max(0, score - 1);; //feil, ikke negativ tall, tar minste poeng emmlom 0 og feil.
         invalidCaptured++;
       }
       //blir sendt til fellesscoren
-      pointSystem("grafana-t3", score);;
+      pointSystem("grafana-t3", score);
 
 
       // lagre tid verdi på graf
@@ -115,7 +116,7 @@ function lagObjekt(){
       objectValues.push(verdi); // objekt verdiene på grafene (y-aksene)
       objects.push(el.dataset.gyldig === "true"); // lagrer om punktene er gyldige eller ugyldige (for å gjøre de grønn/rød punkter)
 
-      document.getElementById("score").textContent=score;
+      document.getElementById("gt3-score").textContent=score;
       el.remove(); // fjern objekt og beveglese hvis den faller ut
       clearInterval(fall);
       

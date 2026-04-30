@@ -1,5 +1,6 @@
 // MQTT card game, task 2
 /* kortene */
+
 const cardsData = [
   {Begrep:"Begrep 1", Forklaring:"Kort forklaring av begrepet", correct:true},
   {Begrep:"Begrep 2", Forklaring:"Kort forklaring av begrepet", correct:false},
@@ -18,22 +19,18 @@ const cardsData = [
   {Begrep:"Begrep 15", Forklaring:"Kort forklaring av begrepet", correct:true},
   {Begrep:"Begrep 16", Forklaring:"Kort forklaring av begrepet", correct:true}
 ];
-function openInfo(){
-  let text = "";
 
-  if(document.getElementById('task5Page') 
-     && document.getElementById('task5Page').style.display !== 'none'){
-    text = "Her skal du finne relevante begreper ved å klikke på kortene.";
-  }
-  // setter teksten i popup
-  document.getElementById('popupText').innerText = text;
-
-  // viser popup
-  document.getElementById('infoPopup').style.display = 'flex';
-}
 
 let cardScore = 0;
+let cardFunnet = 0; 
+
 function startGame(){
+  cardScore = 0; //nullsitller
+  cardFunnet = 0;// nullstiller
+  infoBoxText("Her skal du klikke på relevante begreper for MQTT.");
+  document.getElementById("grid").innerHTML = "";
+  document.getElementById("score").innerText = "0 - Found: 0/7";
+  document.getElementById("completeBanner").style.display = "none";
   document.getElementById("startScreen").style.display = "none";
   document.getElementById("task5Page").style.display = "block";
   randomPlaced(cardsData); //random plassert
@@ -97,16 +94,19 @@ function handleClick(kort, data){
     if(data.correct){
       kort.querySelector(".back").classList.add("correct");
       cardScore++;
+      cardFunnet++;
     } else {
       kort.querySelector(".back").classList.add("wrong");
+      cardScore = Math.max(0, cardScore - 1);
     }
 
-    //oppdaterer poenget
-    document.getElementById("score").innerText = cardScore;
+    //både score og antall funnet
+    document.getElementById("score").innerText = cardScore + " - Found: " + cardFunnet + "/7";
+
     // fullført oppgave etter 7
-    if(cardScore === 7){
+    if(cardFunnet === 7){
       document.getElementById("completeBanner").style.display = "block";
-      pointSystem("cards", cardScore);
+      pointSystem("mqtt-t2", cardScore);
     }
   }, 400);
 }
@@ -115,5 +115,4 @@ function handleClick(kort, data){
 function closeInfo(){
   document.getElementById('infoPopup').style.display='none';
 }
-
 
