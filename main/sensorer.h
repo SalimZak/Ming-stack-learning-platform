@@ -9,6 +9,10 @@ void tof_sensor(void *pvParameters);
 
 void press_sensor(void *pvParameters);
 
+void pot_init();
+
+float pot_sensor();
+
 float get_distance(void);
 
 float get_press(void);

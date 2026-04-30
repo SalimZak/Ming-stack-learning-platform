@@ -14,6 +14,7 @@
 #include "potmeter.h"
 #include "distance.h"
 #include "led_control.h"
+#include "sensorer.h"
 
 
 static const char *REST_TAG = "esp-rest";
@@ -160,8 +161,8 @@ static esp_err_t sensor_get_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "application/json");
     cJSON *root = cJSON_CreateObject();
 
-    float pot = read_potentiometer_voltage(); 
-    float dist = 0;
+    float pot = 0; 
+    float dist = get_distance();
 
     cJSON_AddBoolToObject(root,   "ok",   true);
     cJSON_AddNumberToObject(root, "pot",  pot);

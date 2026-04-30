@@ -2,10 +2,14 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/i2c_master.h"
+#include "driver/adc.h"
 #include "esp_log.h"
 #include "vl53l1x.h"
-#include "freertos/semphr.h" 
+#include "freertos/semphr.h"
 
+#define POT_ADC_CHANNEL   ADC1_CHANNEL_3   // GPIO4
+#define POT_ADC_ATTEN     ADC_ATTEN_DB_11  // 0–3.3V
+#define POT_ADC_WIDTH     ADC_WIDTH_BIT_12 // 0–4095
 #define I2C_SCL_GPIO      9
 #define I2C_SDA_GPIO      8
 #define VL53L1X_ADDR_7BIT 0x29
@@ -52,6 +56,11 @@ static void press_sensor_init(){
     //legg til: init av press sensor
 }
 
+void pot_init(){
+adc1_config_width(POT_ADC_WIDTH);
+adc1_config_channel_atten(POT_ADC_CHANNEL, POT_ADC_ATTEN);
+
+}
 
 void tof_sensor(void *pvParameters){
 
@@ -88,6 +97,11 @@ void press_sensor(void *pvParameters){
     }
 }
 
+float pot_sensor(){
+    int raw = adc1_get_raw(POT_ADC_CHANNEL);
+    return (raw / 4095.0f);
+}
+
 float get_distance(void){
     float val_tof = -1.0f;
     if (xSemaphoreTake(g_i2c_mutex, pdMS_TO_TICKS(10)) == pdTRUE) {
@@ -105,4 +119,3 @@ float get_press(void){
     }
     return val_press;
 }
-//getter funksjonen skal bli brukt i server som blir sendt med REST API

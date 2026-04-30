@@ -31,6 +31,7 @@ const BREADCRUMBS = {
 // Holder styr på hvilken side som vises — brukes av sensor-pollingsløkken
 let _currentPage = 'home';
 
+/*
 // Hoved-navigasjonsfunksjon — skjuler alle sider og viser den riktige
 function go(page) {
   document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
@@ -52,6 +53,7 @@ function go(page) {
   if (page === 'task4')   initNodeRed('nr-root');
   if (page === 'task3')   t3RefreshLabels();
 }
+*/
 
 // Oppdaterer brødsmule-teksten i topbaren
 function updateBreadcrumb() {

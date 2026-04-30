@@ -708,7 +708,9 @@
 <!-- JS — i18n først (alt avhenger av t()), så router, så features -->
 <script src="js/i18n.js"></script>
 <script src="js/router.js"></script>
-<script src="js/led-sync.js"></script>
+
+<!-- prøver å kommentere ut denne: <script src="js/led-sync.js"></script> -->
+
 <script src="js/sensors.js"></script>
 <script src="js/task3.js"></script>
 <script src="js/nodered.js"></script>
@@ -860,12 +862,28 @@ function go(page) {
     alert("Låst oppgave, fullfør de enklere for å få tilgang");
     return;
   }
-  // skjuler alle sidene
   document.querySelectorAll(".page-view").forEach(p => p.classList.remove("active"));
-  // viser kun den siden du klikket på
+  document.querySelectorAll(".nav-link").forEach(el => el.classList.remove("active"));
+
   const el = document.getElementById("page-" + page);
   if (el) el.classList.add("active");
+
+  document.querySelectorAll(`.nav-link[data-page="${page}"]`)
+    .forEach(el => el.classList.add("active"));
+
+  _currentPage = page;
+  updateBreadcrumb();
+  document.querySelector('.content').scrollTop = 0;
+
+  if (page === 'sensors') startSensorPolling();
+  if (page === 'task4')   initNodeRed('nr-root');
+  if (page === 'task3')   t3RefreshLabels();
+
   statusTasks();
+
+  fetch('/led?page=' + encodeURIComponent(page))
+    .catch(err => console.warn('LED sync failed:', err));
+
 }
 // viser riktig status når siden åpner
 document.addEventListener("DOMContentLoaded", () => {
