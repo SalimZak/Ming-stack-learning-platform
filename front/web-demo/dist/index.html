@@ -342,7 +342,7 @@
         
       <div id="startScreen">
         <div class="infobox">
-          <h3>Task 5 - Card Flip</h3>
+          <h3>Task 2 - Card Flip</h3>
           <p>Du skal klikke (flippe) kortene og finne de begrepene som er relevante for MQTT. På baksiden av hvert kort finner du en forklaring.</p>
           <p>Riktig svar gir +1 poeng og kortet blir grønt. </p>
           <p>Feil svar gir -1 poeng og kortet blir rødt.</p>
@@ -351,7 +351,7 @@
         </div>
       </div>
 
-        <!-- Task 5 card flip -->
+        <!-- Task 2 card flip -->
         <div id="task5Page" style="display:none;">
 
           <!-- fullført -->
@@ -1158,7 +1158,7 @@
 <div id="infoPopup" class="popup-overlay mc-popup-overlay">
   <div class="popup-box mc-popup-box">
     <h3>Forklaring</h3>
-    <p id="popupText">Her kommer begrepsforklaring for mqtt t1.</p>
+    <p id="popupText">Her kommer begrepsforklaring.</p>
     <button class="popup-close mc-popup-close" onclick="closeInfo()">Lukk</button>
   </div>
 </div>
@@ -1335,6 +1335,31 @@ function go(page) {
     alert("Låst oppgave, fullfør de enklere for å få tilgang");
     return;
   }
+
+  // infotext, som oppdaterer seg hver gang brukeren bytter side 
+  const infoTekster = {
+    // mqtt
+    "mqtt-t1": "Dette er en Multiple Choice oppgave for MQTT.",
+    "mqtt-t2": "Dette er en kortflip-oppgave for MQTT.",
+    "task3": "Dette er klikk og plasser-oppgave for MQTT.",
+    "task4": "Dette er Node-RED simulatoren.",
+    //influx
+    "influx-t1": "Dette er en Multiple Choice oppgave for InfluxDB.",
+    "influx-t2": "Dette er en sensor-skriveoppgave for InfluxDB.",
+    //nodered
+    "nodered-t1": "Dette er en Multiple Choice oppgave for Node-RED.",
+    "nodered-t2": "Dette er en True/False oppgave for Node-RED.",
+    //grafana
+    "grafana-t1": "Dette er en Multiple Choice oppgave for Grafana.",
+    "grafana-t2": "Dette er en True/False oppgave for Grafana.",
+    "grafana-t3": "Dette er Catch the Object-spillet for Grafana.",
+    "grafana-t4": "Dette er live dashboard-simuleringen for Grafana.",
+  };
+
+  //oppdater infotekst når siden bytter
+  infoBoxText(infoTekster[page] || "");
+
+  // skjuler alle sidene
   document.querySelectorAll(".page-view").forEach(p => p.classList.remove("active"));
   document.querySelectorAll(".nav-link").forEach(el => el.classList.remove("active"));
 

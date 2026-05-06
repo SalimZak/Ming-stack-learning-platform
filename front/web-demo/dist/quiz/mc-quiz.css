@@ -1,7 +1,6 @@
-/* ══════════════════════════════════════════════════════════
-   MC-QUIZ — Delt stilark for alle Multiple Choice oppgaver
+/* MC-QUIZ for alle Multiple Choice oppgaver
    Brukes av: MQTT T1, InfluxDB T1, Node-RED T1, Grafana T1
-   ══════════════════════════════════════════════════════════ */
+*/
 
 /* score boks øverst */
 .mc-score-box {
@@ -12,7 +11,7 @@
   color: var(--text);
 }
 
-/* spørsmålsboks (MC og TF deler stilen) */
+/* start/informasjonsboksen */
 .MCbox, .TFbox {
   width: 500px;
   margin: 20px auto;
@@ -23,14 +22,14 @@
   box-shadow: 0 0 15px rgba(0, 229, 255, 0.15);
 }
 
-/* spørsmålstekst */
+/* teksten på spørsmålene */
 .MCbox p, .TFbox p {
   margin-bottom: 15px;
   font-weight: bold;
   color: var(--text);
 }
 
-/* svaralternativer */
+/* svar knapp valgene */
 .MCbox button, .TFbox button {
   width: 100%;
   margin: 8px 0;
@@ -42,33 +41,28 @@
   cursor: pointer;
   font-family: var(--font-mono);
   font-size: 12px;
-  transition: background 0.1s ease, color 0.1s ease;
 }
 
-.MCbox button:hover:not(:disabled),
-.TFbox button:hover:not(:disabled) {
+.MCbox button:hover:not(:disabled), .TFbox button:hover:not(:disabled) {
   background: var(--cyan);
   color: #000;
 }
 
 /* valgt svar (før innlevering) */
-.MCbox button.selected,
-.TFbox button.selected {
+.MCbox button.selected, .TFbox button.selected {
   background: var(--cyan) !important;
   color: #000 !important;
 }
 
 /* riktig svar (etter innlevering) */
-.MCbox button.correct,
-.TFbox button.correct {
+.MCbox button.correct, .TFbox button.correct {
   background: #1a6b2a !important;
   color: #fff !important;
   border-color: #2ecc71;
 }
 
 /* feil valgt svar (etter innlevering) */
-.MCbox button.wrong,
-.TFbox button.wrong {
+.MCbox button.wrong,.TFbox button.wrong {
   background: #7a1a1a !important;
   color: #fff !important;
   border-color: #e74c3c;
@@ -87,7 +81,6 @@
   font-family: var(--font-mono);
   font-size: 13px;
   cursor: pointer;
-  transition: opacity 0.15s ease;
 }
 
 .mc-finish-btn:hover {
@@ -96,66 +89,63 @@
 
 /* info-knapp nede til høyre */
 .mc-info-btn {
-  position: fixed;
-  bottom: 20px;
+  position: fixed; /* låst knapp på skjermen*/
+  bottom: 20px; /* knappen er nede til høyre*/
   right: 20px;
-  width: 34px;
+  width: 34px; /* knappen er firekantet*/
   height: 34px;
-  line-height: 34px;
+  line-height: 34px; /*plassering av i vertikalt og horisontalt*/
   text-align: center;
-  border: 2px solid var(--cyan);
-  color: var(--cyan);
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  background: transparent;
-  font-family: var(--font-mono);
-  font-size: 14px;
-  z-index: 100;
+  border: 2px solid var(--cyan); /*tykk ramme med cyan som farge*/
+  color: var(--cyan); /* "i" er fargen cyan*/
+  border-radius: 7px; /* ikke skarpe linjer*/
+  cursor: pointer; /* musen peker når man er over knappen*/
+  font-weight: bold; /* "i" en er tykk skrift*/
+  background: transparent; /* bakgrunnen til "i" gjennomsiktig*/
+  font-family: var(--font-mono); /*skriftypen til font-mono*/
+  font-size: 14px; /* skrift størrelse*/
 }
 
-/* popup-overlay */
+/* popup-bakground */
 .mc-popup-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
+  display: none; /*skjuler funksjonen til den aktiveres*/
+  position: fixed; /*siden er låst når den er aktivert*/
+  top: 0; /*overlay starter fra øvert til venstre og sprer seg*/
+  left: 0; 
+  width: 100%; /*den dekker hele skjermen*/
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  justify-content: center;
+  background: rgba(0, 0, 0, 0.6); /*svart bakgrunn, 60% gjennomsiktig*/
+  justify-content: center; /*plasserer popup boksen midt i skjermen , horisontalt og vertikalt*/
   align-items: center;
-  z-index: 200;
 }
 
 .mc-popup-overlay.visible {
-  display: flex;
+  display: flex; /*popup overlay er aktivert*/
 }
-
+/*selve popup boksen*/
 .mc-popup-box {
-  background: var(--panel);
-  padding: 25px;
-  border: 2px solid var(--cyan);
-  border-radius: 10px;
-  width: 350px;
-  text-align: center;
-  color: var(--text);
+  background: var(--panel); /*bakgrunnfarge til popup*/
+  padding: 25px; /*rom mellom tekst og vegg*/
+  border: 2px solid var(--cyan); /* cyan ramme rundt boksen*/
+  border-radius: 10px; /* avrunde hjørner*/
+  width: 350px; /* statisk størrelse på bredde av popup*/
+  text-align: center; /* teksten sin plassering*/
+  color: var(--text); /* farge på teksten*/
 }
-
 .mc-popup-box h3 {
-  margin-top: 0;
-  color: var(--cyan);
+  margin-top: 0; /*oversktift plassering til toppen av boksen*/
+  color: var(--cyan); /*farge på overskriften*/
 }
-
+/*lukk knappen på popup*/
 .mc-popup-close {
-  margin-top: 15px;
-  padding: 10px 20px;
-  background: var(--cyan);
-  color: #000;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 12px;
+  margin-top: 15px; /* mellomrom mellom lukk-knappen og bunnen av boksen*/
+  padding: 10px 20px; /* mellomrom inni lukk-knappen, fra teksten horisontalt og vertikalt*/
+  background: var(--cyan); /*knappen sin bakgrunn*/
+  color: #000; /* svart farge på teksten*/
+  border: none; /* uten rammer */
+  border-radius: 6px; /* avrunde hjørner*/
+  cursor: pointer; /* klikkbar mus*/
+  font-family: var(--font-mono); /* skrifttypen til infoknapp*/
+  font-weight: 700; /* fet tekst*/
+  font-size: 12px; /* skriftstørrelse*/
 }

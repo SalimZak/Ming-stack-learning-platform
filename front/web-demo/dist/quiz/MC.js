@@ -12,7 +12,7 @@ function quizSelect(btn, answerI){
   let qBox = btn.parentElement; // finner spørsmål boksen
   let buttons = qBox.querySelectorAll('button'); //finner alle svar knappene
   let group; // variabel for riktig type (mc eller tf)
-  let selectedAnswers;// lagrer gnerelle svar og sjekk
+  let selectedAnswers;// lagrer generelle svar og sjekk
   let taskFinished;
 
 //MC

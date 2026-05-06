@@ -13,7 +13,7 @@ const cardsData = [
   {Begrep:"Query", Forklaring:"Kort forklaring av begrepet", correct:false},
   {Begrep:"Subscribe", Forklaring:"Kort forklaring av begrepet", correct:true},
   {Begrep:"Dashboard", Forklaring:"Kort forklaring av begrepet", correct:false},
-  {Begrep:"Begrep 11", Forklaring:"Kort forklaring av begrepet", correct:false},
+  {Begrep:"Graph", Forklaring:"Kort forklaring av begrepet", correct:false},
   {Begrep:"QoS (Quality of Service)", Forklaring:"Kort forklaring av begrepet", correct:true},
   {Begrep:"Panel", Forklaring:"Kort forklaring av begrepet", correct:false},
   {Begrep:"Database", Forklaring:"Kort forklaring av begrepet", correct:false},
