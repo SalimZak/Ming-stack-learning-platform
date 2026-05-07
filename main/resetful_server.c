@@ -176,6 +176,23 @@ static esp_err_t sensor_get_handler(httpd_req_t *req){
     return ESP_OK;
 }
 
+//handler for load cell
+static esp_err_t loadcell_get_handler(httpd_req_t *req){
+    httpd_resp_set_type(req, "application/json");
+    cJSON *root = cJSON_CreateObject();
+
+    float load_cell = 0;
+
+    
+    cJSON_AddNumberToObject(root, "loadcell",  load_cell);
+    
+    const char *json = cJSON_Print(root); //konverterer til char
+    httpd_resp_sendstr(req, json); //response body som blir sendt
+    free((void *)json); //json objektet allokerer minnet på heap, dette må frigjøres og slette data inni for å unngå minne lekasje
+    cJSON_Delete(root);
+    return ESP_OK;
+}
+
 /* Simple handler for getting temperature data */
 static esp_err_t temperature_data_get_handler(httpd_req_t *req)
 {
@@ -238,6 +255,17 @@ esp_err_t resetful_server_start(const char *base_path)
     };
     
     httpd_register_uri_handler(server, &temperature_data_get_uri);
+
+    
+        //lastcelle 
+    httpd_uri_t lastcelle_data_get_uri = {
+        .uri = "/lastcelle",
+        .method = HTTP_GET,
+        .handler = loadcell_get_handler,
+        .user_ctx = rest_context
+    };
+    httpd_register_uri_handler(server, &lastcelle_data_get_uri);
+
 
         /* potmeter */
     httpd_uri_t pot_data_get_uri = {
