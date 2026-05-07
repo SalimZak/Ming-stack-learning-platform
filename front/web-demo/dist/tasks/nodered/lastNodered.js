@@ -102,7 +102,7 @@ function nrCreateNodeInst(title, x, y) {
   el.dataset.id    = id;
   el.dataset.title = title;
 
-  const isMQTT  = title.indexOf('MQTT') !== -1;
+  const isMQTT  = title.indexOf('MQTT') !== -1; //Dra noder hit og koble dem med piler
   const hasPlay = title === 'Inject';
   const hasIn   = title !== 'Inject';  // Inject har ingen innport — den starter kjeden
   const hasOut  = title !== 'Debug';   // Debug har ingen utport — den avslutter kjeden
