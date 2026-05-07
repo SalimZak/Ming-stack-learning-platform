@@ -1,4 +1,7 @@
-// ── NODE-RED SIMULATOR ───────────────────────────────────────
+// node red task 4
+
+
+const Lastcelle_url = "http://<esp32-ip>/lastcelle"; // bruker lastcellen
 
 let _nrCtrl = null;  // AbortController — abort() fjerner alle event listeners på en gang
 let _rafMove = 0;    // requestAnimationFrame-handle — 0 betyr ingen frame er planlagt
@@ -24,7 +27,7 @@ const Broker = (() => {
 })();
 
 const TOPIC_OPTIONS = ['sensor/temperatur', 'sensor/fuktighet', 'sensor/trykk'];
-const CORRECT_TOPIC = 'sensor/temperatur';
+const CORRECT_TOPIC = 'sensor/trykk';
 // Bare sensor/temperatur er riktig — sensoren sender temperaturdata
 
 let _selectedTopicIndex = 0;  // hvilket topic som vises på MQTT-nodene
@@ -36,15 +39,11 @@ const _nrWires = [];          // alle tegnede koblinger — oppdateres av nrRedr
 // fjernes når temperatur sensor er lagt til
 async function nrGetSensorValue() {
   try {
-    const res = await fetch(SENSOR_URL, { signal: AbortSignal.timeout(2000) });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    if (!data.ok) throw new Error(data.error);
-    return { value: parseFloat((data.pot * 10).toFixed(2)), real: true };
-    // Ganger med 10 for å gjøre 0–3.3V om til 0–33°C
+    const res = await fetch(Lastcelle_url); // sender forespørsel til backend for lastcelle dataen
+    const data = await res.json(); // leser svaret og gjør det om fra JSON-tekst til et JS-objekt
+    return { value: parseFloat(data.loadcell.toFixed(2)), real: true }; // henter loadcell-feltet og avrunder til 2 desimaler
   } catch {
-    return { value: parseFloat((18 + Math.random() * 10).toFixed(2)), real: false };
-    // Tilfeldig innendørs temperatur 18–28°C som reserve
+    return { value: 0, real: false }; // hvis ESP32 ikke svarer eller noe feiler, returnerer vi 0
   }
 }
 
@@ -232,15 +231,18 @@ async function nrHandlePlay(root) {
   const unsub = Broker.sub(topic, m => {
     unsub();  // éngangsabonnement — fjern deg selv etter første melding
     // Uten dette ville hver Play-trykk legge til en ny lytter
-    const raw = m.payload.toString().replace(/temp=/i, '');
-    const v   = parseFloat(raw);
-    const msg = !isNaN(v)
-      ? t('nr_tempResult').replace('{value}', v.toFixed(2))
-      : t('nr_msgReceived') + m.payload;
-    nrDebugLog(root, source + ' ' + msg);
+  const raw = m.payload.toString().replace(/trykk=/i, ''); // fjerner "trykk="-prefiks fra meldingen
+  const v   = parseFloat(raw); // gjør om teksten til et tall
+  let msg;
+  if (!isNaN(v)) { // sjekker om verdien er et gyldig tall
+    msg = 'Trykk mottatt: ' + v.toFixed(2) + ' kg'; // formaterer meldingen med enhet
+  } else {
+    msg = t('nr_msgReceived') + m.payload; // viser råmeldingen hvis verdien ikke er et tall
+  }
+  nrDebugLog(root, source + ' ' + msg); // skriver meldingen til debug-panelet
   });
 
-  Broker.pub(topic, 'temp=' + result.value.toFixed(2));
+  Broker.pub(topic, 'trykk=' + result.value.toFixed(2)); //publiserer trykkverdien fra topic
 }
 
 // Sjekker flyten og logger første feil den finner — én feil om gangen for å ikke overvelde
@@ -473,24 +475,25 @@ function initNodeRed(rootId) {
     nrDebugLog(root, t('nr_resetOk'));
   }, { signal });
 
-  // Simuler sensor — i tilfelle sensor blir ødelagt etc.
-  // Bruker nrSimLog slik at gjentatte trykk erstatter forrige resultat
-  root.querySelector('#btn-sim').addEventListener('click', async () => {
+ root.querySelector('#btn-sim').addEventListener('click', async () => { //når sim knappen er presset, sjekker om flyten er gyldig før den simulerer
     if (!nrFlowValid(root)) { nrDebugLog(root, t('nr_simInvalid')); return; }
-    const topic = nrGetTopic();
-    const val   = (20 + Math.random() * 10).toFixed(2);  // tilfeldig 20–30°C
-    const unsub = Broker.sub(topic, m => {
-      unsub();  // éngangsabonnement
-      const raw = m.payload.toString().replace(/temp=/i, '');
-      const v   = parseFloat(raw);
-      const msg = !isNaN(v)
-        ? t('nr_tempResult').replace('{value}', v.toFixed(2))
-        : t('nr_msgReceived') + m.payload;
-      nrSimLog(root, msg);
+    const topic = nrGetTopic(); // henter topic
+    const result = await nrGetSensorValue(); // henter sensorverdi fra ESP32, returnerer 0 hvis feil
+    const val = result.value.toFixed(2); // avrunder verdien til 2 desimaler
+    const unsub = Broker.sub(topic, m => { // subscribe til topic slik at vi kan motta meldingen vi sender
+      unsub(); // avslutter abonnementet etter første melding så vi ikke får flere svar
+      const raw = m.payload.toString().replace(/trykk=/i, ''); // fjerner "trykk="-teksten foran tallet
+      const v = parseFloat(raw); // gjør om tekststrengen til et tall
+      let msg;
+      if (!isNaN(v)) { // isNaN betyr "is Not a Number" — sjekker at vi fikk et gyldig tall
+        msg = 'Trykk mottatt: ' + v.toFixed(2) + ' kg'; // bygger meldingen som vises i debug
+      } else {
+        msg = t('nr_msgReceived') + m.payload; // viser råmeldingen hvis noe gikk galt med parsing
+      }
+      nrSimLog(root, msg); // viser meldingen i debug-panelet, erstatter forrige sim-linje
     });
-    Broker.pub(topic, 'temp=' + val);
+    Broker.pub(topic, 'trykk=' + val); // publiserer verdien på topic så Broker.sub over mottar den
   }, { signal });
-
   // Første tegning (tomt lerret) og klar-melding i debug-loggen
   nrRedrawWires(root);
   nrDebugLog(root, t('nr_initOk'));
