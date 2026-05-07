@@ -21,15 +21,17 @@
   <link rel="stylesheet" href="core/layout.css">
   <link rel="stylesheet" href="core/components.css">
   <link rel="stylesheet" href="core/sensors/sensors.css">
-  <link rel="stylesheet" href="tasks/mqtt/task3.css">
-  <link rel="stylesheet" href="tasks/nodered/nodered.css">
-  <link rel="stylesheet" href="tasks/grafana/grafana-t3.css">
-  <link rel="stylesheet" href="tasks/influx/influx-t2.css">
-  <link rel="stylesheet" href="tasks/grafana/grafana-t4.css">
   <link rel="stylesheet" href="quiz/mc-quiz.css">
+  <link rel="stylesheet" href="tasks/mqtt/task3.css">
   <link rel="stylesheet" href="tasks/mqtt/MQTTTask5Card.css">
+  <link rel="stylesheet" href="tasks/mqtt/nodered.css">
+  <link rel="stylesheet" href="tasks/influx/influx-t2.css">
+  <link rel="stylesheet" href="tasks/grafana/grafana-t2.css">
+  <link rel="stylesheet" href="tasks/grafana/grafana-t3.css">
+  <link rel="stylesheet" href="tasks/grafana/grafana-t4.css">
+  
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="chart.umd.js"></script>
 </head>
 <body>
 
@@ -933,6 +935,35 @@
         <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t2_back">← Tilbake</button>
       </div>
 
+      <!-- == Grafana oppgave 2 - drag and drop-->
+       <div class="container">
+          <div class="task-header">Insert title here</div>
+          <div class="task-desc">Insert task description here.</div>
+
+          <div id="infobox" class="infobox">
+            <h4>Insert info title here</h4>
+            <p>Insert explanation text here.</p>
+            <button class="startbtn" onclick="startTask()">Start oppgave</button>
+          </div>
+
+        <div id="complete-banner" class="complete-banner">&#10003; Insert completion message here!</div>
+        <div id="flash-msg" class="messagebox"></div>
+
+          <div id="task-area">
+          <div class="taskbox">Insert instructions here. Drag items from the left panel into their matching slots on the right.</div>
+
+        <div class="split-layout">
+          <div class="drag-source" id="drag-source">
+           <div class="drag-source-label">Insert label here</div>
+        </div>
+          <div class="drop-grid" id="drop-grid"></div>
+        </div>
+
+        <button class="reset-btn" onclick="resetTask()">Reset</button>
+      </div>
+    </div>
+
+
       <!-- ══ GRAFANA OPPGAVE 3 — Catch the Object ══ -->
       <div id="page-grafana-t3" class="page-view">
         <h1 class="page-title" data-i18n="grafana_t3_title">Grafana – Oppgave 3</h1>
@@ -1168,24 +1199,23 @@
 <script src="core/i18n.js"></script>
 <script src="core/router.js"></script>
 
-<!-- prøver å kommentere ut denne: <script src="js/led-sync.js"></script> -->
-
-<script src="tcore/sensors/sensors.js"></script>
-<script src="tasks/mqtt/task3.js"></script>
-<script src="tasks/nodered/nodered.js"></script>
-<script src="tasks/grafana/grafana-t3.js"></script>
+<script src="core/sensors/sensors.js"></script>
 <script src="core/sensors/sensor-task.js"></script>
-<script src="tasks/influx/InfluxDBT-2.js"></script>
-<script src="tasks/grafana/GrafanaT-4.js"></script>
-<script src="quiz/MC_Influx.js"></script>
-<script src="quiz/MC_Grafana.js"></script>
+<script src="quiz/InfoBox.js"></script>
 <script src="quiz/MC.js"></script>
 <script src="quiz/MC_MQTT.js"></script>
-<script src="quiz/InfoBox.js"></script>
+<script src="quiz/MC_Influx.js"></script>
 <script src="quiz/MC_NodeRED.js"></script>
+<script src="quiz/MC_Grafana.js"></script>
 <script src="tasks/mqtt/MQTTTask5Card.js"></script>
+<script src="tasks/mqtt/task3.js"></script>
+<script src="tasks/mqtt/nodered.js"></script>
+<script src="tasks/influx/InfluxDBT-2.js"></script>
 <script src="quiz/TF_NodeRED.js"></script>
 <script src="quiz/TF_Grafana.js"></script>
+<script src="tasks/grafana/grafana-t2.js"></script>
+<script src="tasks/grafana/grafana-t3.js"></script>
+<script src="tasks/grafana/GrafanaT-4.js"></script>
 
 <script>
 //local storage
