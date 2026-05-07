@@ -1,4 +1,4 @@
-// ── GRAFANA OPPGAVE 3 — Catch the Object ─────────────────────
+// grafana task 3 — Catch the object 
 (()=>{
 
 // variabler
