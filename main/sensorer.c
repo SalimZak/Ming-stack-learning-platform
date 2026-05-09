@@ -5,13 +5,18 @@
 #include "driver/adc.h"
 #include "esp_log.h"
 #include "vl53l1x.h"
+#include "hx711.h"
 #include "freertos/semphr.h"
+#include "FreeRTOSConfig/portmacro.h"
 
-#define POT_ADC_CHANNEL   ADC1_CHANNEL_3   // GPIO4
-#define POT_ADC_ATTEN     ADC_ATTEN_DB_11  // 0–3.3V
-#define POT_ADC_WIDTH     ADC_WIDTH_BIT_12 // 0–4095
-#define I2C_SCL_GPIO      9
-#define I2C_SDA_GPIO      8
+
+#define HX711_DT 5
+#define HX711_SCK 6
+#define POT_ADC_CHANNEL ADC1_CHANNEL_3   // GPIO4
+#define POT_ADC_ATTEN ADC_ATTEN_DB_11  // 0–3.3V
+#define POT_ADC_WIDTH ADC_WIDTH_BIT_12 // 0–4095
+#define I2C_SCL_GPIO 9
+#define I2C_SDA_GPIO 8
 #define VL53L1X_ADDR_7BIT 0x29
 
 static const char *TAG = "sensor_test";
@@ -44,6 +49,7 @@ esp_err_t sensors_init(void){
     return i2c_new_master_bus(&bus_cfg, &g_i2c_bus);
 }
 
+//tof sensor init
 static void tof_sensor_init(vl53l1x_t *sensor){
     ESP_ERROR_CHECK(vl53l1x_init(sensor, g_i2c_bus, VL53L1X_ADDR_7BIT));
     ESP_ERROR_CHECK(vl53l1x_sensor_init(sensor));
@@ -52,13 +58,17 @@ static void tof_sensor_init(vl53l1x_t *sensor){
     ESP_LOGI(TAG, "tof sensor ready");
 }
 
-static void press_sensor_init(){
-    //legg til: init av press sensor
+//lastcelle sensor init
+static void loadcell_sensor_init(){
+    gpio_set_direction(HX711_DT, GPIO_MODE_INPUT);
+    gpio_set_direction(HX711_SCK, GPIO_MODE_OUTPUT);
+
 }
 
+// potentiometer init
 void pot_init(){
-adc1_config_width(POT_ADC_WIDTH);
-adc1_config_channel_atten(POT_ADC_CHANNEL, POT_ADC_ATTEN);
+    adc1_config_width(POT_ADC_WIDTH);
+    adc1_config_channel_atten(POT_ADC_CHANNEL, POT_ADC_ATTEN);
 
 }
 
@@ -85,14 +95,43 @@ void tof_sensor(void *pvParameters){
 }
 
 void press_sensor(void *pvParameters){
-    press_sensor_init();
-    
+    loadcell_sensor_init();
+
+    int32_t data = 0;
+    int timeout  = 100000;
+
+    while (gpio_get_level(HX711_DT) == 1) {
+        if (--timeout == 0) return 0;
+    }
+
+    portDISABLE_INTERRUPTS();
+
+    for (int i = 0; i < 24; i++) {
+        gpio_set_level(HX711_SCK, 1);
+        esp_rom_delay_us(2);
+        data <<= 1;
+        if (gpio_get_level(HX711_DT)) data++;  // les mens SCK er høy
+        gpio_set_level(HX711_SCK, 0);
+        esp_rom_delay_us(2);
+    }
+
+
+    // Gain = 128 — 1 ekstra puls
+    gpio_set_level(HX711_SCK, 1);
+    esp_rom_delay_us(2);
+    gpio_set_level(HX711_SCK, 0);
+    esp_rom_delay_us(2);
+
+    portENABLE_INTERRUPTS();
+
+    if (data & 0x800000) data |= 0xFF000000;
+    return data;
+
+
+
+
     for( ;; ){
-        if (xSemaphoreTake(g_i2c_mutex, pdMS_TO_TICKS(100)) == pdTRUE) {
-            //legg til: avlesninger på lastcelle
-            //oppdater g_press
-            xSemaphoreGive(g_i2c_mutex);
-        }
+        
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }

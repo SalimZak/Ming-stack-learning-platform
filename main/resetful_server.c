@@ -108,38 +108,6 @@ static esp_err_t rest_common_get_handler(httpd_req_t *req)
     return ESP_OK;
 }
 
-/* Simple handler for light brightness control */
-static esp_err_t light_brightness_post_handler(httpd_req_t *req)
-{
-    int total_len = req->content_len;
-    int cur_len = 0;
-    char *buf = ((rest_server_context_t *)(req->user_ctx))->scratch;
-    int received = 0;
-    if (total_len >= SCRATCH_BUFSIZE) {
-        /* Respond with 500 Internal Server Error */
-        httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "content too long");
-        return ESP_FAIL;
-    }
-    while (cur_len < total_len) {
-        received = httpd_req_recv(req, buf + cur_len, total_len);
-        if (received <= 0) {
-            /* Respond with 500 Internal Server Error */
-            httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to post control value");
-            return ESP_FAIL;
-        }
-        cur_len += received;
-    }
-    buf[total_len] = '\0';
-
-    cJSON *root = cJSON_Parse(buf);
-    int red = cJSON_GetObjectItem(root, "red")->valueint;
-    int green = cJSON_GetObjectItem(root, "green")->valueint;
-    int blue = cJSON_GetObjectItem(root, "blue")->valueint;
-    ESP_LOGI(REST_TAG, "Light control: red = %d, green = %d, blue = %d", red, green, blue);
-    cJSON_Delete(root);
-    httpd_resp_sendstr(req, "Post control value successfully");
-    return ESP_OK;
-}
 
 /* Simple handler for getting system handler */
 static esp_err_t system_info_get_handler(httpd_req_t *req)
@@ -157,6 +125,7 @@ static esp_err_t system_info_get_handler(httpd_req_t *req)
     return ESP_OK;
 }
 
+//sensor side
 static esp_err_t sensor_get_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "application/json");
     cJSON *root = cJSON_CreateObject();
@@ -186,6 +155,28 @@ static esp_err_t loadcell_get_handler(httpd_req_t *req){
     
     cJSON_AddNumberToObject(root, "loadcell",  load_cell);
     
+    const char *json = cJSON_Print(root); //konverterer til char
+    httpd_resp_sendstr(req, json); //response body som blir sendt
+    free((void *)json); //json objektet allokerer minnet på heap, dette må frigjøres og slette data inni for å unngå minne lekasje
+    cJSON_Delete(root);
+    return ESP_OK;
+}
+
+//handler for influx oppgave
+static esp_err_t loadcell_get_handler(httpd_req_t *req){
+    httpd_resp_set_type(req, "application/json");
+    cJSON *root = cJSON_CreateObject();
+
+    char label[] = "temp"
+    char sensor_name[] = "DS18B20"
+    float temprature = 0;
+    float time = 12.01;
+    
+    cJSON_AddStringToIbject(root, "sensorName" sensor_name);
+    cJSON_AddStringToIbject(root, "label" label);
+    cJSON_AddNumberToObject(root, "temp",  temprature);
+    cJSON_AddNumberToObject(root, "tid",  time);
+
     const char *json = cJSON_Print(root); //konverterer til char
     httpd_resp_sendstr(req, json); //response body som blir sendt
     free((void *)json); //json objektet allokerer minnet på heap, dette må frigjøres og slette data inni for å unngå minne lekasje
@@ -246,16 +237,6 @@ esp_err_t resetful_server_start(const char *base_path)
     };
     httpd_register_uri_handler(server, &system_info_get_uri);
 
-    /* URI handler for fetching temperature data */
-    httpd_uri_t temperature_data_get_uri = {
-        .uri = "/api/v1/temp/raw",
-        .method = HTTP_GET,
-        .handler = temperature_data_get_handler,
-        .user_ctx = rest_context
-    };
-    
-    httpd_register_uri_handler(server, &temperature_data_get_uri);
-
     
         //lastcelle 
     httpd_uri_t lastcelle_data_get_uri = {
@@ -284,15 +265,6 @@ esp_err_t resetful_server_start(const char *base_path)
         .user_ctx = rest_context
     };
     httpd_register_uri_handler(server, &led_set_uri);
-
-    /* URI handler for light brightness control */
-    httpd_uri_t light_brightness_post_uri = {
-        .uri = "/api/v1/light/brightness",
-        .method = HTTP_POST,
-        .handler = light_brightness_post_handler,
-        .user_ctx = rest_context
-    };
-    httpd_register_uri_handler(server, &light_brightness_post_uri);
 
     /* URI handler for getting web server files */
     httpd_uri_t common_get_uri = {
