@@ -1,7 +1,7 @@
 // influxDB timestamp database task 4
 
 let chosenBox = null; // boksene brukeren har valgt
-let point = 0; // score
+let influxT4Point = 0; // score
 let correctPlaced = 0; // bokser som er riktig plassert
 let sensorData = []; // array av de 6 boksene, for å stokke dem senere
 let fasit = []; // array av de 6 boksene som er i riktig rekkefølge, med nyeste først
@@ -13,7 +13,7 @@ const timestamp_sek = 5; // antall sekunder før hvert tidstempel
 // starte oppgaven
 function influxT4Start() {
     chosenBox = null; //reset
-    point = 0;//reset
+    influxT4Point = 0;//reset
     correctPlaced = 0;//reset
     infoBoxText("Klikk og plasser sensorboksene i riktig rekkefølge, med nyeste tidsstempel øverst.\nHver sensorboks dukker opp etter 5 sekunder.\n Juster tempraturen verdien i mellomtiden.");
     document.getElementById("influxT4-startPage").style.display = "none"; //skjuler startpage
@@ -244,13 +244,13 @@ function sensorBoksIRad(valgtRad, radNummer) {
             klikketBox.classList.add("placed");
         }
         correctPlaced++;// teller opp antall riktige plassert
-        point++;// +1 poeng
-        pointSystem("influx-t4", point);
+        influxT4Point++;// +1 poeng
+        pointSystem("influx-t4", influxT4Point);
         points();// oppdater poengscoren
 
     } else { // dersom det er feilplassert
-        point = Math.max(0, point - 1); // trekk 1 poeng, men ikke under 0
-        pointSystem("influx-t4", point); // lagre i felles poengsystem
+        influxT4Point = Math.max(0, influxT4Point - 1); // trekk 1 poeng, men ikke under 0
+        pointSystem("influx-t4", influxT4Point); // lagre i felles poengsystem
         points(); // oppdater poengscoren
 
         valgtRad.classList.add("wrong"); // rød rad
@@ -271,7 +271,7 @@ function sensorBoksIRad(valgtRad, radNummer) {
 // Oppdaterer poengscoren
 function points() {
     let p = document.getElementById("influxT4-poeng"); //finner poengvisningen
-    if (p) p.textContent = "Poeng: " + point + " — Found: " + correctPlaced + "/6"; //oppdaterer poeng og antall funnet
+    if (p) p.textContent = "Poeng: " + influxT4Point + " — Found: " + correctPlaced + "/6"; //oppdaterer poeng og antall funnet
 }
 
 
