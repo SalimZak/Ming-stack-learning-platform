@@ -1,6 +1,8 @@
 // node red task 4
 
 
+(function () {
+
 const Lastcelle_url = "http://<esp32-ip>/lastcelle"; // bruker lastcellen
 
 let _nrCtrl = null;  // AbortController — abort() fjerner alle event listeners på en gang
@@ -499,3 +501,6 @@ function initNodeRed(rootId) {
   nrRedrawWires(root);
   nrDebugLog(root, t('nr_initOk'));
 }
+
+window.initNodeRedT4 = initNodeRed;
+})();

@@ -92,6 +92,7 @@
           <button class="nav-link" data-page="nodered-t1" onclick="go('nodered-t1')"><span class="nav-icon"></span><span data-i18n="nodered_task1">Oppgave 1</span></button>
           <button class="nav-link" data-page="nodered-t2" onclick="go('nodered-t2')"><span class="nav-icon"></span><span data-i18n="nodered_task2">Oppgave 2</span></button>
           <button class="nav-link" data-page="nodered-t3" onclick="go('nodered-t3')"><span class="nav-icon"></span><span data-i18n="nodered_task3">Oppgave 3</span></button>
+          <button class="nav-link" data-page="nodered-t4" onclick="go('nodered-t4')"><span class="nav-icon"></span><span data-i18n="nodered_task4">Oppgave 4</span></button>
         </div>
         <button class="nav-link" data-page="grafana" onclick="go('grafana')"><span class="nav-icon"></span>Grafana</button>
         <div class="nav-sub">
@@ -681,6 +682,7 @@
           <button class="card" onclick="go('nodered-t1')"><strong data-i18n="nodered_task1">Oppgave 1</strong><span data-i18n="nodered_task1sub">Kom i gang.</span></button>
           <button class="card" onclick="go('nodered-t2')"><strong data-i18n="nodered_task2">Oppgave 2</strong><span data-i18n="nodered_task2sub">Avanserte flyter.</span></button>
           <button class="card" onclick="go('nodered-t3')"><strong data-i18n="nodered_task3">Oppgave 3</strong><span data-i18n="nodered_task3sub">Drag og slipp.</span></button>
+          <button class="card" onclick="go('nodered-t4')"><strong data-i18n="nodered_task4">Oppgave 4</strong><span data-i18n="nodered_task4sub">Node-RED simulator.</span></button>
         </div>
         <button class="small-link" onclick="go('ming')">← MING</button>
       </div>
@@ -898,6 +900,23 @@
         </div>
 
         <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t3_back">← Tilbake</button>
+      </div>
+
+      <!-- ══ NODE-RED OPPGAVE 4 ══ -->
+      <div id="page-nodered-t4" class="page-view">
+        <h1 class="page-title" data-i18n="nodered_t4_title">Node-RED – Oppgave 4</h1>
+
+        <div id="nrt4-infobox" class="infobox">
+          <h4 data-i18n="nrt4_infoTitle">Node-RED simulator</h4>
+          <p  data-i18n="nrt4_infoBody">Bygg en flyt som leser av lastcellen og publiserer verdien på riktig MQTT-topic. Dra noder fra venstre, koble dem sammen, og kjør simuleringen.</p>
+          <button class="startbtn" onclick="nrt4StartTask()" data-i18n="nrt4_startBtn">Start oppgave</button>
+        </div>
+
+        <div id="nrt4-task-area" style="display:none;">
+          <div id="nr-root-t4"></div>
+        </div>
+
+        <button class="small-link" style="margin-top:8px" onclick="go('nodered')" data-i18n="nodered_t4_back">← Tilbake</button>
       </div>
 
       <!-- ══ GRAFANA — oppgavevalg + plassholdere ══ -->
@@ -1264,7 +1283,17 @@
           <div class="task-header" data-i18n="nr_title">Sette opp MQTT i Node-RED</div>
           <div class="task-desc"   data-i18n="nr_desc">Oppgavebeskrivelse.</div>
         </div>
-        <div id="nr-root"></div>
+
+        <div id="mt4-infobox" class="infobox">
+          <h4 data-i18n="mt4_infoTitle">Node-RED simulator</h4>
+          <p  data-i18n="mt4_infoBody">Bygg en flyt som leser av en sensorverdi og publiserer den på riktig MQTT-topic. Dra noder fra venstre, koble dem sammen, og kjør simuleringen.</p>
+          <button class="startbtn" onclick="mt4StartTask()" data-i18n="mt4_startBtn">Start oppgave</button>
+        </div>
+
+        <div id="mt4-task-area" style="display:none;">
+          <div id="nr-root"></div>
+        </div>
+
         <button class="small-link" style="margin-top:8px" onclick="go('mqtt')">← MQTT</button>
       </div>
 
@@ -1304,6 +1333,7 @@
 <script src="quiz/TF_NodeRED.js"></script>
 <script src="quiz/TF_Influx.js"></script>
 <script src="tasks/nodered/nodered-t3.js"></script>
+<script src="tasks/nodered/lastNodered.js"></script>
 <script src="tasks/grafana/grafana-t2.js"></script>
 <script src="tasks/grafana/grafana-t3.js"></script>
 <script src="tasks/grafana/GrafanaT-4.js"></script>
@@ -1473,6 +1503,7 @@ function go(page) {
     "nodered-t1": "Dette er en Multiple Choice oppgave for Node-RED.",
     "nodered-t2": "Dette er en True/False oppgave for Node-RED.",
     "nodered-t3": "Dette er en drag og slipp-oppgave for Node-RED.",
+    "nodered-t4": "Dette er Node-RED simulatoren.",
     //grafana
     "grafana-t1": "Dette er en Multiple Choice oppgave for Grafana.",
     "grafana-t2": "Dette er en drag og slipp-oppgave for Grafana.",
@@ -1498,7 +1529,6 @@ function go(page) {
   document.querySelector('.content').scrollTop = 0;
 
   if (page === 'sensors') startSensorPolling();
-  if (page === 'task4')   initNodeRed('nr-root');
   if (page === 'task3')   t3RefreshLabels();
 
   statusTasks();
@@ -1507,6 +1537,23 @@ function go(page) {
     .catch(err => console.warn('LED sync failed:', err));
 
 }
+
+function mt4StartTask() {
+  const infobox = document.getElementById('mt4-infobox');
+  const area    = document.getElementById('mt4-task-area');
+  if (infobox) infobox.style.display = 'none';
+  if (area)    area.style.display    = 'block';
+  if (typeof initNodeRed === 'function') initNodeRed('nr-root');
+}
+
+function nrt4StartTask() {
+  const infobox = document.getElementById('nrt4-infobox');
+  const area    = document.getElementById('nrt4-task-area');
+  if (infobox) infobox.style.display = 'none';
+  if (area)    area.style.display    = 'block';
+  if (typeof initNodeRedT4 === 'function') initNodeRedT4('nr-root-t4');
+}
+
 // viser riktig status når siden åpner
 document.addEventListener("DOMContentLoaded", () => {
   menyScore();
