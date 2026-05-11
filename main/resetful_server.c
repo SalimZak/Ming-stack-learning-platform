@@ -163,17 +163,16 @@ static esp_err_t loadcell_get_handler(httpd_req_t *req){
 }
 
 //handler for influx oppgave
-static esp_err_t loadcell_get_handler(httpd_req_t *req){
+static esp_err_t influx_get_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "application/json");
     cJSON *root = cJSON_CreateObject();
 
     char label[] = "temp"
     char sensor_name[] = "DS18B20"
-    float temprature = 0;
-    float time = 12.01;
+    float temprature = 0; 
     
-    cJSON_AddStringToIbject(root, "sensorName" sensor_name);
-    cJSON_AddStringToIbject(root, "label" label);
+    cJSON_AddStringToIbject(root, "sensorName", sensor_name);
+    cJSON_AddStringToIbject(root, "label", label);
     cJSON_AddNumberToObject(root, "temp",  temprature);
     cJSON_AddNumberToObject(root, "tid",  time);
 
@@ -236,6 +235,15 @@ esp_err_t resetful_server_start(const char *base_path)
         .user_ctx = rest_context
     };
     httpd_register_uri_handler(server, &system_info_get_uri);
+
+            //influx oppgave
+    httpd_uri_t influx_task_get_uri = {
+        .uri = "/influx",
+        .method = HTTP_GET,
+        .handler = influx_get_handler,
+        .user_ctx = rest_context
+    };
+    httpd_register_uri_handler(server, &influx_task_get_uri);
 
     
         //lastcelle 

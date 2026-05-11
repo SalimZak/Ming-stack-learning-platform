@@ -284,13 +284,15 @@ void app_main(void)
     // Initialize SPIFFS
     init_fs();
 
-    //pot_init();
+    // initialize i2c og task for sensorer
+    if(sensors_init() != ESP_OK){
+        ESP_LOGE(TAG, "sensors_init failed, stopping");
+    }
 
-    // initialize i2c og task for senssorer som bruker i2c
-    ESP_ERROR_CHECK(sensors_init());
     xTaskCreate(tof_sensor, "tof_task", 4096, NULL, 4, NULL);
     xTaskCreate(press_sensor, "press_task", 4096, NULL, 4, NULL);
-
+    xTaskCreate(ds18b20_sensor, "ds18b20_task", 4096, NULL, 4, NULL);
+    xTaskCreate(pot_sensor, "pot_task", 4096, NULL, 4, NULL);
 
     // Initialize LED control
     led_control_init();
