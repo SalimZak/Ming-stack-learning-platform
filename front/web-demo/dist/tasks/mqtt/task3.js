@@ -20,7 +20,7 @@ const arrows = [
 function t3Start() {
  
   // Skjuler startpage, starter oppgave og oppdaterer infoboks
-  infoBoxText("Klikk og plasser pilene i de dropsonene du mener passer riktig for MQTT-flyten. \nI dette eksemplet er sensorene publishere. Det betyr at de sender data til Brokeren.\nBrokeren er et mellomledd mellom enhetene. den mottar meldinger fra publisherne og sender dem videre til de riktige topicene og enhetene som har abonnert(subscribed) på disse topicene\nI dette eksemplet er subscriberne klient 1-3. de ønsker å motta data. Klientene abonnerer(subscriber) på et topic hos brokeren. Når nye meldinger blir publisert på topicet, sender brokeren meldingen videre til subscriberne.");
+  infoBoxText("Klikk og plasser pilene i de dropsonene du mener passer riktig for MQTT-flyten. \nI dette eksemplet er sensorene publishere. Det betyr at de sender data til Brokeren.\nBrokeren er et mellomledd mellom enhetene. den mottar meldinger fra publisherne og sender dem videre til de riktige topicene og enhetene som har abonnert(subscribed) på disse topicene. \nI dette eksemplet er subscriberne klient 1-3. de ønsker å motta data. Klientene abonnerer(subscriber) på et topic hos brokeren. Når nye meldinger blir publisert på topicet, sender brokeren meldingen videre til subscriberne.");
   document.getElementById("t3-infobox").style.display = "none";
   document.getElementById("t3-taskbox").style.display = "block";
   document.getElementById("t3-layout").style.display  = "flex";
