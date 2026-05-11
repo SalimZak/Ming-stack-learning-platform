@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" role="img" aria-label="Bar chart">
+  <!-- Grid -->
+  <g stroke="#1f2d44" stroke-width="1">
+    <line x1="30" y1="50"  x2="280" y2="50"/>
+    <line x1="30" y1="90"  x2="280" y2="90"/>
+    <line x1="30" y1="130" x2="280" y2="130"/>
+  </g>
+  <!-- Axes -->
+  <line x1="30" y1="170" x2="280" y2="170" stroke="#3c506e" stroke-width="1.5"/>
+  <line x1="30" y1="30"  x2="30"  y2="170" stroke="#3c506e" stroke-width="1.5"/>
+  <!-- Bars -->
+  <g fill="#38b8d0">
+    <rect x="50"  y="120" width="22" height="50"  rx="2"/>
+    <rect x="82"  y="80"  width="22" height="90"  rx="2"/>
+    <rect x="114" y="100" width="22" height="70"  rx="2"/>
+    <rect x="146" y="50"  width="22" height="120" rx="2"/>
+    <rect x="178" y="90"  width="22" height="80"  rx="2"/>
+    <rect x="210" y="70"  width="22" height="100" rx="2"/>
+    <rect x="242" y="110" width="22" height="60"  rx="2"/>
+  </g>
+  <!-- Highlight tallest bar -->
+  <rect x="146" y="50" width="22" height="120" rx="2" fill="#e8d0a8" fill-opacity="0.25"/>
+</svg>

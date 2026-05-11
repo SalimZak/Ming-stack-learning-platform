@@ -67,6 +67,7 @@ function updateBreadcrumb() {
 function toggleLang() {
   setLang(getLang() === 'no' ? 'en' : 'no');
   t3RefreshLabels();   // disse elementene har ikke data-i18n, må oppdateres manuelt
+  if (typeof gt2RefreshLabels === 'function') gt2RefreshLabels();
   updateBreadcrumb();
   // Tilbakestiller Node-RED simulator slik at nodeetiketter bygges på nytt med nytt språk
   const nrRoot = document.getElementById('nr-root');

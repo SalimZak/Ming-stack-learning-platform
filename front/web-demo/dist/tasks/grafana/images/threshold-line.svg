@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" role="img" aria-label="Time-series with thresholds">
+  <!-- Zone bands -->
+  <rect x="30" y="30"  width="250" height="40" fill="#4ade80" fill-opacity="0.10"/>
+  <rect x="30" y="70"  width="250" height="55" fill="#facc15" fill-opacity="0.10"/>
+  <rect x="30" y="125" width="250" height="45" fill="#f87171" fill-opacity="0.12"/>
+  <!-- Threshold lines -->
+  <line x1="30" y1="70"  x2="280" y2="70"  stroke="#4ade80" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <line x1="30" y1="125" x2="280" y2="125" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <!-- Axes -->
+  <line x1="30" y1="170" x2="280" y2="170" stroke="#3c506e" stroke-width="1.5"/>
+  <line x1="30" y1="30"  x2="30"  y2="170" stroke="#3c506e" stroke-width="1.5"/>
+  <!-- Data line crossing zones -->
+  <path d="M 30 145 C 55 135, 80 110, 110 95 S 160 75, 180 88 S 220 130, 240 140 S 280 105, 280 105"
+        fill="none" stroke="#e8d0a8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Data points -->
+  <g fill="#e8d0a8">
+    <circle cx="30"  cy="145" r="2.5"/>
+    <circle cx="110" cy="95"  r="2.5"/>
+    <circle cx="180" cy="88"  r="2.5"/>
+    <circle cx="240" cy="140" r="2.5"/>
+    <circle cx="280" cy="105" r="2.5"/>
+  </g>
+</svg>

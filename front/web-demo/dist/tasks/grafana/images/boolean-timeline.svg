@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" role="img" aria-label="Boolean state timeline">
+  <!-- Top label row -->
+  <text x="30" y="55" fill="#7d8da5" font-family="monospace" font-size="11" font-weight="700" letter-spacing="2">DETECTED</text>
+  <!-- Timeline bar segments: green = true, dark = false -->
+  <g>
+    <rect x="30"  y="80" width="50" height="40" fill="#4ade80" rx="2"/>
+    <rect x="80"  y="80" width="35" height="40" fill="#1f2d44" rx="2"/>
+    <rect x="115" y="80" width="60" height="40" fill="#4ade80" rx="2"/>
+    <rect x="175" y="80" width="25" height="40" fill="#1f2d44" rx="2"/>
+    <rect x="200" y="80" width="55" height="40" fill="#4ade80" rx="2"/>
+    <rect x="255" y="80" width="25" height="40" fill="#1f2d44" rx="2"/>
+  </g>
+  <!-- Timeline border -->
+  <rect x="30" y="80" width="250" height="40" fill="none" stroke="#3c506e" stroke-width="1.5" rx="2"/>
+  <!-- Time-axis ticks -->
+  <g stroke="#3c506e" stroke-width="1">
+    <line x1="30"  y1="120" x2="30"  y2="128"/>
+    <line x1="92"  y1="120" x2="92"  y2="128"/>
+    <line x1="155" y1="120" x2="155" y2="128"/>
+    <line x1="217" y1="120" x2="217" y2="128"/>
+    <line x1="280" y1="120" x2="280" y2="128"/>
+  </g>
+  <!-- Time labels -->
+  <g fill="#7d8da5" font-family="monospace" font-size="9" text-anchor="middle">
+    <text x="30"  y="145">0s</text>
+    <text x="92"  y="145">5s</text>
+    <text x="155" y="145">10s</text>
+    <text x="217" y="145">15s</text>
+    <text x="280" y="145">20s</text>
+  </g>
+</svg>

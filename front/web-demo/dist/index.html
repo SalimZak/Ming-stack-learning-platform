@@ -83,11 +83,14 @@
         <div class="nav-sub">
           <button class="nav-link" data-page="influx-t1"  onclick="go('influx-t1')" ><span class="nav-icon"></span><span data-i18n="influx_task1">Oppgave 1</span></button>
           <button class="nav-link" data-page="influx-t2"  onclick="go('influx-t2')" ><span class="nav-icon"></span><span data-i18n="influx_task2">Oppgave 2</span></button>
+          <button class="nav-link" data-page="influx-t3"  onclick="go('influx-t3')" ><span class="nav-icon"></span><span data-i18n="influx_task3">Oppgave 3</span></button>
+          <button class="nav-link" data-page="influx-t4"  onclick="go('influx-t4')" ><span class="nav-icon"></span><span data-i18n="influx_task4">Oppgave 4</span></button>
         </div>
         <button class="nav-link" data-page="nodered" onclick="go('nodered')"><span class="nav-icon"></span>Node-RED</button>
         <div class="nav-sub">
           <button class="nav-link" data-page="nodered-t1" onclick="go('nodered-t1')"><span class="nav-icon"></span><span data-i18n="nodered_task1">Oppgave 1</span></button>
           <button class="nav-link" data-page="nodered-t2" onclick="go('nodered-t2')"><span class="nav-icon"></span><span data-i18n="nodered_task2">Oppgave 2</span></button>
+          <button class="nav-link" data-page="nodered-t3" onclick="go('nodered-t3')"><span class="nav-icon"></span><span data-i18n="nodered_task3">Oppgave 3</span></button>
         </div>
         <button class="nav-link" data-page="grafana" onclick="go('grafana')"><span class="nav-icon"></span>Grafana</button>
         <div class="nav-sub">
@@ -386,6 +389,8 @@
         <div class="grid">
           <button class="card" onclick="go('influx-t1')"><strong data-i18n="influx_task1">Oppgave 1</strong><span data-i18n="influx_task1sub">Kom i gang.</span></button>
           <button class="card" onclick="go('influx-t2')"><strong data-i18n="influx_task2">Oppgave 2</strong><span data-i18n="influx_task2sub">Spørringer på data.</span></button>
+          <button class="card" onclick="go('influx-t3')"><strong data-i18n="influx_task3">Oppgave 3</strong><span data-i18n="influx_task3sub">True/False oppgave.</span></button>
+          <button class="card" onclick="go('influx-t4')"><strong data-i18n="influx_task4">Oppgave 4</strong><span data-i18n="influx_task4sub">Drag og slipp.</span></button>
         </div>
         <button class="small-link" onclick="go('ming')">← MING</button>
       </div>
@@ -547,6 +552,118 @@
         <button class="small-link" onclick="go('influx')" data-i18n="influx_t2_back">← Tilbake</button>
       </div>
 
+      <!-- ══ INFLUXDB OPPGAVE 3 — True / False ══ -->
+      <div id="page-influx-t3" class="page-view">
+        <h1 class="page-title" data-i18n="influx_t3_title">InfluxDB – Oppgave 3</h1>
+
+        <!-- startpage-->
+        <div id="influxT3-infobox" class="infobox">
+          <h3>True or False</h3>
+          <p>Informasjon om Temaet skal stå her</p>
+          <p>Dette er er true or false oppgave med 10 spørsmål. Med 4 valg alternativer. Kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
+          <button class="startbtn" onclick="influxT3Start()">Start</button>
+        </div>
+
+        <div id="influxT3-taskbox" style="display:none;">
+          <!-- score -->
+          <div id="influxT3-score" class="scoreBox">Poeng Score: 0 / 10</div>
+
+          <div class="TFbox" data-correct="1">
+            <p>Spørsmål 1?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="0">
+            <p>Spørsmål 2?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="0">
+            <p>Spørsmål 3?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="0">
+            <p>Spørsmål 4?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="1">
+            <p>Spørsmål 5?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="1">
+            <p>Spørsmål 6?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="1">
+            <p>Spørsmål 7?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="0">
+            <p>Spørsmål 8?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="1">
+            <p>Spørsmål 9?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <div class="TFbox" data-correct="0">
+            <p>Spørsmål 10?</p>
+            <button onclick="quizSelect(this,1)">True</button>
+            <button onclick="quizSelect(this,0)">False</button>
+          </div>
+
+          <!-- submitt-->
+          <button class="mc-finish-btn" onclick="quizFinish('.TFbox','influxT3-score')">Lever</button>
+        </div>
+        <button class="small-link" onclick="go('influx')" data-i18n="influx_t3_back">← Tilbake</button>
+      </div>
+
+      <!-- ══ INFLUXDB OPPGAVE 4 — Drag og slipp (placeholder) ══ -->
+      <div id="page-influx-t4" class="page-view">
+        <h1 class="page-title" data-i18n="influx_t4_title">InfluxDB – Oppgave 4</h1>
+        <div class="task-desc" data-i18n="influx_t4_desc">Insert task description here.</div>
+
+        <div id="inft4-infobox" class="infobox">
+          <h4 data-i18n="inft4_infoTitle">Insert info title here</h4>
+          <p  data-i18n="inft4_infoBody">Insert explanation text here.</p>
+          <button class="startbtn" onclick="inft4StartTask()" data-i18n="inft4_startBtn">Start oppgave</button>
+        </div>
+
+        <div id="inft4-complete-banner" class="complete-banner" data-i18n="inft4_complete">&#10003; Insert completion message here!</div>
+        <div id="inft4-flash-msg" class="messagebox"></div>
+
+        <div id="inft4-task-area" style="display:none;">
+          <div class="taskbox" data-i18n="inft4_taskbox">Insert instructions here. Drag items from the left panel into their matching slots on the right.</div>
+
+          <div class="split-layout">
+            <div class="drag-source" id="inft4-drag-source">
+              <div class="drag-source-label" data-i18n="inft4_sourceLabel">Insert label here</div>
+            </div>
+            <div class="drop-grid" id="inft4-drop-grid"></div>
+          </div>
+
+          <button class="reset-btn" onclick="inft4ResetTask()" data-i18n="inft4_resetBtn">Reset</button>
+        </div>
+
+        <button class="small-link" onclick="go('influx')" data-i18n="influx_t4_back">← Tilbake</button>
+      </div>
+
 <!-- ══ NODE-RED — oppgavevalg + plassholdere ══ -->
       <div id="page-nodered" class="page-view">
         <h1 class="page-title" data-i18n="nodered_title">Node-RED</h1>
@@ -554,6 +671,7 @@
         <div class="grid">
           <button class="card" onclick="go('nodered-t1')"><strong data-i18n="nodered_task1">Oppgave 1</strong><span data-i18n="nodered_task1sub">Kom i gang.</span></button>
           <button class="card" onclick="go('nodered-t2')"><strong data-i18n="nodered_task2">Oppgave 2</strong><span data-i18n="nodered_task2sub">Avanserte flyter.</span></button>
+          <button class="card" onclick="go('nodered-t3')"><strong data-i18n="nodered_task3">Oppgave 3</strong><span data-i18n="nodered_task3sub">Drag og slipp.</span></button>
         </div>
         <button class="small-link" onclick="go('ming')">← MING</button>
       </div>
@@ -740,6 +858,36 @@
         <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t2_back">← Tilbake</button>
       </div>
 
+      <!-- ══ NODE-RED OPPGAVE 3 — Drag og slipp (placeholder) ══ -->
+      <div id="page-nodered-t3" class="page-view">
+        <h1 class="page-title" data-i18n="nodered_t3_title">Node-RED – Oppgave 3</h1>
+        <div class="task-desc" data-i18n="nodered_t3_desc">Insert task description here.</div>
+
+        <div id="nrt3-infobox" class="infobox">
+          <h4 data-i18n="nrt3_infoTitle">Insert info title here</h4>
+          <p  data-i18n="nrt3_infoBody">Insert explanation text here.</p>
+          <button class="startbtn" onclick="nrt3StartTask()" data-i18n="nrt3_startBtn">Start oppgave</button>
+        </div>
+
+        <div id="nrt3-complete-banner" class="complete-banner" data-i18n="nrt3_complete">&#10003; Insert completion message here!</div>
+        <div id="nrt3-flash-msg" class="messagebox"></div>
+
+        <div id="nrt3-task-area" style="display:none;">
+          <div class="taskbox" data-i18n="nrt3_taskbox">Insert instructions here. Drag items from the left panel into their matching slots on the right.</div>
+
+          <div class="split-layout">
+            <div class="drag-source" id="nrt3-drag-source">
+              <div class="drag-source-label" data-i18n="nrt3_sourceLabel">Insert label here</div>
+            </div>
+            <div class="drop-grid" id="nrt3-drop-grid"></div>
+          </div>
+
+          <button class="reset-btn" onclick="nrt3ResetTask()" data-i18n="nrt3_resetBtn">Reset</button>
+        </div>
+
+        <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t3_back">← Tilbake</button>
+      </div>
+
       <!-- ══ GRAFANA — oppgavevalg + plassholdere ══ -->
       <div id="page-grafana" class="page-view">
         <h1 class="page-title" data-i18n="grafana_title">Grafana</h1>
@@ -854,115 +1002,36 @@
       </div>
 
       <!-- NODE-RED OPPGAVE 2 - True/False -->
+      <!-- ══ GRAFANA OPPGAVE 2 — Drag and Drop ══ -->
       <div id="page-grafana-t2" class="page-view">
-        <h1 class="page-title" data-i18n="grafana_t2_title">Grafana - Oppgave 2</h1>
-      
-        <!-- startpage-->
-        <div id="grafanaT2-infobox" class="infobox">
-          <h3>True or False</h3>
-          <p>Informasjon om Temaet skal stå her</p>
-          <p>Dette er er true or false oppgave med 10 spørsmål. Med 4 valg alternativer. Kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
-          <button class="startbtn" onclick="grafanaT2Start()">Start</button>
+        <h1 class="page-title" data-i18n="grafana_t2_title">Grafana – Oppgave 2</h1>
+        <div class="task-desc" data-i18n="grafana_t2_desc">Fyll inn her.</div>
+
+        <!-- Infoboks vises før oppgaven starter, skjules av startTask() -->
+        <div id="infobox" class="infobox">
+          <h4 data-i18n="gt2_infoTitle">Drag og slipp</h4>
+          <p  data-i18n="gt2_infoBody">Dra elementene fra venstre panel til riktig boks.</p>
+          <button class="startbtn" onclick="startTask()" data-i18n="gt2_startBtn">Start oppgave</button>
         </div>
 
-        <div id="grafanaT2-taskbox" style="display:none;">
-          <!-- score -->
-          <div id="grafanaT2-score" class="scoreBox">Poeng Score: 0 / 10</div>
-
-          <div class="TFbox" data-correct="1">
-            <p>Spørsmål 1?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="0">
-            <p>Spørsmål 2?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="0">
-            <p>Spørsmål 3?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="0">
-            <p>Spørsmål 4?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="1">
-            <p>Spørsmål 5?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="1">
-            <p>Spørsmål 6?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="1">
-            <p>Spørsmål 7?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="0">
-            <p>Spørsmål 8?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="1">
-            <p>Spørsmål 9?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="0">
-            <p>Spørsmål 10?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <!-- submitt-->
-          <button class="mc-finish-btn" onclick="quizFinish('.TFbox','grafanaT2-score')">Lever</button>
-          </div>
-        <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t2_back">← Tilbake</button>
-      </div>
-
-      <!-- == Grafana oppgave 2 - drag and drop-->
-       <div class="container">
-          <div class="task-header">Insert title here</div>
-          <div class="task-desc">Insert task description here.</div>
-
-          <div id="infobox" class="infobox">
-            <h4>Insert info title here</h4>
-            <p>Insert explanation text here.</p>
-            <button class="startbtn" onclick="startTask()">Start oppgave</button>
-          </div>
-
-        <div id="complete-banner" class="complete-banner">&#10003; Insert completion message here!</div>
+        <div id="complete-banner" class="complete-banner" data-i18n="gt2_complete">&#10003; Oppgave fullført!</div>
         <div id="flash-msg" class="messagebox"></div>
 
-          <div id="task-area">
-          <div class="taskbox">Insert instructions here. Drag items from the left panel into their matching slots on the right.</div>
+        <div id="task-area">
+          <div class="taskbox" data-i18n="gt2_taskbox">Dra elementene fra venstre panel til riktig boks på høyre side.</div>
 
-        <div class="split-layout">
-          <div class="drag-source" id="drag-source">
-           <div class="drag-source-label">Insert label here</div>
-        </div>
-          <div class="drop-grid" id="drop-grid"></div>
+          <div class="split-layout">
+            <div class="drag-source" id="drag-source">
+              <div class="drag-source-label" data-i18n="gt2_sourceLabel">Elementer</div>
+            </div>
+            <div class="drop-grid" id="drop-grid"></div>
+          </div>
+
+          <button class="reset-btn" onclick="resetTask()" data-i18n="gt2_resetBtn">Reset</button>
         </div>
 
-        <button class="reset-btn" onclick="resetTask()">Reset</button>
+        <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t2_back">← Tilbake</button>
       </div>
-    </div>
-
 
       <!-- ══ GRAFANA OPPGAVE 3 — Catch the Object ══ -->
       <div id="page-grafana-t3" class="page-view">
@@ -1211,8 +1280,10 @@
 <script src="tasks/mqtt/task3.js"></script>
 <script src="tasks/mqtt/nodered.js"></script>
 <script src="tasks/influx/InfluxDBT-2.js"></script>
+<script src="tasks/influx/influx-t4.js"></script>
 <script src="quiz/TF_NodeRED.js"></script>
-<script src="quiz/TF_Grafana.js"></script>
+<script src="quiz/TF_Influx.js"></script>
+<script src="tasks/nodered/nodered-t3.js"></script>
 <script src="tasks/grafana/grafana-t2.js"></script>
 <script src="tasks/grafana/grafana-t3.js"></script>
 <script src="tasks/grafana/GrafanaT-4.js"></script>
@@ -1376,12 +1447,15 @@ function go(page) {
     //influx
     "influx-t1": "Dette er en Multiple Choice oppgave for InfluxDB.",
     "influx-t2": "Dette er en sensor-skriveoppgave for InfluxDB.",
+    "influx-t3": "Dette er en True/False oppgave for InfluxDB.",
+    "influx-t4": "Dette er en drag og slipp-oppgave for InfluxDB.",
     //nodered
     "nodered-t1": "Dette er en Multiple Choice oppgave for Node-RED.",
     "nodered-t2": "Dette er en True/False oppgave for Node-RED.",
+    "nodered-t3": "Dette er en drag og slipp-oppgave for Node-RED.",
     //grafana
     "grafana-t1": "Dette er en Multiple Choice oppgave for Grafana.",
-    "grafana-t2": "Dette er en True/False oppgave for Grafana.",
+    "grafana-t2": "Dette er en drag og slipp-oppgave for Grafana.",
     "grafana-t3": "Dette er Catch the Object-spillet for Grafana.",
     "grafana-t4": "Dette er live dashboard-simuleringen for Grafana.",
   };

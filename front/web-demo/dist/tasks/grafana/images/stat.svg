@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" role="img" aria-label="Stat panel">
+  <!-- Panel background -->
+  <rect x="30" y="35" width="240" height="130" rx="10" fill="#0d1626" stroke="#1f2d44" stroke-width="1.5"/>
+  <!-- Label -->
+  <text x="150" y="65" text-anchor="middle" fill="#7d8da5"
+        font-family="monospace" font-size="11" font-weight="700" letter-spacing="2">DISTANCE</text>
+  <!-- Big number -->
+  <text x="150" y="118" text-anchor="middle" fill="#e8d0a8"
+        font-family="monospace" font-size="44" font-weight="800">127</text>
+  <!-- Unit -->
+  <text x="150" y="140" text-anchor="middle" fill="#38b8d0"
+        font-family="monospace" font-size="14" font-weight="700">mm</text>
+  <!-- Trend sparkline -->
+  <path d="M 80 155 L 100 150 L 120 152 L 140 148 L 160 145 L 180 147 L 200 142 L 220 144"
+        fill="none" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+</svg>

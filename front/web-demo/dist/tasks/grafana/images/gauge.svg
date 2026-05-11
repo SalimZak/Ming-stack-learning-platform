@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" role="img" aria-label="Gauge chart">
+  <!-- Background arc track -->
+  <path d="M 50 160 A 100 100 0 0 1 250 160"
+        fill="none" stroke="#1f2d44" stroke-width="22" stroke-linecap="round"/>
+  <!-- Filled arc (0-65% sweep) -->
+  <path d="M 50 160 A 100 100 0 0 1 220 95"
+        fill="none" stroke="#38b8d0" stroke-width="22" stroke-linecap="round"/>
+  <!-- Tick marks -->
+  <g stroke="#3c506e" stroke-width="2" stroke-linecap="round">
+    <line x1="50"  y1="160" x2="58"  y2="155"/>
+    <line x1="78"  y1="105" x2="86"  y2="110"/>
+    <line x1="150" y1="60"  x2="150" y2="70"/>
+    <line x1="222" y1="105" x2="214" y2="110"/>
+    <line x1="250" y1="160" x2="242" y2="155"/>
+  </g>
+  <!-- Needle -->
+  <line x1="150" y1="160" x2="208" y2="103" stroke="#e8d0a8" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="150" cy="160" r="7" fill="#e8d0a8"/>
+  <circle cx="150" cy="160" r="3" fill="#0d1626"/>
+  <!-- Value -->
+  <text x="150" y="185" text-anchor="middle" fill="#e8d0a8"
+        font-family="monospace" font-size="18" font-weight="700">65%</text>
+</svg>
