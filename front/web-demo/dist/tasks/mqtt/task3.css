@@ -1,64 +1,165 @@
-/* ── MQTT Oppgave 3 ── */
-.mqtt-layout  { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
-.mqtt-side, .mqtt-center { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.device-row   { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+/* mqtt task 3 css */
+
+/* ─── LAYOUT ─────────────────────────────────────────────── */
+
+.mqtt-layout {
+  display: flex;                  /* legger elementene side om side */
+  justify-content: space-between; /* fordeler plass mellom elementene */
+  align-items: flex-start;        /* justerer elementer til toppen */
+  gap: 16px;                      /* avstand mellom elementene */
+  flex-wrap: wrap;                /* bryter til ny linje hvis det ikke er plass */
+}
+
+.mqtt-side,
+.mqtt-center {
+  display: flex;          /* legger innhold under hverandre */
+  flex-direction: column;
+  align-items: center;    /* sentrerer innhold */
+  gap: 10px;
+}
+
+.device-row {
+  display: flex;          /* legger innhold under hverandre */
+  flex-direction: column;
+  align-items: center;    /* sentrerer innhold */
+  gap: 8px;
+}
+
+
+/* ─── SIRKLER ─────────────────────────────────────────────── */
 
 .circle {
-  width: 80px; height: 80px; border-radius: 50%;
-  border: 2px solid var(--cyan); background: rgba(56,184,208,.08);
-  display: flex; justify-content: center; align-items: center; font-size: 28px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;                     /* gjør boksen til en sirkel */
+  border: 2px solid var(--cyan);          /* blå kant */
+  background: rgba(56,184,208,.08);       /* svak blå bakgrunn */
+  display: flex;
+  justify-content: center;                /* sentrerer innhold horisontalt */
+  align-items: center;                    /* sentrerer innhold vertikalt */
+  font-size: 28px;
 }
+
 .broker-circle {
-  width: 130px; height: 130px; border-radius: 50%;
-  border: 2px solid var(--cyan); background: rgba(56,184,208,.10);
-  display: flex; justify-content: center; align-items: center;
-  text-align: center; font-family: var(--font-ui);
-  font-weight: 800; font-size: 15px; color: var(--gold);
-  white-space: pre-line;
-  /* white-space: pre-line gjør at \n i tekststrengen blir et ekte linjeskift */
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;                     /* gjør boksen til en sirkel */
+  border: 2px solid var(--cyan);          /* blå kant */
+  background: rgba(56,184,208,.10);       /* svak blå bakgrunn */
+  display: flex;
+  justify-content: center;                /* sentrerer innhold horisontalt */
+  align-items: center;                    /* sentrerer innhold vertikalt */
+  text-align: center;
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--gold);                     /* gull-farget tekst */
+  white-space: pre-line;                  /* gjør \n om til ekte linjeskift */
 }
 
-.dev-label { font-size: 11px; font-weight: 700; color: var(--gold); text-align: center; }
+.dev-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold);   /* gull-farget tekst */
+  text-align: center;
+}
 
-.arrow-select-box   { background: var(--panel); border: 2px solid var(--border); border-radius: 12px; padding: 12px; min-width: 170px; }
-.arrow-select-title { font-size: 11px; font-weight: 800; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
-.arrow-list         { display: flex; flex-direction: column; gap: 8px; }
+
+/* ─── PIL-VELGER BOKSEN ───────────────────────────────────── */
+
+.arrow-select-box {
+  background: var(--panel);          /* bakgrunnsfarge fra tema */
+  border: 2px solid var(--border);   /* kantlinje fra tema */
+  border-radius: 12px;
+  padding: 12px;
+  min-width: 170px;
+}
+
+.arrow-select-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);          /* grå tekst */
+  letter-spacing: 1px;
+  text-transform: uppercase;    /* gjør teksten til store bokstaver */
+  margin-bottom: 10px;
+}
+
+.arrow-list {
+  display: flex;          /* legger knappene under hverandre */
+  flex-direction: column;
+  gap: 8px;
+}
+
+
+/* ─── PIL-KNAPPER ─────────────────────────────────────────── */
 
 .arrow-btn {
-  position: relative;
-  /* position: relative trengs for at ::after/::before pil-tegn kan plasseres absolutt inni knappen */
-  border: 1px solid var(--cyan); padding: 7px 10px;
-  font-family: var(--font-mono); font-size: 11px; font-weight: 700;
-  color: var(--cyan); background: rgba(56,184,208,.07);
-  border-radius: 6px; cursor: pointer; text-align: left;
-  transition: background .15s;
-  white-space: pre-line;  /* gjør \n om til ekte linjeskift i knappetikett */
+  position: relative;             /* trengs for at piltegnene kan plasseres inni knappen */
+  border: 1px solid var(--cyan);
+  padding: 7px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cyan);
+  background: rgba(56,184,208,.07);
+  border-radius: 6px;
+  cursor: pointer;                /* viser hånd-peker når man holder over */
+  text-align: left;
+  transition: background .15s;    /* myk overgang ved hover */
+  white-space: pre-line;          /* gjør \n om til ekte linjeskift */
   width: 100%;
 }
-.arrow-btn.right { padding-right: 26px; }  /* plass til ▶ på høyre side */
-.arrow-btn.left  { padding-left:  26px; }  /* plass til ◀ på venstre side */
-.arrow-btn:hover    { background: rgba(56,184,208,.15); }
-.arrow-btn.selected { background: rgba(56,184,208,.25); border-color: #fff; color: #fff; }
 
-/* Legger til pil-tegn med CSS uten å trenge ekstra HTML-elementer */
-.arrow-btn.right::after  { content: "▶"; position: absolute; top: 50%; right: 8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
-.arrow-btn.left::before  { content: "◀"; position: absolute; top: 50%; left:  8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
+/* plass til piltegn på sidene */
+.arrow-btn.right { padding-right: 26px; } /* plass til -> på høyre side */
+.arrow-btn.left  { padding-left:  26px; } /* plass til <- på venstre side */
+.arrow-btn.both  { padding-left: 26px; padding-right: 26px; } /* plass til begge sider */
+
+/* hover og valgt-farge */
+.arrow-btn:hover    { background: rgba(56,184,208,.15); }           /* lysere ved hover */
+.arrow-btn.selected { background: rgba(56,184,208,.25); border-color: #fff; color: #fff; } /* hvit når valgt */
+
+/* piltegn laget med css, ingen ekstra html trengs */
+.arrow-btn.right::after  { content: "->"; position: absolute; top: 50%; right: 8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
+.arrow-btn.left::before  { content: "<-"; position: absolute; top: 50%; left:  8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
+.arrow-btn.both::before  { content: "<-"; position: absolute; top: 50%; left:  8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
+.arrow-btn.both::after   { content: "->"; position: absolute; top: 50%; right: 8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
+
+/* piltegn blir hvite når knappen er valgt */
 .arrow-btn.selected.right::after  { color: #fff; }
 .arrow-btn.selected.left::before  { color: #fff; }
-.arrow-btn.both  { padding-left: 26px; padding-right: 26px; }
-.arrow-btn.both::before  { content: "◀"; position: absolute; top: 50%; left:  8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
-.arrow-btn.both::after   { content: "▶"; position: absolute; top: 50%; right: 8px; transform: translateY(-50%); font-size: 10px; color: var(--cyan); }
 .arrow-btn.selected.both::before  { color: #fff; }
 .arrow-btn.selected.both::after   { color: #fff; }
 
+
+/* ─── DROPZONER ───────────────────────────────────────────── */
+
 .dropzone {
-  border: 2px dashed rgba(56,184,208,.5); background: rgba(56,184,208,.04);
-  border-radius: 8px; min-height: 46px; min-width: 150px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 11px; color: var(--muted);
-  text-align: center; padding: 6px; transition: border-color .15s, background .15s;
+  border: 2px dashed rgba(56,184,208,.5); /* stiplet blå kant */
+  background: rgba(56,184,208,.04);       /* svak blå bakgrunn */
+  border-radius: 8px;
+  min-height: 46px;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* sentrerer innhold horisontalt */
+  justify-content: center;  /* sentrerer innhold vertikalt */
+  cursor: pointer;          /* viser hånd-peker når man holder over */
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  padding: 6px;
+  transition: border-color .15s, background .15s; /* myk overgang ved hover */
 }
-.dropzone-hint  { font-size: 9px; color: rgba(56,184,208,.5); margin-top: 2px; font-weight: 700; letter-spacing: .3px; }
-.dropzone:hover { border-color: var(--cyan); background: rgba(56,184,208,.08); }
-.dropzone.zone-correct { border-color: #4ade80; background: rgba(74,222,128,.1);  color: #4ade80; }  /* grønn = riktig */
-.dropzone.zone-wrong   { border-color: #f87171; background: rgba(248,113,113,.1); color: #f87171; }  /* rød = feil */
+
+.dropzone-hint {
+  font-size: 9px;
+  color: rgba(56,184,208,.5); /* svak blå tekst */
+  margin-top: 2px;
+  font-weight: 700;
+  letter-spacing: .3px;
+}
+
+.dropzone:hover        { border-color: var(--cyan); background: rgba(56,184,208,.08); } /* lysere ved hover */
+.dropzone.zone-correct { border-color: #4ade80; background: rgba(74,222,128,.1);  color: #4ade80; } /* grønn = riktig */
+.dropzone.zone-wrong   { border-color: #f87171; background: rgba(248,113,113,.1); color: #f87171; } /* rød = feil */

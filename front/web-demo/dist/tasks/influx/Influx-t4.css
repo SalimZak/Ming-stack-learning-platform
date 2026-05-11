@@ -1,0 +1,142 @@
+/* influxDB task4 sin css */
+
+#influxT4Page {
+    display: none; /* skjul startpage når oppgaven starter */
+}
+
+
+#influxT4-layout {
+    display: flex; /* venstre og høyre side, ved siden av hverandre */
+    gap: 28px; /* mellomrom mellom sidene */
+    align-items: flex-start;  /* starter høyre og venstre side fra top og strekke seg ned */
+    margin-top: 15px; /* luft mellom boksene */
+}
+
+
+/* poeng */
+#influxT4-poeng {
+    text-align: center; /* midten */
+    font-size: 19px;
+    color: var(--text);
+    margin-bottom: 15px;
+}
+
+
+/* venstre side: sensorbokser*/
+#venstreSide {
+    display: flex;
+    flex-direction: column; /* boksene kommer nedover */
+    gap: 11px; /* mellomrom mellom boksene */
+    width: 35%; /* 35% av siden sin bredde */
+}
+
+/* per sensorboks */
+.sensorBox {
+    background: var(--card); /* bakgrunn */
+    border: 1px solid var(--cyan);  /* ramme */
+    padding: 11px 11px; /* top/bunn luft,  side luft*/
+    cursor: pointer; /* musen peker */
+    position: relative; /* for nedtelling */
+}
+
+.sensorBox:hover {
+    border-color: var(--text);
+}
+
+/* valgt boks */
+.selected {
+    border-color: var(--cyan);
+    background: rgba(54, 180, 202, 0.12);
+}
+
+/* Boksen er riktig plassert, da skal valgene bli grå */
+.placed {
+    opacity: 0.35; /* gjennomsiktig */
+    pointer-events: none; /* ikke klikkbar */
+    border-style: dashed; /* stiplet ramme */
+}
+
+/* Sensornavnet øverst i boksen */
+.sensorNavn {
+    font-size: 11px;
+    color: var(--muted); /* rolig farge */
+    margin-bottom: 3px;
+}
+
+/* Measurement-teksten */
+.lable {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+
+/* Temperatur  */
+.temp {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--cyan); 
+    margin-bottom: 2px;
+}
+
+/* Timestamp */
+.tid {
+    font-size: 11px;
+    color: var(--text);
+    font-family: monospace; /* jevn bredde for dato og tid */
+}
+
+/* Nedtelling øverst til høyre i boksen */
+.countDown {
+    position: absolute; /* plassert i boksen */
+    top: 6px;
+    right: 7px;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: monospace;
+}
+
+
+/* høyre side: database */
+#høyreSide {
+    flex: 1; /* fyller resten av siden 65% */
+}
+
+/* Overskriften over databasen */
+.bucketTittel {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--cyan);
+    margin-bottom: 10px;
+}
+
+/* en tom rad i databasen */
+.rad {
+    padding: 12px; /* indre space */
+    border: 1px dashed var(--muted); /* stiplet = tom rad */
+    margin-bottom: 6px;
+    cursor: pointer;
+    color: var(--muted); 
+    font-size: 12px;
+    min-height: 44px; /* gjøre det romslig, den er 44 pikselr høy selv om den er tom */
+}
+
+.rad:hover {
+    border-color: var(--cyan);
+    background: rgba(52, 175, 197, 0.06);
+}
+
+
+.correct {
+    border-style: solid; /* solid strek ramme */
+    border-color: #2cc76d;
+    background: rgba(45, 204, 112, 0.08);
+    cursor: default;/* ikke klikkbar */
+    color: var(--text); /* normal tekstfarge */
+    font-family: monospace;
+}
+
+
+.wrong {
+    border-color: #eb4e3c;
+    background: rgba(231, 76, 60, 0.1);
+}

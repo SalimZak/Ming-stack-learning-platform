@@ -43,7 +43,8 @@ async function nrGetSensorValue() {
     const data = await res.json(); // leser svaret og gjør det om fra JSON-tekst til et JS-objekt
     return { value: parseFloat(data.loadcell.toFixed(2)), real: true }; // henter loadcell-feltet og avrunder til 2 desimaler
   } catch {
-    return { value: 0, real: false }; // hvis ESP32 ikke svarer eller noe feiler, returnerer vi 0
+    // tifeldig tall som avrunder til 2 desimaler, og gjør teksten tilbake til tall, ellers er det simulert
+    return { value: parseFloat((Math.random() * 10).toFixed(2)), real: false };
   }
 }
 

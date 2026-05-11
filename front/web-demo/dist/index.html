@@ -21,6 +21,14 @@
   <link rel="stylesheet" href="core/layout.css">
   <link rel="stylesheet" href="core/components.css">
   <link rel="stylesheet" href="core/sensors/sensors.css">
+<<<<<<< Updated upstream
+=======
+  <link rel="stylesheet" href="tasks/mqtt/task3.css">
+  <link rel="stylesheet" href="tasks/mqtt/nodered.css">
+  <link rel="stylesheet" href="tasks/grafana/grafana-t3.css">
+  <link rel="stylesheet" href="tasks/influx/influx-t2.css">
+  <link rel="stylesheet" href="tasks/grafana/grafana-t4.css">
+>>>>>>> Stashed changes
   <link rel="stylesheet" href="quiz/mc-quiz.css">
   <link rel="stylesheet" href="tasks/mqtt/task3.css">
   <link rel="stylesheet" href="tasks/mqtt/MQTTTask5Card.css">
@@ -246,8 +254,11 @@
           <!-- infoboks-->
         <div id="mqttT1-infobox" class="infobox">
           <h3>Multiple Choice</h3>
-          <p>Informasjon om Temaet skal stå her</p>
-          <p>Dette er er multiplechoice oppgave med 10 spørsmål. Med 4 valg alternativer. kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
+          <p>MQTT (Message Queuing Telemetry Transport) er en lettvekts meldingsprotokoll som er spesielt godt egnet for IIoT-enheter (Industrial Internet of Things). Fordi protokollen har lite overhead, fungerer den bra på enheter med begrenset prosessorkraft, lite batteri og trege eller ustabile nettverksforbindelser.
+            MQTT bygger på en publish/subscribe-modell. I stedet for at sensorer og mottakere snakker direkte med hverandre, går all kommunikasjon gjennom en sentral server kalt en broker — Mosquitto er et vanlig eksempel. Brokeren tar imot meldinger og videresender dem til de riktige mottakerne. Dette gir tre sentrale roller i systemet. En publisher sender en melding til en bestemt adresse (en sensor som sender en temperaturmåling er et typisk eksempel). En subscriber abonnerer på en adresse og mottar alle meldinger som publiseres dit, og kan for eksempel være et nettgrensesnitt eller en database. Brokeren er midtmannen som ruter meldinger mellom publishere og subscribere — den måler ikke noe selv og lagrer ikke data permanent.</p>
+          <p> Adressene meldinger sendes til kalles topics, og er bygget opp hierarkisk med skråstrek som skille. For eksempel betyr sensor/temperature/room1 at temperaturmålingen hører til rom 1 under temperaturkategorien. MQTT støtter også QoS (Quality of Service), som bestemmer leveringsgarantien for meldinger.
+              MQTT sender data over nettverket via TCP/IP, ikke via direkte kabel eller andre kanaler.</p>
+          <p>Dette er er multiplechoice oppgave med 10 spørsmål. Med 4 valg alternativer. Kun ett svar er korrekt per spørsmål. Det er +1 poneg for hver korrekt svar.</p>
           <button class="startbtn" onclick="mqttT1Start()">Start</button>
         </div>
 
@@ -261,65 +272,49 @@
             <button onclick="quizSelect(this,1)">En måte å sende meldinger mellom systemer</button>
             <button onclick="quizSelect(this,2)">Et grafprogram</button>
             <button onclick="quizSelect(this,3)">En signalfilter</button>
-          </div>
+        </div>
 
-          <div class="MCbox" data-correct="0">
+        <div class="MCbox" data-correct="0">
             <p>Hva sender sensoren i MQTT?</p>
             <button onclick="quizSelect(this,0)">Meldinger med måledata</button>
             <button onclick="quizSelect(this,1)">Bilder</button>
             <button onclick="quizSelect(this,2)">Programkode</button>
-            <button onclick="quizSelect(this,3)">Sender IP-adresse</button>
-          </div>
+            <button onclick="quizSelect(this,3)">IP-adresse</button>
+        </div>
 
-          <div class="MCbox" data-correct="0">
+        <div class="MCbox" data-correct="0">
             <p>I MQTT-protokollen, hva gjør 'publish'?</p>
-            <button onclick="quizSelect(this,0)">Sender en melding</button>
+            <button onclick="quizSelect(this,0)">Sender en melding til en topic</button>
             <button onclick="quizSelect(this,1)">Sletter data</button>
             <button onclick="quizSelect(this,2)">Lagrer filer</button>
-            <button onclick="quizSelect(this,3)">Oversetter språk til filer</button>
-          </div>
+            <button onclick="quizSelect(this,3)">Oversetter språk</button>
+        </div>
 
-          <div class="MCbox" data-correct="3">
+        <div class="MCbox" data-correct="3">
             <p>I MQTT-protokollen, hva gjør 'subscribe'?</p>
-            <button onclick="quizSelect(this,0)">Lagrer data i en tidsserie-database</button>
+            <button onclick="quizSelect(this,0)">Lagrer data i en database</button>
             <button onclick="quizSelect(this,1)">Skriver måledata</button>
             <button onclick="quizSelect(this,2)">Henter historiske data</button>
-            <button onclick="quizSelect(this,3)">Mottar meldinger fra et topic</button>
-          </div>
+            <button onclick="quizSelect(this,3)">Mottar meldinger fra en topic</button>
+        </div>
 
-          <div class="MCbox" data-correct="2">
+        <div class="MCbox" data-correct="2">
             <p>Hva skjer etter at sensoren måler?</p>
             <button onclick="quizSelect(this,0)">Systemet slår seg av</button>
             <button onclick="quizSelect(this,1)">Internett kobles fra</button>
             <button onclick="quizSelect(this,2)">Data sendes videre i systemet</button>
             <button onclick="quizSelect(this,3)">Måler spenning</button>
-          </div>
-
-          <div class="MCbox" data-correct="1">
-            <p>Hva betyr datapipeline?</p>
-            <button onclick="quizSelect(this,0)">Et kabelsystem</button>
-            <button onclick="quizSelect(this,1)">Veien data tar gjennom systemet</button>
-            <button onclick="quizSelect(this,2)">En type sensor</button>
-            <button onclick="quizSelect(this,3)">At WiFi er av</button>
-          </div>
-
-          <div class="MCbox" data-correct="1">
-            <p>Hva skjer hvis filtreringen er svak?</p>
-            <button onclick="quizSelect(this,0)">Sensoren blir kaldere</button>
-            <button onclick="quizSelect(this,1)">Signal reagerer raskere</button>
-            <button onclick="quizSelect(this,2)">WiFi blir sterkere</button>
-            <button onclick="quizSelect(this,3)">Systemet slår seg av</button>
-          </div>
-
-          <div class="MCbox" data-correct="3">
-            <p>Hva skjer hvis filtreringen er veldig sterk?</p>
-            <button onclick="quizSelect(this,0)">Internett kobles fra</button>
-            <button onclick="quizSelect(this,1)">Grafen forsvinner</button>
-            <button onclick="quizSelect(this,2)">Sensoren stopper</button>
-            <button onclick="quizSelect(this,3)">Signal reagerer saktere</button>
-          </div>
+        </div>
 
           <div class="MCbox" data-correct="0">
+            <p>Hva gjør en MQTT broker?</p>
+            <button onclick="quizSelect(this,0)">Måler sensorverdier</button>
+            <button onclick="quizSelect(this,1)">Visualiserer grafer</button>
+            <button onclick="quizSelect(this,2)">Sender meldinger mellom publish og subscribe</button>
+            <button onclick="quizSelect(this,3)">Slår av systemet</button>
+          </div>
+
+         <div class="MCbox" data-correct="2">
             <p>Hva er et "topic" i MQTT?</p>
             <button onclick="quizSelect(this,0)">En kanal som meldinger sendes på</button>
             <button onclick="quizSelect(this,1)">En IP-adresse</button>
@@ -328,11 +323,27 @@
           </div>
 
           <div class="MCbox" data-correct="2">
-            <p>Hva gjør en MQTT broker?</p>
-            <button onclick="quizSelect(this,0)">Måler sensorverdier</button>
-            <button onclick="quizSelect(this,1)">Visualiserer grafer</button>
-            <button onclick="quizSelect(this,2)">Sender meldinger mellom publish og subscribe</button>
-            <button onclick="quizSelect(this,3)">Slår av systemet</button>
+              <p>Hva står QoS for i MQTT?</p>
+              <button onclick="quizSelect(this,0)">Query of Speed</button>
+              <button onclick="quizSelect(this,1)">Quality of Speed</button>
+              <button onclick="quizSelect(this,2)">Quality of Service</button>
+              <button onclick="quizSelect(this,3)">Query of Service</button>
+          </div>
+
+          <div class="MCbox" data-correct="3">
+              <p>Hvorfor er MQTT brukt for IoT-enheter med begrenset strøm/nettverk?</p>
+              <button onclick="quizSelect(this,0)">Fordi den bruker mye data</button>
+              <button onclick="quizSelect(this,1)">Den er tung og komplisert</button>
+              <button onclick="quizSelect(this,2)">Den lagrer data lokalt</button>
+              <button onclick="quizSelect(this,3)">Den er lettvekt og bruker lite ressurser</button>
+          </div>
+
+          <div class="MCbox" data-correct="0">
+              <p>Hva kjennetegner pub/sub-modellen i MQTT?</p>
+              <button onclick="quizSelect(this,0)">Publisher og subscriber kommuniserer gjennom en broker, ikke direkte</button>
+              <button onclick="quizSelect(this,1)">Publisher og subscriber snakker direkte med hverandre</button>
+              <button onclick="quizSelect(this,2)">Alle enheter sender til samme IP-adresse</button>
+              <button onclick="quizSelect(this,3)">Broker sletter alle meldinger permanent</button>
           </div>
 
           <!-- submitt-->
@@ -347,11 +358,11 @@
         
       <div id="startScreen">
         <div class="infobox">
-          <h3>Task 2 - Card Flip</h3>
-          <p>Du skal klikke (flippe) kortene og finne de begrepene som er relevante for MQTT. På baksiden av hvert kort finner du en forklaring.</p>
-          <p>Riktig svar gir +1 poeng og kortet blir grønt. </p>
-          <p>Feil svar gir -1 poeng og kortet blir rødt.</p>
-          <p>Du må finne 7 riktige av 16 for å fullføre oppgaven. Lykke til!</p>
+          <h3>Task 2 - Kortflip</h3>
+            <p>Hensikten med denne oppgaven er å lære deg å gjenkjenne og huske sentrale MQTT-begreper. Begrapene er nevnt i MQTT multiplechoice oppgave 1. Ved å flippe kortene og lese forklaringen på baksiden Vil du få en god forstårelse av begrepet.</p>
+            <p>Du skal klikke på kortene og finne de 7 begrepene som er relevante for MQTT. På baksiden av hvert kort finner du en forklaring.</p>
+            <p>Riktig svar gir +1 poeng og kortet blir grønt. Feil svar gir -1 poeng og kortet blir rødt.</p>
+            <p>Du må finne 7 riktige av 16 for å fullføre oppgaven.</p>
           <button class="startbtn" onclick="startGame()">Start</button>
         </div>
       </div>
@@ -401,8 +412,11 @@
         <!-- infoboks-->
         <div id="influxT1-infobox" class="infobox">
           <h3>Multiple Choice</h3>
-          <p>Informasjon om Temaet skal stå her</p>
-          <p>Dette er er multiplechoice oppgave med 10 spørsmål. Med 4 valg alternativer. kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
+          <p>InfluxDB er en tidsseriedatabase (timeseries database). Det vil si at den er spesialbygd for å lagre data som er ordnet etter tidspunkt (typisk sensormålinger som kommer inn jevnt over tid). I MING-stacken er InfluxDB lagringslaget. Den er foretrukket fordi den er optimalisert for høyhastighets datainntak og raske spørringer på tidsbaserte data. Sammenlignet med en vanlig relasjonsdatabase håndterer InfluxDB tidsstempler og store mengder kontinuerlig innkommende data mye mer effektivt.\n
+              Et sentralt begrep er measurement, som er en navngitt beholder for relaterte tidsseriedata, omtrent som en tabell i en SQL-database. Eksempler kan være «temprature», «humidity» eller «pressure». Hvert datapunkt har en timestamp (tidspinktet det ble registert, som er selve nøkkelen i en tidsseriedatabase). InfluxDB bruker også retention policies, som er regler som bestemmer hvor lenge data lagres. Hvis policyen er satt til 30 dager, slettes data eldre enn 30 dager automatisk, de flyttes ikke til backup eller komprimeres.\n
+              Når man spør InfluxDB om for eksempel de siste fem minuttene med temperaturdata, får man tilbake en tids ordnet liste med alle målingene som er registret i det tidsvinduet (ikke bare gjeldene verdi, og ikke hele historikken). Data sendes fra Node-RED til InfluxDB over nettverket via http, ved hjelp av InfluxDBs API. Det skjer altså ikke via MQTT eller direkte kabel.
+          </p>
+          <p>Dette er er multiplechoice oppgave med 10 spørsmål. Med 4 valg alternativer. Kun ett svar er korrekt per spørsmål. Det er +1 poneg for hver korrekt svar.</p>
           <button class="startbtn" onclick="influxT1Start()">Start</button>
         </div>
 
@@ -411,83 +425,83 @@
           <div id="influxT1-score" class="scoreBox">Poeng Score: 0 / 10</div>
 
           <div class="MCbox" data-correct="1">
-            <p>Spørsmål 1?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
+            <p>Hva er InfluxDB?</p>
+            <button onclick="quizSelect(this,0)">En relasjonsdatabase for kundedata</button>
+            <button onclick="quizSelect(this,1)">En tidsrekke (Timeseries) database</button>
+            <button onclick="quizSelect(this,2)">En meldingskø for sensordata</button>
+            <button onclick="quizSelect(this,3)">En graf</button>
           </div>
 
           <div class="MCbox" data-correct="0">
-            <p>Spørsmål 2?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
-
-          <div class="MCbox" data-correct="0">
-            <p>Spørsmål 3?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
+            <p>Hvorfor er InfluxDB foretrukket i MING stacken?</p>
+            <button onclick="quizSelect(this,0)">Den er egnet for høyhastighets datainntak</button>
+            <button onclick="quizSelect(this,1)">Det er den eneste databasen som fungerer med Node-RED. </button>
+            <button onclick="quizSelect(this,2)">Bokstaven passer bra inn i akronymet. </button>
+            <button onclick="quizSelect(this,3)">Fordi den sender data sakte</button>
           </div>
 
           <div class="MCbox" data-correct="3">
-            <p>Spørsmål 4?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
-
-          <div class="MCbox" data-correct="2">
-            <p>Spørsmål 5?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
+            <p>Hvorfor brukes InfluxDB fremfor en vanlig relasjonsdatabase for sensordata?</p>
+            <button onclick="quizSelect(this,0)">Den er dyrere</button>
+            <button onclick="quizSelect(this,1)">Den er billigere</button>
+            <button onclick="quizSelect(this,2)">Den krever mindre lagringsplass</button>
+            <button onclick="quizSelect(this,3)">Den er optimalisert for tidsseriedata med tidsstempler</button>
           </div>
 
           <div class="MCbox" data-correct="1">
-            <p>Spørsmål 6?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
-
-          <div class="MCbox" data-correct="1">
-            <p>Spørsmål 7?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
-
-          <div class="MCbox" data-correct="3">
-            <p>Spørsmål 8?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
+            <p>InfluxDB har en retention policy på 30 dager. Hva skjer med data eldre enn 30 dager?</p>
+            <button onclick="quizSelect(this,0)">De komprimere</button>
+            <button onclick="quizSelect(this,1)">De slettes automatisk</button>
+            <button onclick="quizSelect(this,2)">De flyttes til en backup-server </button>
+            <button onclick="quizSelect(this,3)">De blir publisert offentlig</button>
           </div>
 
           <div class="MCbox" data-correct="0">
-            <p>Spørsmål 9?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
+            <p>Du spør InfluxDB om de siste 5 minuttene med temperaturdata. Hva får du tilbake?</p>
+            <button onclick="quizSelect(this,0)">En tidsordnet liste med målinger fra de siste 5 minuttene </button>
+            <button onclick="quizSelect(this,1)">All temperaturdata som noen gang er lagret</button>
+            <button onclick="quizSelect(this,2)">Kun gjeldende temperatur </button>
+            <button onclick="quizSelect(this,3)">Ingen temperaturdata blir vist etter 5 minutter</button>
+          </div>
+
+          <div class="MCbox" data-correct="1">
+            <p>Hva er en "measurement" i InfluxDB?</p>
+            <button onclick="quizSelect(this,0)">En enkelt sensoravlesning</button>
+            <button onclick="quizSelect(this,1)">En navngitt beholder for relaterte tidsseriedata, lignende en tabell</button>
+            <button onclick="quizSelect(this,2)">Et Grafana-panel</button>
+            <button onclick="quizSelect(this,3)">Navn på sensor</button>
+          </div>
+
+          <div class="MCbox" data-correct="0">
+            <p>Hvordan sendes data fra Node-RED til InfluxDB?</p>
+            <button onclick="quizSelect(this,0)">Via nettverk (HTTP) </button>
+            <button onclick="quizSelect(this,1)">Via kabel direkte</button>
+            <button onclick="quizSelect(this,2)">Via MQTT</button>
+            <button onclick="quizSelect(this,3)">Via vann</button>
           </div>
 
           <div class="MCbox" data-correct="2">
-            <p>Spørsmål 10?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
+            <p>Hva er Tag?</p>
+            <button onclick="quizSelect(this,0)">Et annet navn for dashbord</button>
+            <button onclick="quizSelect(this,1)">Et annet navn for panel</button>
+            <button onclick="quizSelect(this,2)">Indeksert metadata som beskriver et datapunkt </button>
+            <button onclick="quizSelect(this,3)">Selve måleverdien</button>
+          </div>
+
+          <div class="MCbox" data-correct="3">
+            <p>Hva er Retention policy?</p>
+            <button onclick="quizSelect(this,0)">Regel som sletter all data</button>
+            <button onclick="quizSelect(this,1)">Regel som publiserer all data</button>
+            <button onclick="quizSelect(this,2)">Regel som lager data permanent</button>
+            <button onclick="quizSelect(this,3)">Regel som bestemmer hvor lenge data lagres før det automatisk slettes.</button>
+          </div>
+
+          <div class="MCbox" data-correct="3">
+            <p>Hva er Timestamp?</p>
+            <button onclick="quizSelect(this,0)">Et annet ord for klokke</button>
+            <button onclick="quizSelect(this,1)">En rød stempel</button>
+            <button onclick="quizSelect(this,2)">Sertifiserings stempel</button>
+            <button onclick="quizSelect(this,3)">Tidsstempling av data</button>
           </div>
 
           <!-- submitt-->
@@ -682,8 +696,11 @@
         <!-- infoboks-->
         <div id="noderedT1-infobox" class="infobox">
           <h3>Multiple Choice</h3>
-          <p>Informasjon om Temaet skal stå her</p>
-          <p>Dette er er multiplechoice oppgave med 10 spørsmål. Med 4 valg alternativer. kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
+          <p>Node-RED er et visuelt programmeringsverktøy der man bygger dataflyter ved å dra og koble sammen noder grafisk, i stedet for å skrive kode linje for linje. I MING-stacken sitter Node-RED i midten og fungerer som behandlingsledd (det vil si at det tar imot rådata, behandler dem, og sender dem videre til lagring).\n
+            En flow i Node-RED er en koblet sekvens av noder som behandler data fra inngang til utgang. Hver node har en bestemt oppgave, og dataene flyter mellom dem som meldinger. Node-RED brukes typisk til å legge til tidsstempling på data, filtrere bort feilaktige sensorverdier, formatere data til riktig format før de lagres, rute data til ulike mottakere, og utløse alarmer når verdier overstiger gitte grenser. Dette behandlingsnivået kalles ofte fog-laget (laget mellom sensorene og lagring eller sky). Når Node-RED utløser en alarm basert på en innkommende verdi, er det altså behandlingslaget som jobber, ikke lagring eller visualisering.\n
+            En viktig grunn til at Node-RED treng i MING-stacken er at MQTT ikke kan sende data direkte til InfluxDB, InfluxDB krever at data er på et spesifikt format(line protocol), og MQTT meldinger er ikke i dette formatet. Node-RED tar derfor imot MQTT meldinger over nettverket via TCP/IP, omformer dem og sender dem videre til InfluxDB.
+          </p>
+          <p>Dette er er multiplechoice oppgave med 10 spørsmål. Med 4 valg alternativer. Kun ett svar er korrekt per spørsmål. Det er +1 poneg for hver korrekt svar.</p>
           <button class="startbtn" onclick="nodeREDT1Start()">Start</button>
         </div>
 
@@ -691,84 +708,84 @@
           <!-- score -->
           <div id="noderedT1-score" class="scoreBox">Poeng Score: 0 / 10</div>
 
+          <div class="MCbox" data-correct="2">
+            <p>Hva er Node-RED?</p>
+            <button onclick="quizSelect(this,0)">En database</button>
+            <button onclick="quizSelect(this,1)">En publisher</button>
+            <button onclick="quizSelect(this,2)">Et visuelt programmerings verktøy som brukes for å behandle data</button>
+            <button onclick="quizSelect(this,3)">En graf</button>
+          </div>
+
+            <div class="MCbox" data-correct="0">
+              <p>Hva er Node?</p>
+              <button onclick="quizSelect(this,0)">En byggekloss i en flow som utfører en bestemt oppgave (motta data, transformere, sende videre, osv.)</button>
+              <button onclick="quizSelect(this,1)">Strekene/koblingene mellom nodene</button>
+              <button onclick="quizSelect(this,2)">Lengden til en database </button>
+              <button onclick="quizSelect(this,3)">En boks</button>
+          </div>
+
+            <div class="MCbox" data-correct="3">
+              <p>Hva er Wire?</p>
+              <button onclick="quizSelect(this,0)">Byggekloss</button>
+              <button onclick="quizSelect(this,1)">Tabell</button>
+              <button onclick="quizSelect(this,2)">Tidsstempel</button>
+              <button onclick="quizSelect(this,3)">Den visuelle koblingen mellom to noder som viser hvordan data flyter</button>
+          </div>
+
           <div class="MCbox" data-correct="1">
-            <p>Spørsmål 1?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
+            <p>Hva er Node-REDs rolle i MING-stacken?</p>
+            <button onclick="quizSelect(this,0)">Lagre sensordata</button>
+            <button onclick="quizSelect(this,1)">Behandle og rute data mellom komponenter</button>
+            <button onclick="quizSelect(this,2)">Vise grafer</button>
+            <button onclick="quizSelect(this,3)">Slette sensordata</button>
           </div>
 
           <div class="MCbox" data-correct="0">
-            <p>Spørsmål 2?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
-
-          <div class="MCbox" data-correct="0">
-            <p>Spørsmål 3?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
+            <p>Hvordan behandler Node-RED data? </p>
+            <button onclick="quizSelect(this,0)">Legger til tidsstempling til dataet, filtrer vekk faulty sensor values, og formaterer data til riktig format.</button>
+            <button onclick="quizSelect(this,1)">Rute meldinger mellom publishere og subscribere</button>
+            <button onclick="quizSelect(this,2)">En fysisk sensor som sender data </button>
+            <button onclick="quizSelect(this,3)">Lagrer og struktruerer filmapper</button>
           </div>
 
           <div class="MCbox" data-correct="3">
-            <p>Spørsmål 4?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
+            <p>Hva er en "flow" i Node-RED?</p>
+            <button onclick="quizSelect(this,0)">Filmappen</button>
+            <button onclick="quizSelect(this,1)">Hastigheten på data i nettverket</button>
+            <button onclick="quizSelect(this,2)">En type sensorsignal</button>
+            <button onclick="quizSelect(this,3)">En koblet sekvens av noder som behandler data</button>
           </div>
 
           <div class="MCbox" data-correct="2">
-            <p>Spørsmål 5?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
+            <p>Node-RED utløser en alarm når en verdi overstiger en grense. Hvilket lag i MING-stacken representerer dette?</p>
+            <button onclick="quizSelect(this,0)">Lagring</button>
+            <button onclick="quizSelect(this,1)">Visualisering</button>
+            <button onclick="quizSelect(this,2)">Behandling/fog-lag</button>
+            <button onclick="quizSelect(this,3)">IP-adressen</button>
           </div>
 
           <div class="MCbox" data-correct="1">
-            <p>Spørsmål 6?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
+            <p>MQTT kan ikke sende data direkte til InfluxDB hva er en av grunnene til dette?</p>
+            <button onclick="quizSelect(this,0)">Ikke nok lagringplass</button>
+            <button onclick="quizSelect(this,1)">En av grunnene er at InfluxDB krever at dataen er på et spesifikt format, dataen MQTT sender er ikke på dette formatet.</button>
+            <button onclick="quizSelect(this,2)">Det er et bildet så det kan ikke bli sendt</button>
+            <button onclick="quizSelect(this,3)">En av grunnene er at det er for få sensorverdier</button>
           </div>
 
           <div class="MCbox" data-correct="1">
-            <p>Spørsmål 7?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
-
-          <div class="MCbox" data-correct="3">
-            <p>Spørsmål 8?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
-
-          <div class="MCbox" data-correct="0">
-            <p>Spørsmål 9?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
+            <p>Hvordan sender MQTT data til Node-RED?</p>
+            <button onclick="quizSelect(this,0)">Via kabel direkte</button>
+            <button onclick="quizSelect(this,1)">Via nettverk(TCP/IP)</button>
+            <button onclick="quizSelect(this,2)">Brevdu</button>
+            <button onclick="quizSelect(this,3)">Gmail</button>
           </div>
 
           <div class="MCbox" data-correct="2">
-            <p>Spørsmål 10?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
+            <p>Hva kan Node-RED gjøre med data?</p>
+            <button onclick="quizSelect(this,0)">Endre tekst størrelse</button>
+            <button onclick="quizSelect(this,1)">Endre fargen på sensoren</button>
+            <button onclick="quizSelect(this,2)">Filtrere eller sende dem videre</button>
+            <button onclick="quizSelect(this,3)">Endre strømforsyningen</button>
           </div>
 
           <!-- submitt-->
@@ -907,93 +924,97 @@
       <!-- infoboks-->
         <div id="grafanaT1-infobox" class="infobox">
           <h3>Multiple Choice</h3>
-          <p>Informasjon om Temaet skal stå her</p>
-          <p>Dette er er multiplechoice oppgave med 10 spørsmål. Med 4 valg alternativer. kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
+          <p>Grafana er et visualiseringsverktøy som kan koble seg til ange ulike datakilder og presentere dataen som grafer, målere, tabeller og varmekart. I MING-stacken har Grafana en primær rolle: å visualisere data fra databasen i dashboards.\n
+            En data source i Grafana er en tilkobling til en database eller tjeneste som leverer data (for eksempel InfluxDB). Det er ikke en fysisk sensor eller en fil som lastes opp manuelt. Selve visningen er bygd opp av dashboards og paneler, der et dashboard er en samling av flere visualiseringer som til sammen gir oversikt, og et panel er en enkelt visualisering i dashboardet. Grafana har også et innebygd varslingssystem kalt alerting, som kan sende e-post eller meldinger når en verdi krysser en definert grense.\n
+            Grafna henter data ved å sende spørringer, kalt queries, til InfluxDB over nettverket. Den abonnerer ikke på MQRR og leser ikke direkte fra disk. Grafna og InfluxDB passer godt sammen fordi Grafana har innebygd støtte for tidsseriedatabaser og kan tegne tidsserier effektivt. For en industrioperatør er et dashboard nyttig fordi den gir oversikt over fler prosessvariabler på ett sted (det erstatter ikke sensorene, men gjør det mulig å overvåke hele prosessen samtidig).\n 
+            Når man feil søker er det viktig å forstå at Grafana kun viser data, ikke prdouserer eller lagrer dem. Hvis en spike vises både i Grafana og i rådata i InfluxDB, oppstod spiken i sensoren eller selve målingen (ikke i Grafana eller Node.RED). Hvis Grafana viser data fra to timer siden selv om sensorene er aktive, er feilen sannsynligvis at Node-RED ikke sender nye data videre til InfluxDB, og hvis en alarm grense er satt men ingen alarm utløses, er den mest sannsynlige årsaken at alarmreglen er feil konfigurert eller at varsling ikke er satt opp riktig.
+          </p>
+          <p>Dette er er multiplechoice oppgave med 10 spørsmål. Med 4 valg alternativer. Kun ett svar er korrekt per spørsmål. Det er +1 poneg for hver korrekt svar.</p>
           <button class="startbtn" onclick="grafanaT1Start()">Start</button>
         </div>
 
         <div id="grafanaT1-taskbox" style="display:none">
           <div id="grafanaT1-score" class="scoreBox">Poeng Score: 0 / 10</div>
 
-          <div class="MCbox" data-correct="1">
-            <p>Spørsmål 1?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
+        <div class="MCbox" data-correct="3">
+          <p>Hva er Grafana?</p>
+          <button onclick="quizSelect(this,0)">En filmappe</button>
+          <button onclick="quizSelect(this,1)">En database for tidsserie data</button>
+          <button onclick="quizSelect(this,2)">En meldingsprotokoll for IoT enheter</button>
+          <button onclick="quizSelect(this,3)">Et visualiseringsverktøy for data fra ulike kilder</button>
+        </div>
 
-          <div class="MCbox" data-correct="0">
-            <p>Spørsmål 2?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
+        <div class="MCbox" data-correct="2">
+          <p>Hva er Grafanas primære rolle i MING-stacken?</p>
+          <button onclick="quizSelect(this,0)">Samle inn sensordata</button>
+          <button onclick="quizSelect(this,1)">Behandle og filtrere data</button>
+          <button onclick="quizSelect(this,2)">Visualisere data fra en database i dashboards</button>
+          <button onclick="quizSelect(this,3)">Å lagre data</button>
+        </div>
 
-          <div class="MCbox" data-correct="0">
-            <p>Spørsmål 3?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
+        <div class="MCbox" data-correct="0">
+          <p>Hvordan henter Grafana data fra InfluxDB?</p>
+          <button onclick="quizSelect(this,0)">Ved å sende spørringer (Queries) til InfluxDB over nettverk</button>
+          <button onclick="quizSelect(this,1)">Ved å abonnere på MQTT topics</button>
+          <button onclick="quizSelect(this,2)">Ved å lese direkte fra disk</button>
+          <button onclick="quizSelect(this,3)">ved kabeloverføring</button>
+        </div>
 
-          <div class="MCbox" data-correct="3">
-            <p>Spørsmål 4?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
+        <div class="MCbox" data-correct="3">
+          <p>Hva er en «data source» i Grafana?</p>
+          <button onclick="quizSelect(this,0)">En fysisk sensor som sender data</button>
+          <button onclick="quizSelect(this,1)">En CSV fil som lastes opp manuelt</button>
+          <button onclick="quizSelect(this,2)">En filmappe</button>
+          <button onclick="quizSelect(this,3)">En tilkobling til en database eller en tjeneste som leverer data</button>
+        </div>
 
-          <div class="MCbox" data-correct="2">
-            <p>Spørsmål 5?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
+        <div class="MCbox" data-correct="1">
+          <p>Du ser en spike i Grafana-grafen. Rådata i InfluxDB viser samme spike. Hvor oppstod spiken?</p>
+          <button onclick="quizSelect(this,0)">I Grafanas visningsmotor</button>
+          <button onclick="quizSelect(this,1)">I sensoren eller selve målingen</button>
+          <button onclick="quizSelect(this,2)">I Node-RED-behandlingen</button>
+          <button onclick="quizSelect(this,3)">I MQTT under sending</button>
+        </div>
 
-          <div class="MCbox" data-correct="1">
-            <p>Spørsmål 6?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
+        <div class="MCbox" data-correct="0">
+          <p>Et Grafana-dashboard viser data for to timer siden, selv om sensorene er aktive. Hvor er feilen mest sannsynlig?</p>
+          <button onclick="quizSelect(this,0)">Node-RED sender ikke nye data til InfluxDB</button>
+          <button onclick="quizSelect(this,1)">Grafana-visningsinnstillinger</button>
+          <button onclick="quizSelect(this,2)">Sensoren er ødelagt</button>
+          <button onclick="quizSelect(this,3)">Sensoren er treg</button>
+        </div>
 
-          <div class="MCbox" data-correct="1">
-            <p>Spørsmål 7?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
+        <div class="MCbox" data-correct="0">
+          <p>Hvorfor er et dashboard nyttig for en industrioperatør?</p>
+          <button onclick="quizSelect(this,0)">Det gir oversikt over flere prosessvariabler på ett sted</button>
+          <button onclick="quizSelect(this,1)">Det erstatter behovet for sensorer</button>
+          <button onclick="quizSelect(this,2)">Det programmerer sensorene automatisk</button>
+          <button onclick="quizSelect(this,3)">Det er billig</button>
+        </div>
 
-          <div class="MCbox" data-correct="3">
-            <p>Spørsmål 8?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
+        <div class="MCbox" data-correct="3">
+          <p>En alarmgrense er satt i Grafana. En verdi overstiger den, men ingen alarm utløses. Hva er den mest sannsynlige årsaken?</p>
+          <button onclick="quizSelect(this,0)">Sensoren sender feil verdier</button>
+          <button onclick="quizSelect(this,1)">InfluxDB har slettet dataene</button>
+          <button onclick="quizSelect(this,2)">Sensoren sender ikke data</button>
+          <button onclick="quizSelect(this,3)">Alarmregelen er feil konfigurert eller varsling er ikke satt opp</button>
+        </div>
 
-          <div class="MCbox" data-correct="0">
-            <p>Spørsmål 9?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
+        <div class="MCbox" data-correct="1">
+          <p>Hvorfor passer Grafana bra sammen med InfluxDB?</p>
+          <button onclick="quizSelect(this,0)">De er laget av samme selskap</button>
+          <button onclick="quizSelect(this,1)">Grafana har innebygd støtte for tidsseriedatabaser og kan tegne tidsserier effektivt</button>
+          <button onclick="quizSelect(this,2)">InfluxDB kan kun leses av Grafana</button>
+          <button onclick="quizSelect(this,3)">De er like billige</button>
+        </div>
 
-          <div class="MCbox" data-correct="2">
-            <p>Spørsmål 10?</p>
-            <button onclick="quizSelect(this,0)">Valg 1</button>
-            <button onclick="quizSelect(this,1)">Valg 2</button>
-            <button onclick="quizSelect(this,2)">Valg 3</button>
-            <button onclick="quizSelect(this,3)">Valg 4</button>
-          </div>
+        <div class="MCbox" data-correct="2">
+          <p>Hva et panel i Grafana?</p>
+          <button onclick="quizSelect(this,0)">Navnet på sensoren</button>
+          <button onclick="quizSelect(this,1)">Koblingen mellom 2 noder</button>
+          <button onclick="quizSelect(this,2)">Et enkelt visualisering i et dashboard, for eksempel en graf, måler eller en tabell</button>
+          <button onclick="quizSelect(this,3)">Databasen</button>
+        </div>
 
           <!-- submitt-->
           <button class="mc-finish-btn" onclick="quizFinish('.MCbox','grafanaT1-score')">Lever</button>
@@ -1039,6 +1060,7 @@
 
         <div id="start" class="infobox">
           <h3 data-i18n="gt3_gameTitle">Catch the object game</h3>
+          <p> Grafana visualiserer sensordata som strømmer inn over tid. I dette spillet simulerer de fallende objektene sensorverdier, slik Grafana mottar og viser måledata i sanntid.</p>
           <p data-i18n="gt3_desc1">Fang så mange sensorverdier som mulig innen 60 sekunder ved hjelp av venstre og høyre piltast</p>
           <p data-i18n="gt3_desc2">Gyldige verdier: Fuktighet: 40-60 %RH, alt utenfor er ugyldige</p>
           <p data-i18n="gt3_desc3">Det er +1 poeng for å fange riktige objekter og -1 poeng for å fange feil objekter</p>
@@ -1153,20 +1175,23 @@
         </div>
       </div>
 
-      <!-- ══ MQTT OPPGAVE 3 — Klikk og Plasser ══ -->
+      <!-- MQTT OPPGAVE 3 — Klikk og Plasser -->
       <div id="page-task3" class="page-view">
-        <h1 class="page-title" data-i18n="t3_header">MQTT – Oppgave 3</h1>
+        <h1 class="page-title" data-i18n="t3_header">MQTT - Oppgave 3</h1>
 
         <!-- Infoboks som vises før oppgaven starter, skjules av t3Start() -->
         <div id="t3-infobox" class="infobox">
-          <h4 data-i18n="t3_infoTitle">Forklaring av MQTT-flyt</h4>
-          <p  data-i18n="t3_infoBody">Forklaringstekst.</p>
+        <h4 data-i18n="t3_infoTitle">Forklaring av MQTT-flyt</h4>
+          <p>I MQTT kommuniserer ikke enheter direkte med hverandre. All kommunikasjon går gjennom en broker. Brokeren tar imot meldinger og videresender dem til riktige mottakere.</p>
+          <p>En publisher sender en melding til en bestemt topic på brokeren. En subscriber abonnerer på en topic og mottar alle meldingene.</p>
+          <p>I denne oppgaven skal du plassere riktige publish og subscribe piler mellom sensorene, brokeren og klientene for å vise hvordan MQTT-flyten fungerer.</p>
+          <p>Riktig plassering på første forsøk gir +1 poeng.</p>
           <button class="startbtn" onclick="t3Start()" data-i18n="t3_startBtn">Start oppgave</button>
         </div>
         <!-- poeng score -->
         <div id="t3-score">Score: 0</div>
         <!-- Vises kun når alle 8 soner er riktig fylt -->
-        <div id="t3-complete-banner" class="complete-banner" style="display:none" data-i18n="t3_complete">✓ Fullført!</div>
+        <div id="t3-complete-banner" class="complete-banner" style="display:none" data-i18n="t3_complete">Fullført</div>
         <!-- Kort riktig/feil-tilbakemelding, skjules automatisk etter 1 sekund -->
         <div id="t3-message" class="messagebox" style="display:none"></div>
         <!-- Instruksjonsboks, skjult til oppgaven starter -->
@@ -1197,7 +1222,7 @@
             </div>
           </div>
 
-          <!-- MIDTEN: megler-sirkel og pilvelger -->
+          <!-- MIDTEN: sirkel og valg -->
           <div class="mqtt-center">
             <!-- Tekst settes av t3RefreshLabels() — \n blir linjeskift pga white-space:pre-line -->
             <div class="broker-circle" id="t3-broker-lbl"></div>
@@ -1208,7 +1233,7 @@
             </div>
           </div>
 
-          <!-- HØYRE: abonnerende klienter -->
+          <!-- HØYRE: subscriber klienter -->
           <div class="mqtt-side">
             <!-- Klient 1 — abonnerer på Temp -->
             <div class="device-row">
@@ -1268,7 +1293,16 @@
 <script src="core/i18n.js"></script>
 <script src="core/router.js"></script>
 
+<<<<<<< Updated upstream
 <script src="core/sensors/sensors.js"></script>
+=======
+<!-- prøver å kommentere ut denne: <script src="js/led-sync.js"></script> -->
+
+<script src="tcore/sensors/sensors.js"></script>
+<script src="tasks/mqtt/task3.js"></script>
+<script src="tasks/mqtt/nodered.js"></script>
+<script src="tasks/grafana/grafana-t3.js"></script>
+>>>>>>> Stashed changes
 <script src="core/sensors/sensor-task.js"></script>
 <script src="quiz/InfoBox.js"></script>
 <script src="quiz/MC.js"></script>
@@ -1442,7 +1476,7 @@ function go(page) {
     // mqtt
     "mqtt-t1": "Dette er en Multiple Choice oppgave for MQTT.",
     "mqtt-t2": "Dette er en kortflip-oppgave for MQTT.",
-    "task3": "Dette er klikk og plasser-oppgave for MQTT.",
+    "task3": "Dette er klikk og plasser-oppgave for MQTT",
     "task4": "Dette er Node-RED simulatoren.",
     //influx
     "influx-t1": "Dette er en Multiple Choice oppgave for InfluxDB.",
