@@ -26,10 +26,10 @@
   <link rel="stylesheet" href="tasks/mqtt/MQTTTask5Card.css">
   <link rel="stylesheet" href="tasks/mqtt/nodered.css">
   <link rel="stylesheet" href="tasks/influx/influx-t2.css">
-  <link rel="stylesheet" href="tasks/influx/Influx-t4.css">
   <link rel="stylesheet" href="tasks/grafana/grafana-t2.css">
   <link rel="stylesheet" href="tasks/grafana/grafana-t3.css">
   <link rel="stylesheet" href="tasks/grafana/grafana-t4.css">
+  <link rel="stylesheet" href="tasks/influx/influx-t4.css">
   
 
   <script src="chart.umd.js"></script>
@@ -92,7 +92,6 @@
           <button class="nav-link" data-page="nodered-t1" onclick="go('nodered-t1')"><span class="nav-icon"></span><span data-i18n="nodered_task1">Oppgave 1</span></button>
           <button class="nav-link" data-page="nodered-t2" onclick="go('nodered-t2')"><span class="nav-icon"></span><span data-i18n="nodered_task2">Oppgave 2</span></button>
           <button class="nav-link" data-page="nodered-t3" onclick="go('nodered-t3')"><span class="nav-icon"></span><span data-i18n="nodered_task3">Oppgave 3</span></button>
-          <button class="nav-link" data-page="nodered-t4" onclick="go('nodered-t4')"><span class="nav-icon"></span><span data-i18n="nodered_task4">Oppgave 4</span></button>
         </div>
         <button class="nav-link" data-page="grafana" onclick="go('grafana')"><span class="nav-icon"></span>Grafana</button>
         <div class="nav-sub">
@@ -560,81 +559,55 @@
         <button class="small-link" onclick="go('influx')" data-i18n="influx_t2_back">← Tilbake</button>
       </div>
 
-      <!-- ══ INFLUXDB OPPGAVE 3 — True / False ══ -->
+      <!-- INFLUXDB OPPGAVE 3 — True / False -->
       <div id="page-influx-t3" class="page-view">
-        <h1 class="page-title" data-i18n="influx_t3_title">InfluxDB – Oppgave 3</h1>
+        <h1 class="page-title" data-i18n="influx_t3_title">InfluxDB - Oppgave 3</h1>
 
         <!-- startpage-->
         <div id="influxT3-infobox" class="infobox">
           <h3>True or False</h3>
-          <p>Informasjon om Temaet skal stå her</p>
-          <p>Dette er er true or false oppgave med 10 spørsmål. Med 4 valg alternativer. Kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
+          <p>InfluxDB er en tidsseriedatabase (timeseries database). Det vil si at den er spesialbygd for å lagre data som er ordnet etter tidspunkt (typisk sensormålinger som kommer inn jevnt over tid). I MING-stacken er InfluxDB lagringslaget. Den er foretrukket fordi den er optimalisert for høyhastighets datainntak og raske spørringer på tidsbaserte data. Sammenlignet med en vanlig relasjonsdatabase håndterer InfluxDB tidsstempler og store mengder kontinuerlig innkommende data mye mer effektivt.\n
+              Et sentralt begrep er measurement, som er en navngitt beholder for relaterte tidsseriedata, omtrent som en tabell i en SQL-database. Eksempler kan være «temprature», «humidity» eller «pressure». Hvert datapunkt har en timestamp (tidspinktet det ble registert, som er selve nøkkelen i en tidsseriedatabase). InfluxDB bruker også retention policies, som er regler som bestemmer hvor lenge data lagres. Hvis policyen er satt til 30 dager, slettes data eldre enn 30 dager automatisk, de flyttes ikke til backup eller komprimeres.\n
+              Når man spør InfluxDB om for eksempel de siste fem minuttene med temperaturdata, får man tilbake en tids ordnet liste med alle målingene som er registret i det tidsvinduet (ikke bare gjeldene verdi, og ikke hele historikken). Data sendes fra Node-RED til InfluxDB over nettverket via http, ved hjelp av InfluxDBs API. Det skjer altså ikke via MQTT eller direkte kabel.
+          </p>
+          <p>Dette er er True or False oppgave med 5 spørsmål. Med 2 valg alternativer. Kun ett svar er korrekt per spørsmål. Det er +1 poneg for hver korrekt svar.</p>
           <button class="startbtn" onclick="influxT3Start()">Start</button>
         </div>
 
         <div id="influxT3-taskbox" style="display:none;">
           <!-- score -->
-          <div id="influxT3-score" class="scoreBox">Poeng Score: 0 / 10</div>
+          <div id="influxT3-score" class="scoreBox">Poeng Score: 0 / 5</div>
 
-          <div class="TFbox" data-correct="1">
-            <p>Spørsmål 1?</p>
+          <div class="TFbox" data-correct="0">
+            <p>Node-RED er et programmeringsspråk?</p>
             <button onclick="quizSelect(this,1)">True</button>
             <button onclick="quizSelect(this,0)">False</button>
           </div>
 
           <div class="TFbox" data-correct="0">
-            <p>Spørsmål 2?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="0">
-            <p>Spørsmål 3?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="0">
-            <p>Spørsmål 4?</p>
+            <p>Node-RED kan ikke kommunisere med MQTT?</p>
             <button onclick="quizSelect(this,1)">True</button>
             <button onclick="quizSelect(this,0)">False</button>
           </div>
 
           <div class="TFbox" data-correct="1">
-            <p>Spørsmål 5?</p>
+            <p>Node-RED kan brukes sammen med IIoT enheter og sensorer?</p>
             <button onclick="quizSelect(this,1)">True</button>
             <button onclick="quizSelect(this,0)">False</button>
           </div>
 
           <div class="TFbox" data-correct="1">
-            <p>Spørsmål 6?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="1">
-            <p>Spørsmål 7?</p>
+            <p>Node-RED kjører flows fra venstre mot høyre når noder er koblet sammen?</p>
             <button onclick="quizSelect(this,1)">True</button>
             <button onclick="quizSelect(this,0)">False</button>
           </div>
 
           <div class="TFbox" data-correct="0">
-            <p>Spørsmål 8?</p>
+            <p>Node-RED kan ikke brukes til å sende data til databaser som InfluxDB?</p>
             <button onclick="quizSelect(this,1)">True</button>
             <button onclick="quizSelect(this,0)">False</button>
           </div>
 
-          <div class="TFbox" data-correct="1">
-            <p>Spørsmål 9?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="0">
-            <p>Spørsmål 10?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
 
           <!-- submitt-->
           <button class="mc-finish-btn" onclick="quizFinish('.TFbox','influxT3-score')">Lever</button>
@@ -642,37 +615,39 @@
         <button class="small-link" onclick="go('influx')" data-i18n="influx_t3_back">← Tilbake</button>
       </div>
 
-      <!-- ══ INFLUXDB OPPGAVE 4 — Drag og slipp (placeholder) ══ -->
-      <div id="page-influx-t4" class="page-view">
-        <h1 class="page-title" data-i18n="influx_t4_title">InfluxDB – Oppgave 4</h1>
+      <!-- INFLUXDB OPPGAVE 4 -->
+  <!-- Oppgave 4 influx -->
+    <div id="page-influx-t4" class="page-view">
+      <h1 class="page-title">InfluxDB - Oppgave 4</h1>
 
-        <!-- startpage -->
-        <div id="influxT4-startPage" class="infobox">
-          <h4 data-i18n="inft4_infoTitle">Tidsserie sortering</h4>
-          <p data-i18n="inft4_infoBody1">Plasser sensorboksene fra venstre side i riktig rekkefølge i bucket (databasen) på høyre side. Nyeste tidsstempel øverst.</p>
-          <p data-i18n="inft4_infoBody2">Riktig plassering gir +1 poeng. Feil gir -1 poeng.</p>
-          <p data-i18n="inft4_infoBody3">Bucket er en navngitt database i InfluxDB. Det er en samling der alle relevante sensormålinger samles ett sted og sorteres etter tid.</p>
-          <button class="startbtn" onclick="influxT4Start()" data-i18n="inft4_startBtn">Start</button>
-        </div>
+    <!-- startpage -->
+    <div id="influxT4-startPage" class="infobox">
+        <h4>Tidsserie sortering</h4>
+        <p>Plasser sensorboksene fra venstre side i riktig rekkefølge i bucket (databasen) på høyre side. Nyeste tidsstempel øverst.</p>
+        <p>Riktig plassering gir +1 poeng. Feil gir -1 poeng.</p>
+        <p>Bucket er en navngitt database i InfluxDB. Det er en samling der alle relevante sensormålinger samles ett sted og sorteres etter tid.</p>
+        <button class="startbtn" onclick="influxT4Start()">Start</button>
+    </div>
 
-        <!-- taskpage -->
-        <div id="influxT4Page">
-          <!-- poeng -->
-          <div id="influxT4-poeng">Poeng: 0 — Found: 0/6</div>
-          <!-- venstre og høyre side layout-->
-          <div id="influxT4-layout">
-            <!-- venstre side med sensorbokser -->
+    <!-- taskpage -->
+    <div id="influxT4Page">
+        <!-- poeng -->
+        <div id="influxT4-poeng">Poeng: 0 — Found: 0/6</div>
+        <!-- venstre og høyre side layout-->
+        <div id="influxT4-layout">
+            <!-- venstre side med  sensorbokser -->
             <div id="venstreSide"></div>
             <!-- høyre side med database -->
             <div id="høyreSide">
-              <div class="bucketTittel" data-i18n="inft4_bucketTitle">Bucket: sensor_data</div>
-              <div id="databaseRader"></div>
+                <div class="bucketTittel">Bucket: sensor_data</div>
+                <div id="databaseRader"></div>
             </div>
-          </div>
-        </div>
 
-        <button class="small-link" onclick="go('influx')" data-i18n="influx_t4_back">← Tilbake</button>
-      </div>
+        </div>
+    </div>
+
+    <button class="small-link" onclick="go('influx')">← Tilbake</button>
+</div>
 
 <!-- ══ NODE-RED — oppgavevalg + plassholdere ══ -->
       <div id="page-nodered" class="page-view">
@@ -682,7 +657,6 @@
           <button class="card" onclick="go('nodered-t1')"><strong data-i18n="nodered_task1">Oppgave 1</strong><span data-i18n="nodered_task1sub">Kom i gang.</span></button>
           <button class="card" onclick="go('nodered-t2')"><strong data-i18n="nodered_task2">Oppgave 2</strong><span data-i18n="nodered_task2sub">Avanserte flyter.</span></button>
           <button class="card" onclick="go('nodered-t3')"><strong data-i18n="nodered_task3">Oppgave 3</strong><span data-i18n="nodered_task3sub">Drag og slipp.</span></button>
-          <button class="card" onclick="go('nodered-t4')"><strong data-i18n="nodered_task4">Oppgave 4</strong><span data-i18n="nodered_task4sub">Node-RED simulator.</span></button>
         </div>
         <button class="small-link" onclick="go('ming')">← MING</button>
       </div>
@@ -797,74 +771,48 @@
         <!-- infoboks-->
         <div id="noderedT2-infobox" class="infobox">
           <h3>True or False</h3>
-          <p>Informasjon om Temaet skal stå her</p>
-          <p>Dette er er true or false oppgave med 10 spørsmål. Med 4 valg alternativer. Kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
+          <p>Node-RED er et visuelt programmeringsverktøy der man bygger dataflyter ved å dra og koble sammen noder grafisk, i stedet for å skrive kode linje for linje. I MING-stacken sitter Node-RED i midten og fungerer som behandlingsledd (det vil si at det tar imot rådata, behandler dem, og sender dem videre til lagring).\n
+            En flow i Node-RED er en koblet sekvens av noder som behandler data fra inngang til utgang. Hver node har en bestemt oppgave, og dataene flyter mellom dem som meldinger. Node-RED brukes typisk til å legge til tidsstempling på data, filtrere bort feilaktige sensorverdier, formatere data til riktig format før de lagres, rute data til ulike mottakere, og utløse alarmer når verdier overstiger gitte grenser. Dette behandlingsnivået kalles ofte fog-laget (laget mellom sensorene og lagring eller sky). Når Node-RED utløser en alarm basert på en innkommende verdi, er det altså behandlingslaget som jobber, ikke lagring eller visualisering.\n
+            En viktig grunn til at Node-RED treng i MING-stacken er at MQTT ikke kan sende data direkte til InfluxDB, InfluxDB krever at data er på et spesifikt format(line protocol), og MQTT meldinger er ikke i dette formatet. Node-RED tar derfor imot MQTT meldinger over nettverket via TCP/IP, omformer dem og sender dem videre til InfluxDB.
+          </p>
+          <p>Dette er er True or False oppgave med 5 spørsmål. Med 2 valg alternativer. Kun ett svar er korrekt per spørsmål. Det er +1 poneg for hver korrekt svar.</p>
           <button class="startbtn" onclick="nodeREDT2Start()">Start</button>
         </div>
 
         <div id="noderedT2-taskbox" style="display:none;">
           <!-- score -->
-          <div id="noderedT2-score" class="scoreBox">Poeng Score: 0 / 10</div>
+          <div id="noderedT2-score" class="scoreBox">Poeng Score: 0 / 5</div>
 
-          <div class="TFbox" data-correct="1">
-            <p>Spørsmål 1?</p>
+          <div class="TFbox" data-correct="0">
+            <p>Node-RED er et programeringsspråk?</p>
             <button onclick="quizSelect(this,1)">True</button>
             <button onclick="quizSelect(this,0)">False</button>
           </div>
 
           <div class="TFbox" data-correct="0">
-            <p>Spørsmål 2?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="0">
-            <p>Spørsmål 3?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="0">
-            <p>Spørsmål 4?</p>
+            <p>Node-RED kan ikke kommunisere med MQTT?</p>
             <button onclick="quizSelect(this,1)">True</button>
             <button onclick="quizSelect(this,0)">False</button>
           </div>
 
           <div class="TFbox" data-correct="1">
-            <p>Spørsmål 5?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="1">
-            <p>Spørsmål 6?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="1">
-            <p>Spørsmål 7?</p>
+            <p>Node-RED kan brukes sammen med IIoT enheter og sensorer?</p>
             <button onclick="quizSelect(this,1)">True</button>
             <button onclick="quizSelect(this,0)">False</button>
           </div>
 
           <div class="TFbox" data-correct="0">
-            <p>Spørsmål 8?</p>
+            <p>En flow I Node-RED består kun av 1 node?</p>
             <button onclick="quizSelect(this,1)">True</button>
             <button onclick="quizSelect(this,0)">False</button>
           </div>
 
           <div class="TFbox" data-correct="1">
-            <p>Spørsmål 9?</p>
+            <p>Node-RED kjører flows fra venstre mot høyre når noder er koblet sammen</p>
             <button onclick="quizSelect(this,1)">True</button>
             <button onclick="quizSelect(this,0)">False</button>
           </div>
 
-          <div class="TFbox" data-correct="0">
-            <p>Spørsmål 10?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
 
           <!-- submitt-->
           <button class="mc-finish-btn" onclick="quizFinish('.TFbox','noderedT2-score')">Lever</button>
@@ -900,23 +848,6 @@
         </div>
 
         <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t3_back">← Tilbake</button>
-      </div>
-
-      <!-- ══ NODE-RED OPPGAVE 4 ══ -->
-      <div id="page-nodered-t4" class="page-view">
-        <h1 class="page-title" data-i18n="nodered_t4_title">Node-RED – Oppgave 4</h1>
-
-        <div id="nrt4-infobox" class="infobox">
-          <h4 data-i18n="nrt4_infoTitle">Node-RED simulator</h4>
-          <p  data-i18n="nrt4_infoBody">Bygg en flyt som leser av lastcellen og publiserer verdien på riktig MQTT-topic. Dra noder fra venstre, koble dem sammen, og kjør simuleringen.</p>
-          <button class="startbtn" onclick="nrt4StartTask()" data-i18n="nrt4_startBtn">Start oppgave</button>
-        </div>
-
-        <div id="nrt4-task-area" style="display:none;">
-          <div id="nr-root-t4"></div>
-        </div>
-
-        <button class="small-link" style="margin-top:8px" onclick="go('nodered')" data-i18n="nodered_t4_back">← Tilbake</button>
       </div>
 
       <!-- ══ GRAFANA — oppgavevalg + plassholdere ══ -->
@@ -1283,17 +1214,7 @@
           <div class="task-header" data-i18n="nr_title">Sette opp MQTT i Node-RED</div>
           <div class="task-desc"   data-i18n="nr_desc">Oppgavebeskrivelse.</div>
         </div>
-
-        <div id="mt4-infobox" class="infobox">
-          <h4 data-i18n="mt4_infoTitle">Node-RED simulator</h4>
-          <p  data-i18n="mt4_infoBody">Bygg en flyt som leser av en sensorverdi og publiserer den på riktig MQTT-topic. Dra noder fra venstre, koble dem sammen, og kjør simuleringen.</p>
-          <button class="startbtn" onclick="mt4StartTask()" data-i18n="mt4_startBtn">Start oppgave</button>
-        </div>
-
-        <div id="mt4-task-area" style="display:none;">
-          <div id="nr-root"></div>
-        </div>
-
+        <div id="nr-root"></div>
         <button class="small-link" style="margin-top:8px" onclick="go('mqtt')">← MQTT</button>
       </div>
 
@@ -1329,11 +1250,10 @@
 <script src="tasks/mqtt/task3.js"></script>
 <script src="tasks/mqtt/nodered.js"></script>
 <script src="tasks/influx/InfluxDBT-2.js"></script>
-<script src="tasks/influx/Influx-t4.js"></script>
+<script src="tasks/influx/influx-t4.js"></script>
 <script src="quiz/TF_NodeRED.js"></script>
 <script src="quiz/TF_Influx.js"></script>
 <script src="tasks/nodered/nodered-t3.js"></script>
-<script src="tasks/nodered/lastNodered.js"></script>
 <script src="tasks/grafana/grafana-t2.js"></script>
 <script src="tasks/grafana/grafana-t3.js"></script>
 <script src="tasks/grafana/GrafanaT-4.js"></script>
@@ -1498,12 +1418,11 @@ function go(page) {
     "influx-t1": "Dette er en Multiple Choice oppgave for InfluxDB.",
     "influx-t2": "Dette er en sensor-skriveoppgave for InfluxDB.",
     "influx-t3": "Dette er en True/False oppgave for InfluxDB.",
-    "influx-t4": "Dette er en drag og slipp-oppgave for InfluxDB.",
+    "influx-t4": "Sorter temperaturmålingene inn i tidsserie-databasen i riktig rekkefølge.",
     //nodered
     "nodered-t1": "Dette er en Multiple Choice oppgave for Node-RED.",
     "nodered-t2": "Dette er en True/False oppgave for Node-RED.",
     "nodered-t3": "Dette er en drag og slipp-oppgave for Node-RED.",
-    "nodered-t4": "Dette er Node-RED simulatoren.",
     //grafana
     "grafana-t1": "Dette er en Multiple Choice oppgave for Grafana.",
     "grafana-t2": "Dette er en drag og slipp-oppgave for Grafana.",
@@ -1529,6 +1448,7 @@ function go(page) {
   document.querySelector('.content').scrollTop = 0;
 
   if (page === 'sensors') startSensorPolling();
+  if (page === 'task4')   initNodeRed('nr-root');
   if (page === 'task3')   t3RefreshLabels();
 
   statusTasks();
@@ -1537,23 +1457,6 @@ function go(page) {
     .catch(err => console.warn('LED sync failed:', err));
 
 }
-
-function mt4StartTask() {
-  const infobox = document.getElementById('mt4-infobox');
-  const area    = document.getElementById('mt4-task-area');
-  if (infobox) infobox.style.display = 'none';
-  if (area)    area.style.display    = 'block';
-  if (typeof initNodeRed === 'function') initNodeRed('nr-root');
-}
-
-function nrt4StartTask() {
-  const infobox = document.getElementById('nrt4-infobox');
-  const area    = document.getElementById('nrt4-task-area');
-  if (infobox) infobox.style.display = 'none';
-  if (area)    area.style.display    = 'block';
-  if (typeof initNodeRedT4 === 'function') initNodeRedT4('nr-root-t4');
-}
-
 // viser riktig status når siden åpner
 document.addEventListener("DOMContentLoaded", () => {
   menyScore();
