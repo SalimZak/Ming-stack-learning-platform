@@ -28,7 +28,7 @@ let cardFunnet = 0;
 function startGame(){
   cardScore = 0; //nullsitller
   cardFunnet = 0;// nullstiller
-  infoBoxText("Her skal du klikke på relevante begreper for MQTT. Du skal finne 7 relevante begreper for å fullføre oppgaven");
+  infoBoxText("Her skal du klikke på relevante begreper for MQTT. Du skal finne 7 relevante begreper for å fullføre oppgaven.\n Begrepene er brukt i MQTT Multiplechoice oppgaven.");
   document.getElementById("grid").innerHTML = "";
   document.getElementById("score").innerText = "0 - Found: 0/7";
   document.getElementById("completeBanner").style.display = "none";
