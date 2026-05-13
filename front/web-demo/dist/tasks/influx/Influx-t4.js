@@ -150,7 +150,7 @@ function database() {
         rad.dataset.radNummer = r; // radnummer index med 0 øverste rad
         rad.dataset.filled = "false"; // raden er tom, sensorboks er ikke plassert enda
 
-        rad.innerHTML = '<div>— klikk for å plassere —</div>'; // innhold inni raden
+        rad.innerHTML = '<div> Klikk for å plassere </div>'; // innhold inni raden
 
         // Vet hvilken rad og indeksen til raden som er klikket
         rad.addEventListener("click", function() {
