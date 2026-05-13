@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 //status til sensorer
-typedef struct(){
+typedef struct{
     bool i2c;
     bool tof;
     bool loadcell;

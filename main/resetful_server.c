@@ -130,12 +130,17 @@ static esp_err_t sensor_get_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "application/json");
     cJSON *root = cJSON_CreateObject();
 
-    float pot = 0; 
+    float pot = get_pot(); 
     float dist = get_distance();
+    float loadc = get_press();
+    float tempe = get_temp();
 
     cJSON_AddBoolToObject(root,   "ok",   true);
     cJSON_AddNumberToObject(root, "pot",  pot);
     cJSON_AddNumberToObject(root, "dist",  dist);
+    cJSON_AddNumberToObject(root, "temp",  tempe);
+    cJSON_AddNumberToObject(root, "weight",  loadc);
+    
 
     
     const char *json = cJSON_Print(root); //konverterer til char
@@ -150,9 +155,9 @@ static esp_err_t loadcell_get_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "application/json");
     cJSON *root = cJSON_CreateObject();
 
-    float load_cell = 0;
+    float load_cell = get_press();
 
-    
+    cJSON_AddBoolToObject(root,   "ok",   true);
     cJSON_AddNumberToObject(root, "loadcell",  load_cell);
     
     const char *json = cJSON_Print(root); //konverterer til char
@@ -167,14 +172,11 @@ static esp_err_t influx_get_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "application/json");
     cJSON *root = cJSON_CreateObject();
 
-    char label[] = "temp"
-    char sensor_name[] = "DS18B20"
-    float temprature = 0; 
+    char sensorName[] = "DS18B20";
+    float temprature = get_temp(); 
     
-    cJSON_AddStringToIbject(root, "sensorName", sensor_name);
-    cJSON_AddStringToIbject(root, "label", label);
+    cJSON_AddStringToObject(root, "sensorName", sensorName);
     cJSON_AddNumberToObject(root, "temp",  temprature);
-    cJSON_AddNumberToObject(root, "tid",  time);
 
     const char *json = cJSON_Print(root); //konverterer til char
     httpd_resp_sendstr(req, json); //response body som blir sendt

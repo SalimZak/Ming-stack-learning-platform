@@ -6,22 +6,21 @@
 #include "driver/adc.h"
 #include "esp_log.h"
 #include "vl53l1x.h"
-#include "hx711.h"
 #include "freertos/semphr.h"
-#include "FreeRTOSConfig/portmacro.h"
 #include "sensorer.h"
 
 //======================================globale variabler osv
 #define HX711_DT 5
 #define HX711_SCK 6
 #define DS18B20_GPIO GPIO_NUM_4
-#define POT_ADC_CHANNEL ADC1_CHANNEL_3   // GPIO4
+#define POT_ADC_CHANNEL ADC1_CHANNEL_6   // GPIO4
 #define POT_ADC_ATTEN ADC_ATTEN_DB_11  // 0–3.3V
 #define POT_ADC_WIDTH ADC_WIDTH_BIT_12 // 0–4095
 #define I2C_SCL_GPIO 9
 #define I2C_SDA_GPIO 8
 #define VL53L1X_ADDR_7BIT 0x29
-#define TEMP_ALPHA 0.1f   
+#define TEMP_ALPHA 0.1f
+#define VREF 3.3f
 
 static const char *TAG = "sensor_test";
 
@@ -192,6 +191,7 @@ static float ds18b20_read_temp_c(){
 //hjelpe funksjon for potmeter
 static float pot_read(){
     int raw = adc1_get_raw(POT_ADC_CHANNEL);
+    raw = VREF - raw;
     return (raw / 4095.0f);
 }
 
@@ -341,7 +341,7 @@ void tof_sensor(void *pvParameters){
 
 void press_sensor(void *pvParameters){
     if(loadcell_sensor_init() != ESP_OK){
-        ESP_LOGE(TAG, "loadcell init failed")
+        ESP_LOGE(TAG, "loadcell init failed");
         g_health.loadcell = false;
         vTaskDelete(NULL);
         return;
@@ -393,14 +393,14 @@ void press_sensor(void *pvParameters){
 
 void ds18b20_sensor(void *pvParameters){
     if(ds18b20_init() != ESP_OK){
-        ESP_LOGE(TAG, "temp init failed")
+        ESP_LOGE(TAG, "temp init failed");
         g_health.temperature = false;
         vTaskDelete(NULL);
         return;
     }
     
     if (!ow_reset()) {
-        ESP_LOGE(TAG, "one wire reset failed")
+        ESP_LOGE(TAG, "one wire reset failed");
         g_health.temperature = false;
         vTaskDelete(NULL);
         return;
