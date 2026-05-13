@@ -151,7 +151,7 @@ class SensorTask {
 
   _simulateValue() {
     if (this.sensorKey === 'pot') {
-      return parseFloat((Math.random() * 3.3).toFixed(3));
+      return parseFloat((Math.random()).toFixed(3));
     }
     if (this.sensorKey === 'dist') {
       return Math.floor(30 + Math.random() * 1170);

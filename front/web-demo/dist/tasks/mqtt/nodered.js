@@ -27,21 +27,26 @@ const TOPIC_OPTIONS = ['sensor/temperatur', 'sensor/fuktighet', 'sensor/trykk'];
 const CORRECT_TOPIC = 'sensor/temperatur';
 // Bare sensor/temperatur er riktig — sensoren sender temperaturdata
 
+// Poengsystem: start på 5, -1 per hint brukt, gulvet på 0
+const NR_MAX_SCORE = 5;
+const NR_MIN_SCORE = 0;
+
 let _selectedTopicIndex = 0;  // hvilket topic som vises på MQTT-nodene
 let _hintIndex = 0;           // hvilket hint som vises neste gang
 let _nrNodeId  = 1;           // auto-inkrement ID for nodeinstanser på lerretet
 const _nrWires = [];          // alle tegnede koblinger — oppdateres av nrRedrawWires()
+let _nrCompleted = false;     // true når brukeren har fullført flyten minst én gang denne økten
 
-// Henter sensorverdi for simulatoren — skalerer potmeter-volt til temperaturlignende tall,
-// fjernes når temperatur sensor er lagt til
+// Henter temperaturverdi fra DS18B20 via /influx-endepunktet.
+// Faller tilbake til simulert 18–28°C dersom enheten er offline.
 async function nrGetSensorValue() {
   try {
-    const res = await fetch(SENSOR_URL, { signal: AbortSignal.timeout(2000) });
+    const res = await fetch(TEMP_URL, { signal: AbortSignal.timeout(2000) });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    if (!data.ok) throw new Error(data.error);
-    return { value: parseFloat((data.pot * 10).toFixed(2)), real: true };
-    // Ganger med 10 for å gjøre 0–3.3V om til 0–33°C
+    const temp = parseFloat(data.temp);
+    if (isNaN(temp)) throw new Error('invalid temp');
+    return { value: parseFloat(temp.toFixed(2)), real: true };
   } catch {
     return { value: parseFloat((18 + Math.random() * 10).toFixed(2)), real: false };
     // Tilfeldig innendørs temperatur 18–28°C som reserve
@@ -220,6 +225,23 @@ function nrFlowValid(root) {
   return true;
 }
 
+// Beregner gjeldende poeng basert på hint brukt
+function nrCurrentScore() {
+  return Math.max(NR_MIN_SCORE, NR_MAX_SCORE - _hintIndex);
+}
+
+// Viser fullføringsbanneret med poengsum og lagrer poeng i felles highscore
+function nrShowCompleteBanner() {
+  const banner = document.getElementById('mt4-complete-banner');
+  if (!banner) return;
+  const score = nrCurrentScore();
+  banner.textContent = t('nr_complete') + ' \u2014 ' + t('nr_completeScore') +
+                       ': ' + score + '/' + NR_MAX_SCORE;
+  banner.style.display = 'block';
+  if (typeof pointSystem === 'function') pointSystem('task4', score);
+  _nrCompleted = true;
+}
+
 // Simulerer at Inject-noden sender en melding gjennom flyten
 async function nrHandlePlay(root) {
   if (!nrFlowValid(root)) { nrDebugLog(root, t('nr_flowInvalid')); return; }
@@ -241,6 +263,9 @@ async function nrHandlePlay(root) {
   });
 
   Broker.pub(topic, 'temp=' + result.value.toFixed(2));
+
+  // Flyten er gyldig OG en melding ble sendt — registrer fullføring
+  nrShowCompleteBanner();
 }
 
 // Sjekker flyten og logger første feil den finner — én feil om gangen for å ikke overvelde
@@ -275,6 +300,7 @@ function initNodeRed(rootId) {
   // Nullstiller all tilstand
   _hintIndex = 0; _selectedTopicIndex = 0; _nrNodeId = 1;
   _nrWires.length = 0;
+  _nrCompleted = false;
   Broker.clear();
 
   // Injiserer simulator-HTML
@@ -468,6 +494,9 @@ function initNodeRed(rootId) {
     nrClearWires(root);
     root.querySelector('#debug-lines').innerHTML = '';
     _hintIndex = 0; _selectedTopicIndex = 0;
+    _nrCompleted = false;
+    const banner = document.getElementById('mt4-complete-banner');
+    if (banner) banner.style.display = 'none';
     root._nrInit = false;
     Broker.clear();
     nrDebugLog(root, t('nr_resetOk'));
@@ -489,6 +518,9 @@ function initNodeRed(rootId) {
       nrSimLog(root, msg);
     });
     Broker.pub(topic, 'temp=' + val);
+
+    // Flyten er gyldig OG en melding ble sendt — registrer fullføring
+    nrShowCompleteBanner();
   }, { signal });
 
   // Første tegning (tomt lerret) og klar-melding i debug-loggen

@@ -18,9 +18,13 @@ const BREADCRUMBS = {
   influx:       () => 'MING → InfluxDB',
   'influx-t1':  () => `MING → InfluxDB → ${t('influx_task1')}`,
   'influx-t2':  () => `MING → InfluxDB → ${t('influx_task2')}`,
+  'influx-t3':  () => `MING → InfluxDB → ${t('influx_task3')}`,
+  'influx-t4':  () => `MING → InfluxDB → ${t('influx_task4')}`,
   nodered:      () => 'MING → Node-RED',
   'nodered-t1': () => `MING → Node-RED → ${t('nodered_task1')}`,
   'nodered-t2': () => `MING → Node-RED → ${t('nodered_task2')}`,
+  'nodered-t3': () => `MING → Node-RED → ${t('nodered_task3')}`,
+  'nodered-t4': () => `MING → Node-RED → ${t('nodered_task4')}`,
   grafana:      () => 'MING → Grafana',
   'grafana-t1': () => `MING → Grafana → ${t('grafana_task1')}`,
   'grafana-t2': () => `MING → Grafana → ${t('grafana_task2')}`,
@@ -68,6 +72,7 @@ function toggleLang() {
   setLang(getLang() === 'no' ? 'en' : 'no');
   t3RefreshLabels();   // disse elementene har ikke data-i18n, må oppdateres manuelt
   if (typeof gt2RefreshLabels === 'function') gt2RefreshLabels();
+  if (typeof nrt3RefreshLabels === 'function') nrt3RefreshLabels();
   updateBreadcrumb();
   // Tilbakestiller Node-RED simulator slik at nodeetiketter bygges på nytt med nytt språk
   const nrRoot = document.getElementById('nr-root');

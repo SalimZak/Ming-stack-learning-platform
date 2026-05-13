@@ -10,13 +10,13 @@ let _it2Timer = null;  // nedtellingsintervall-ID
 let _it2Count = 0;     // antall lagrede målinger
 let _it2Score = 0;     // poeng for denne oppgaven
 
-// Genererer en tilfeldig målsone for avstandssensoren
+// Genererer en tilfeldig målsone for potmeteret (ratio 0.0–1.0)
 function it2NewTarget() {
-  const center    = Math.floor(100 + Math.random() * 700); // 100–800 mm
-  const tolerance = Math.random() < 0.5 ? 25 : 50;        // ±25 eller ±50 mm
+  const center    = parseFloat((0.1 + Math.random() * 0.8).toFixed(2)); // 0.10–0.90
+  const tolerance = 0.05;                 // alltid ±0.05
   return {
-    min:       Math.max(0, center - tolerance),
-    max:       center + tolerance,
+    min:       parseFloat(Math.max(0, center - tolerance).toFixed(2)),
+    max:       parseFloat(Math.min(1, center + tolerance).toFixed(2)),
     tolerance,
   };
 }
@@ -36,10 +36,10 @@ function it2StartRound() {
   if (roundEl) roundEl.textContent = t('it2_roundOf').replace('{n}', _it2Count + 1);
 
   const rangeEl = document.getElementById('it2-range');
-  if (rangeEl) rangeEl.textContent = `${target.min} – ${target.max} mm  (±${target.tolerance} mm)`;
+  if (rangeEl) rangeEl.textContent = `${target.min.toFixed(2)} – ${target.max.toFixed(2)}  (±${target.tolerance} ratio)`;
 
   const liveValEl = document.getElementById('it2-live-value');
-  if (liveValEl) liveValEl.textContent = '— mm';
+  if (liveValEl) liveValEl.textContent = '—';
 
   const liveSrcEl = document.getElementById('it2-live-status');
   if (liveSrcEl) liveSrcEl.textContent = '';
@@ -53,7 +53,7 @@ function it2StartRound() {
 
   // SensorTask for denne runden
   _it2Task = new SensorTask({
-    sensorKey:    'dist',
+    sensorKey:    'pot',
     targetMin:    target.min,
     targetMax:    target.max,
     holdTime:     0,       // fullfør ved første avlesning innenfor området
@@ -62,7 +62,7 @@ function it2StartRound() {
     onValue(reading) {
       const src = reading.real ? '● LIVE' : '◌ sim';
       const el  = document.getElementById('it2-live-value');
-      if (el) el.textContent = reading.value + ' mm';
+      if (el) el.textContent = reading.value.toFixed(3) + ' ratio';
       const srcEl = document.getElementById('it2-live-status');
       if (srcEl) srcEl.textContent = src;
     },
@@ -119,7 +119,7 @@ function it2AddRow(timestamp, value) {
   tr.className = 'it2-row-ok';
   tr.innerHTML = `
     <td>${it2FormatTs(timestamp)}</td>
-    <td>${value} mm</td>
+    <td>${typeof value === 'number' ? value.toFixed(3) : value} ratio</td>
     <td class="it2-status-ok">${t('it2_saved')}</td>
   `;
   tbody.appendChild(tr);
