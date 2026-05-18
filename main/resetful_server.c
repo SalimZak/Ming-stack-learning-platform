@@ -11,8 +11,6 @@
 #include "esp_random.h"
 #include "esp_vfs.h"
 #include "cJSON.h"
-#include "potmeter.h"
-#include "distance.h"
 #include "led_control.h"
 #include "sensorer.h"
 
