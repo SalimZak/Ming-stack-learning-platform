@@ -57,11 +57,10 @@ function makeArrowButton() {
     let btn = document.createElement("button"); //lager en knapp
     btn.className = "arrow-btn " + arrow.retning; // styling og retning til knapp
     btn.textContent = arrow.tekst; //tekst på pil
-    //btn.dataset.index = i;
  
     // Når knappen klikkes, velges denne pilen
     btn.onclick = function() { //knapp klikkes
-      choseArrow(btn, arrow); //vleger knappen og pilen
+      choseArrow(btn, arrow); //velger knappen og pilen
     };
  
     brokerList.appendChild(btn); //legg knapppen i listen

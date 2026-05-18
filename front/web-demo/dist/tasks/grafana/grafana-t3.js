@@ -16,7 +16,7 @@ let objectValues = [] //lagrer verdien til fuktighet
 let objects = [] //lagrer verdien til gyldig og ugyldig
 
 
-// skjul start siden og start spill og topbar etter 2 sek
+// skjul start siden og start spill og topbar etter 1 sek
 function startSpill(){
   infoBoxText("Fang gyldige sensorverdier mellom 40-60 %RH");
   document.getElementById("start").style.display="none";
@@ -33,10 +33,14 @@ document.addEventListener("keydown",e=>keys[e.key]=true); // trykker tast
 document.addEventListener("keyup",e=>keys[e.key]=false); // slipper tast
 
 setInterval(()=>{
+  const spillEl = document.getElementById("spill");// game frame
+  const spillWidth = spillEl.offsetWidth; // henter bredden til spillet
+  const barWidth = 80; // bar pixel
+
   if(keys["ArrowLeft"]&&spillerX>0)spillerX-=6; // venstre piltast med fast
-  if(keys["ArrowRight"]&&spillerX<320)spillerX+=6; // høyre piltast med fart
+  if(keys["ArrowRight"]&&spillerX<spillWidth - barWidth)spillerX+=6; // høyre piltast med fart
   document.getElementById("bruker").style.left=spillerX+"px"; // oppdater posisjon til bar
-},10);
+},10); // hver 10ms sjekker baren om pil er tastet
 
 // tid
 setInterval(()=>{
@@ -79,7 +83,7 @@ function lagObjekt(){
 
   el.textContent= timeString + " : " + verdi + "%RH";// det som står i sensorverdiene
   el.dataset.gyldig=gyldig; // lagrer verdier som er gyldig og ugyldig
-  el.style.left=Math.random()*330+"px"; // objektene fellaer på tilfeldige plasser
+  el.style.left=Math.random()*330+"px"; // objektene faller på tilfeldige plasser
 
   el.dataset.verdi = verdi; // sensor verdiene
   el.dataset.time = timeString; // tidene på objektene
@@ -89,7 +93,6 @@ function lagObjekt(){
   let fall=setInterval(()=>{
     y+=3;
     el.style.top=y+"px";
-
 
     // Treffe bar
     let ob=el.getBoundingClientRect(); // objekt
