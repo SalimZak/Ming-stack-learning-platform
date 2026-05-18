@@ -34,9 +34,6 @@
 #include "freertos/task.h"
 
 
-//ESP_LOGI(TAG, "starting app for RNDIS and webusb");
-//ESP_LOGI(TAG, "=== SENSOR TEST START ===");
-
 static const char *TAG = "NCM/RNDIS";
 
 #define DEF_IP "192.168.4.1"
@@ -220,51 +217,6 @@ static esp_err_t init_fs(void)
     }
     return ESP_OK;
 }
-
-/*
-#define I2C_SCL_GPIO      9
-#define I2C_SDA_GPIO      8
-#define VL53L1X_ADDR_7BIT 0x29
-
-
-
-void app_main(void)
-{
-    // Init I2C
-    i2c_master_bus_config_t bus_cfg = {
-        .i2c_port = I2C_NUM_0,
-        .sda_io_num = I2C_SDA_GPIO,
-        .scl_io_num = I2C_SCL_GPIO,
-        .clk_source = I2C_CLK_SRC_DEFAULT,
-        .glitch_ignore_cnt = 7,
-        .flags.enable_internal_pullup = true,
-    };
-    i2c_master_bus_handle_t bus = NULL;
-    ESP_ERROR_CHECK(i2c_new_master_bus(&bus_cfg, &bus));
-
-    // Init sensor
-    vl53l1x_t sensor = {0};
-    ESP_ERROR_CHECK(vl53l1x_init(&sensor, bus, VL53L1X_ADDR_7BIT));
-    ESP_ERROR_CHECK(vl53l1x_sensor_init(&sensor));
-    ESP_ERROR_CHECK(vl53l1x_config_long_100ms(&sensor));
-    ESP_ERROR_CHECK(vl53l1x_start(&sensor));
-
-    ESP_LOGI(TAG, "Sensor klar, starter måling...");
-
-    // Les i loop
-    while (1) {
-        vl53l1x_result_t r = {0};
-        esp_err_t err = vl53l1x_read(&sensor, &r, 200);
-        if (err == ESP_OK && r.status == 0) {
-            ESP_LOGI(TAG, "Avstand: %u mm", r.distance_mm);
-        } else {
-            ESP_LOGW(TAG, "Ugyldig måling, status=%u", r.status);
-        }
-        vTaskDelay(pdMS_TO_TICKS(100));
-    }
-}
-*/
-
 
 
 void app_main(void)

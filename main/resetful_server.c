@@ -53,7 +53,7 @@ static esp_err_t set_content_type_from_file(httpd_req_t *req, const char *filepa
     } else if (CHECK_FILE_EXTENSION(filepath, ".ico")) {
         type = "image/x-icon";
     } else if (CHECK_FILE_EXTENSION(filepath, ".svg")) {
-        type = "text/xml";
+        type = "image/svg+xml";
     }
     return httpd_resp_set_type(req, type);
 }
@@ -142,7 +142,7 @@ static esp_err_t sensor_get_handler(httpd_req_t *req){
     cJSON_AddNumberToObject(root, "weight",  loadc);
     
 
-    
+
     const char *json = cJSON_Print(root); //konverterer til char
     httpd_resp_sendstr(req, json); //response body som blir sendt
     free((void *)json); //json objektet allokerer minnet på heap, dette må frigjøres og slette data inni for å unngå minne lekasje
@@ -258,7 +258,7 @@ esp_err_t resetful_server_start(const char *base_path)
     httpd_register_uri_handler(server, &lastcelle_data_get_uri);
 
 
-        /* potmeter */
+        
     httpd_uri_t pot_data_get_uri = {
         .uri = "/sensor",
         .method = HTTP_GET,

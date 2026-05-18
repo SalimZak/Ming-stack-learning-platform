@@ -8,6 +8,7 @@
 #include "vl53l1x.h"
 #include "freertos/semphr.h"
 #include "sensorer.h"
+#include <math.h>
 
 //======================================globale variabler osv
 #define HX711_DT 5
@@ -20,17 +21,17 @@
 #define I2C_SDA_GPIO 8
 #define VL53L1X_ADDR_7BIT 0x29
 #define TEMP_ALPHA 0.1f
-#define VREF 3.3f
+
 
 static const char *TAG = "sensor_test";
 
 static i2c_master_bus_handle_t g_i2c_bus = NULL;
 static SemaphoreHandle_t g_i2c_mutex = NULL;   
 static sensor_health_t g_health = {false, false, false, false}; 
-static volatile float g_distance = -1.0f;
-static volatile float g_press = -1.0f;
-static volatile float g_temperature = -1000.0f;
-static volatile float g_pot_value = -1.0f;
+static volatile float g_distance = NAN;
+static volatile float g_press = NAN;
+static volatile float g_temperature = NAN;
+static volatile float g_pot_value = NAN;
 static int32_t baseline = 254700;       // kalibrering, må overleve mellom kall
 static float scale = 430.0f;            // kalibrering
 static float weight_filtered = 0.0f;    // filter-state, må overleve mellom iterasjoner
@@ -191,7 +192,6 @@ static float ds18b20_read_temp_c(){
 //hjelpe funksjon for potmeter
 static float pot_read(){
     int raw = adc1_get_raw(POT_ADC_CHANNEL);
-    raw = VREF - raw;
     return (raw / 4095.0f);
 }
 
