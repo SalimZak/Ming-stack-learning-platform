@@ -20,16 +20,16 @@
   <link rel="stylesheet" href="core/base.css">
   <link rel="stylesheet" href="core/layout.css">
   <link rel="stylesheet" href="core/components.css">
-  <link rel="stylesheet" href="core/sensors/sensors.css">
+  <link rel="stylesheet" href="core/sensors/sensor_page.css">
   <link rel="stylesheet" href="quiz/mc-quiz.css">
-  <link rel="stylesheet" href="tasks/mqtt/task3.css">
-  <link rel="stylesheet" href="tasks/mqtt/MQTTTask5Card.css">
-  <link rel="stylesheet" href="tasks/mqtt/nodered.css">
-  <link rel="stylesheet" href="tasks/influx/influx-t2.css">
-  <link rel="stylesheet" href="tasks/grafana/grafana-t2.css">
-  <link rel="stylesheet" href="tasks/grafana/grafana-t3.css">
-  <link rel="stylesheet" href="tasks/grafana/grafana-t4.css">
-  <link rel="stylesheet" href="tasks/influx/influx-t4.css">
+  <link rel="stylesheet" href="tasks/mqtt/MQTT_T3.css">
+  <link rel="stylesheet" href="tasks/mqtt/MQTT_T2.css">
+  <link rel="stylesheet" href="tasks/shared/Node-RED_Simulator.css">
+  <link rel="stylesheet" href="tasks/influx/Influx_T2.css">
+  <link rel="stylesheet" href="tasks/influx/Influx_T4.css">
+  <link rel="stylesheet" href="tasks/grafana/Grafana_T2.css">
+  <link rel="stylesheet" href="tasks/grafana/Grafana_T3.css">
+  <link rel="stylesheet" href="tasks/grafana/Grafana_T4.css">
   
 
   <script src="chart.umd.js"></script>
@@ -120,11 +120,58 @@
 
     <div class="content">
 
+      <!-- ══ SETUP (forced entry — vises kun første gang eller etter reset) ══ -->
+      <div id="page-setup" class="page-view">
+        <!-- Steg 1: Språkvalg -->
+        <div id="setup-step-1">
+          <h1 class="page-title">Language / Språk</h1>
+          <p class="page-sub">Choose your language before continuing. / Velg språk før du fortsetter.</p>
+          <div class="grid-auto" style="max-width:420px;margin:0 auto;">
+            <button class="card" onclick="setupSelectLang('en')">
+              <strong>English</strong>
+              <span>Continue in English.</span>
+            </button>
+            <button class="card" onclick="setupSelectLang('no')">
+              <strong>Norsk</strong>
+              <span>Fortsett på norsk.</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Steg 2: Rollevalg -->
+        <div id="setup-step-2" style="display:none;">
+          <h1 class="page-title" data-i18n="role_title">Velg rolle</h1>
+          <p class="page-sub" data-i18n="role_sub">Velg om du er elev eller lærer.</p>
+          <div class="grid-auto" style="max-width:420px;margin:0 auto;">
+            <button class="card" onclick="setupSelectRole('student')">
+              <strong data-i18n="role_student">Elev</strong>
+              <span data-i18n="role_studentSub">Elevveiledning og oppgaver.</span>
+            </button>
+            <button class="card" onclick="setupSelectRole('teacher')">
+              <strong data-i18n="role_teacher">Lærer</strong>
+              <span data-i18n="role_teacherSub">Lærerveiledning og støtte.</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Steg 3: Manual -->
+        <div id="setup-step-3" style="display:none;">
+          <h1 class="page-title" id="setup-manual-title" data-i18n="student_title">Elevveiledning</h1>
+          <p class="page-sub" id="setup-manual-sub" data-i18n="student_sub">Din guide til MING-oppgavene.</p>
+          <div class="card" style="max-width:560px;margin:0 auto;cursor:default;display:block;">
+            <p id="setup-manual-body" data-i18n="student_manual"></p>
+          </div>
+          <div style="max-width:560px;margin:20px auto 0;">
+            <button class="startbtn" onclick="setupFinish()" data-i18n="manual_openMING">Åpne MING-oppgaver</button>
+          </div>
+        </div>
+      </div>
+
       <!-- ══ HJEMSIDE ══ -->
-      <!-- "active" er hardkodet her så hjemesiden vises uten å vente på JavaScript -->
-      <div id="page-home" class="page-view active">
+      <div id="page-home" class="page-view">
         <h1 class="page-title" data-i18n="home_headline">IIoT i en skoeske</h1>
         <p  class="page-sub"   data-i18n="home_sub">En kompakt undervisningsplattform.</p>
+        <p  class="page-sub"   data-i18n="home_intro"></p>
         <div class="grid-auto">
           <button class="card" onclick="go('sensors')">
             <div class="card-icon"></div>
@@ -136,15 +183,15 @@
             <strong>MING</strong>
             <span data-i18n="ming_sub">Velg en modul.</span>
           </button>
-          <button class="card" onclick="go('task3')">
+          <button class="card" onclick="go('role')">
             <div class="card-icon"></div>
-            <strong data-i18n="home_card_t3_title">MQTT Oppgave 3</strong>
-            <span   data-i18n="home_card_t3_desc">Klikk og plasser piler.</span>
+            <strong data-i18n="home_card_role_title">Velg rolle</strong>
+            <span   data-i18n="home_card_role_desc">Bytt mellom elev og lærer.</span>
           </button>
-          <button class="card" onclick="go('task4')">
+          <button class="card" onclick="go('settings')">
             <div class="card-icon"></div>
-            <strong data-i18n="home_card_t4_title">Node-RED Simulator</strong>
-            <span   data-i18n="home_card_t4_desc">Bygg en Node-RED-flyt.</span>
+            <strong data-i18n="home_card_settings_title">Innstillinger</strong>
+            <span   data-i18n="home_card_settings_desc">Språk og systeminnstillinger.</span>
           </button>
         </div>
       </div>
@@ -217,6 +264,7 @@
       <!-- ══ MING-HUB ══ -->
       <div id="page-ming" class="page-view">
         <h1 class="page-title" data-i18n="ming_title">MING</h1>
+        <p  class="page-sub"   data-i18n="ming_intro"></p>
         <p  class="page-sub"   data-i18n="ming_sub">Velg en modul.</p>
         <div class="grid">
           <button class="card" onclick="go('mqtt')"   ><strong>MQTT</strong>    <span data-i18n="ming_mqttSub">Meldingsprotokoll.</span></button>
@@ -1248,8 +1296,8 @@
 <script src="core/i18n.js"></script>
 <script src="core/router.js"></script>
 
-<script src="core/sensors/sensors.js"></script>
-<script src="core/sensors/sensor-task.js"></script>
+<script src="core/sensors/sensor_page.js"></script>
+<script src="tasks/shared/sensor_task_class.js"></script>
 <script src="quiz/InfoBox.js"></script>
 <script src="quiz/MC.js"></script>
 <script src="quiz/MC_MQTT.js"></script>
@@ -1260,10 +1308,11 @@
 <script src="tasks/mqtt/task3.js"></script>
 <script src="tasks/mqtt/nodered.js"></script>
 <script src="tasks/influx/InfluxDBT-2.js"></script>
-<script src="tasks/influx/influx-t4.js"></script>
+<script src="tasks/influx/Influx-t4.js"></script>
 <script src="quiz/TF_NodeRED.js"></script>
 <script src="quiz/TF_Influx.js"></script>
 <script src="tasks/nodered/nodered-t3.js"></script>
+<script src="tasks/nodered/lastNodered.js"></script>
 <script src="tasks/grafana/grafana-t2.js"></script>
 <script src="tasks/grafana/grafana-t3.js"></script>
 <script src="tasks/grafana/GrafanaT-4.js"></script>
@@ -1471,7 +1520,65 @@ function go(page) {
 document.addEventListener("DOMContentLoaded", () => {
   menyScore();
   statusTasks();
+
+  // Forced entry: ingen lagret data = første gang (eller etter reset)
+  if (!localStorage.getItem("artificer_data")) {
+    setSidebarLock(true);
+    go('setup');
+  } else {
+    go('home');
+  }
 });
+
+// ── Setup-flyt funksjoner ──────────────────────────────────
+
+// Steg 1 → 2: lagrer språkvalg og viser rollevalg
+function setupSelectLang(code) {
+  setLang(code);
+  document.getElementById('setup-step-1').style.display = 'none';
+  document.getElementById('setup-step-2').style.display = 'block';
+  applyI18n(); // oppdaterer tekst til valgt språk
+}
+
+// Steg 2 → 3: lagrer rollevalg og viser riktig manual
+function setupSelectRole(type) {
+  setRole(type);
+  document.getElementById('setup-step-2').style.display = 'none';
+  document.getElementById('setup-step-3').style.display = 'block';
+
+  // Oppdater manual-innhold basert på rolle
+  const titleEl = document.getElementById('setup-manual-title');
+  const subEl   = document.getElementById('setup-manual-sub');
+  const bodyEl  = document.getElementById('setup-manual-body');
+  if (type === 'teacher') {
+    titleEl.setAttribute('data-i18n', 'teacher_title');
+    subEl.setAttribute('data-i18n',   'teacher_sub');
+    bodyEl.setAttribute('data-i18n',  'teacher_manual');
+  } else {
+    titleEl.setAttribute('data-i18n', 'student_title');
+    subEl.setAttribute('data-i18n',   'student_sub');
+    bodyEl.setAttribute('data-i18n',  'student_manual');
+  }
+  applyI18n();
+}
+
+// Steg 3 → hjem: avslutter oppsett og sender brukeren til hjemskjermen
+function setupFinish() {
+  // Reset steg-visning slik at flyten starter på nytt ved reset
+  document.getElementById('setup-step-1').style.display = 'block';
+  document.getElementById('setup-step-2').style.display = 'none';
+  document.getElementById('setup-step-3').style.display = 'none';
+  // Lås opp menyen igjen
+  setSidebarLock(false);
+  go('home');
+}
+
+// Låser eller låser opp menyen avhengig av om brukeren er i setup
+function setSidebarLock(locked) {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.style.pointerEvents = locked ? 'none' : '';
+  sidebar.style.opacity       = locked ? '0.3'  : '';
+}
 
 </script>
 
