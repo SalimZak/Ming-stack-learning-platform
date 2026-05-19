@@ -1,149 +1,149 @@
 /* mqtt task 3 css */
 
-/* ─── LAYOUT ─────────────────────────────────────────────── */
 
 .mqtt-layout {
-  display: flex;                  /* legger elementene side om side */
-  justify-content: space-between; /* fordeler plass mellom elementene */
-  align-items: flex-start;        /* justerer elementer til toppen */
-  gap: 16px;                      /* avstand mellom elementene */
-  flex-wrap: wrap;                /* bryter til ny linje hvis det ikke er plass */
+  display: flex; /* legger elementeene side til side */
+  justify-content: space-between;/* fordeler plass mellom elementene */
+  align-items: flex-start; /* justerer elementer fra toppen av siden*/
+  gap: 17px; /* avstand mellom elementene */
+  flex-wrap: wrap; /* dersom det er liten plass i skjermen så kan man scrolle ned*/
 }
 
-.mqtt-side,
-.mqtt-center {
-  display: flex;          /* legger innhold under hverandre */
-  flex-direction: column;
-  align-items: center;    /* sentrerer innhold */
-  gap: 10px;
+/* de 3 sidene i taks page */
+.mqtt-side, .mqtt-center {
+  display: flex; /* legger boksene under hverandre */
+  flex-direction: column; /* legger boksene under hverandre */
+  align-items: center; /* boksene plassert sentralt på siden sin */
+  gap: 11px; /* avstanden mellom boksene */
 }
 
+/* legger under hverandre */
 .device-row {
-  display: flex;          /* legger innhold under hverandre */
-  flex-direction: column;
-  align-items: center;    /* sentrerer innhold */
+  display: flex; /* legger innhold under hverandre */
+  flex-direction: column; /* legger sirkel, tekst og dropzone under hverandre */
+  align-items: center;  
   gap: 8px;
 }
 
 
-/* ─── SIRKLER ─────────────────────────────────────────────── */
-
+/* sub og publish sirkler */
 .circle {
-  width: 80px;
+  width: 80px; /* legger innhold under hverandre */
   height: 80px;
-  border-radius: 50%;                     /* gjør boksen til en sirkel */
-  border: 2px solid var(--cyan);          /* blå kant */
-  background: rgba(56,184,208,.08);       /* svak blå bakgrunn */
+  border-radius: 50%; /* gjør boksen til en sirkel */
+  border: 2px solid var(--cyan); /* cyan sirkel med tykkelsen */
+  background: rgba(53, 177, 198, 0.08); /* sirkel for bakgrunn */
   display: flex;
-  justify-content: center;                /* sentrerer innhold horisontalt */
-  align-items: center;                    /* sentrerer innhold vertikalt */
+  justify-content: center;/* legger innhold midten horisontalt */
+  align-items: center;/* legger innhold midten vertikalt */
   font-size: 28px;
 }
 
+/* broker sirkel */
 .broker-circle {
   width: 130px;
   height: 130px;
-  border-radius: 50%;                     /* gjør boksen til en sirkel */
-  border: 2px solid var(--cyan);          /* blå kant */
-  background: rgba(56,184,208,.10);       /* svak blå bakgrunn */
+  border-radius: 50%; /* gjøre til sirkel */
+  border: 2px solid var(--cyan); /* blå kant sirkel*/
+  background: rgba(54, 177, 198, 0.1); 
   display: flex;
-  justify-content: center;                /* sentrerer innhold horisontalt */
-  align-items: center;                    /* sentrerer innhold vertikalt */
+  justify-content: center; /* legger innhold midten horisontalt */
+  align-items: center;/* legger innhold midten vertikalt */
   text-align: center;
   font-family: var(--font-ui);
   font-weight: 800;
   font-size: 15px;
-  color: var(--gold);                     /* gull-farget tekst */
-  white-space: pre-line;                  /* gjør \n om til ekte linjeskift */
+  color: var(--gold);
+  white-space: pre-line;/* gjøre \n til linjesift */
 }
 
+/* teksten under sirklene */
 .dev-label {
   font-size: 11px;
   font-weight: 700;
-  color: var(--gold);   /* gull-farget tekst */
+  color: var(--gold);
   text-align: center;
 }
 
-
-/* ─── PIL-VELGER BOKSEN ───────────────────────────────────── */
-
+/* option boksen under broker sirkel */
 .arrow-select-box {
-  background: var(--panel);          /* bakgrunnsfarge fra tema */
-  border: 2px solid var(--border);   /* kantlinje fra tema */
-  border-radius: 12px;
-  padding: 12px;
-  min-width: 170px;
+  background: var(--panel); /* bakgrunnsfarge */
+  border: 2px solid var(--border); /* kanter */
+  border-radius: 12px; /* circle */
+  padding: 12px; /* distance between the the contnet and the wall */
+  min-width: 170px; /* minimum width of the circle */
 }
 
+/* velg option overskrift */
 .arrow-select-title {
   font-size: 11px;
   font-weight: 800;
-  color: var(--muted);          /* grå tekst */
+  color: var(--muted);
   letter-spacing: 1px;
-  text-transform: uppercase;    /* gjør teksten til store bokstaver */
+  text-transform: uppercase; /* store bokstaver */
   margin-bottom: 10px;
 }
 
+/* listen som holder sensor boksene */
 .arrow-list {
-  display: flex;          /* legger knappene under hverandre */
+  display: flex; /* knappene under hverandre */
   flex-direction: column;
   gap: 8px;
 }
 
-
-/* ─── PIL-KNAPPER ─────────────────────────────────────────── */
-
+/* arrow box */
 .arrow-btn {
-  position: relative;             /* trengs for at piltegnene kan plasseres inni knappen */
+  position: relative; /* trengs for at piltegnene kan plasseres inni knappen */
   border: 1px solid var(--cyan);
   padding: 7px 10px;
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 700;
   color: var(--cyan);
-  background: rgba(56,184,208,.07);
+  background: rgba(53, 177, 198, 0.07);
   border-radius: 6px;
-  cursor: pointer;                /* viser hånd-peker når man holder over */
-  text-align: left;
-  transition: background .15s;    /* myk overgang ved hover */
-  white-space: pre-line;          /* gjør \n om til ekte linjeskift */
-  width: 100%;
+  cursor: pointer; 
+  text-align: left; /* tekst is at the left side av sensor boksen */
+  white-space: pre-line; /* \n som ekte linjeskift */
+  width: 100%; /* fyller hele bredden til arrow list */
 }
 
 /* plass til piltegn på sidene */
 .arrow-btn.right 
-{ padding-right: 26px; /* plass til -> på høyre side */
+{ padding-right: 26px; /* -> høyre side */
 } 
 .arrow-btn.left  
-{ padding-left:  26px; /* plass til <- på venstre side */
+{ padding-left:  26px; /* <- venstre side */
 } 
 .arrow-btn.both  
-{ padding-left: 26px; padding-right: 26px; /* plass til begge sider */
+{ padding-left: 26px; padding-right: 26px; /* pil begge sider */
 } 
 
-/* hover og valgt-farge */
+/* hover on arrow box */
 .arrow-btn:hover    
 { 
-  background: rgba(56,184,208,.15); 
+  background: rgba(53, 179, 201, 0.15); 
 }
 
+/* selected arrow box */
 .arrow-btn.selected 
 { background: rgba(56,184,208,.25); 
-  border-color: #fff; 
-  color: #fff; 
-} /* hvit når valgt */
+  border-color: #fff; /* teksten og kanten blir hvit */
+  color: #fff;  
+} 
 
-/* piltegn laget med css, ingen ekstra html trengs */
-.arrow-btn.right::after  
-{ content: "->"; 
-  position: absolute; 
-  top: 50%; 
-  right: 8px; 
+/* piltegnet legges etter teksten på høyere side */
+.arrow-btn.right::after 
+{ content: "->"; /* pil tegn*/
+  position: absolute; /* pil er posisjonert fritt i boksen */
+  top: 50%; /* pilen er i midten av grafen ved gjelp av y aksen sin transform */
+  right: 8px; /* pil plassert 8 px unna fra veggen */
   transform: translateY(-50%); 
   font-size: 10px; 
   color: var(--cyan); 
 }
 
+/* piltegnet legges før teksten teksten på venstre side */
 .arrow-btn.left::before  
 { content: "<-"; 
   position: absolute; 
@@ -154,6 +154,7 @@
   color: var(--cyan); 
 }
 
+/* piltegnet legges før teksten på venstre side */
 .arrow-btn.both::before  
 { content: "<-"; 
   position: absolute; 
@@ -164,6 +165,7 @@
   color: var(--cyan); 
 }
 
+/* piltegnet legges etter teksten på høyere side */
 .arrow-btn.both::after   
 { content: "->"; 
   position: absolute; 
@@ -174,7 +176,7 @@
   color: var(--cyan); 
 }
 
-/* piltegn blir hvite når knappen er valgt */
+/* de valgte pilene blir hvite etter de er valgt*/
 .arrow-btn.selected.right::after  
 { color: #fff; 
 }
@@ -191,48 +193,40 @@
 { color: #fff; 
 }
 
-
-/* ─── DROPZONER ───────────────────────────────────────────── */
-
+/* drop zone */
 .dropzone {
-  border: 2px dashed rgba(56,184,208,.5); /* stiplet blå kant */
-  background: rgba(56,184,208,.04);       /* svak blå bakgrunn */
+  border: 2px dashed rgba(54, 180, 202, 0.5); /* stipete kant */
+  background: rgba(54, 179, 201, 0.04); /* bakgrunn */
   border-radius: 8px;
   min-height: 46px;
   min-width: 150px;
   display: flex;
   flex-direction: column;
-  align-items: center;      /* sentrerer innhold horisontalt */
-  justify-content: center;  /* sentrerer innhold vertikalt */
-  cursor: pointer;          /* viser hånd-peker når man holder over */
+  align-items: center; /* legger innhold midten horisontalt */
+  justify-content: center;/* legger innhold midten vertikalt */
+  cursor: pointer; /* viser hånd-peker når man holder over */
   font-size: 11px;
   color: var(--muted);
   text-align: center;
   padding: 6px;
-  transition: border-color .15s, background .15s; /* myk overgang ved hover */
 }
 
-.dropzone-hint {
-  font-size: 9px;
-  color: rgba(56,184,208,.5); /* svak blå tekst */
-  margin-top: 2px;
-  font-weight: 700;
-  letter-spacing: .3px;
-}
-
+/* drop zone hover effect */
 .dropzone:hover        
 { border-color: var(--cyan); 
-  background: rgba(56,184,208,.08); 
+  background: rgba(54, 179, 201, 0.08); 
 } 
 
+/* drop zone correct effect */
 .dropzone.zone-correct 
-{ border-color: #4ade80; 
-  background: rgba(74,222,128,.1);  
+{ border-color: #41c571; 
+  background: rgba(70, 211, 122, 0.1);  
   color: #4ade80; 
 }
 
+/* drop zone wrong effect */
 .dropzone.zone-wrong   
 { border-color: #f87171; 
-  background: rgba(248,113,113,.1); 
-  color: #f87171; 
+  background: rgba(232, 106, 106, 0.1); 
+  color: #ed6d6d; 
 }
