@@ -1,4 +1,4 @@
-#ifndef LED_CONTROL_H
+#ifdef LED_CONTROL_H
 #define LED_CONTROL_H
 
 #ifdef __cplusplus

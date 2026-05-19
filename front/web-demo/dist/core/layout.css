@@ -1,21 +1,21 @@
-/* ── Ytre ramme — sidebar til venstre, innhold til høyre ── */
+/* outer shell — sidebar on the left, content on the right */
 .app-shell {
   display: flex;
-  height: 100vh;        /* fyller hele skjermhøyden */
-  overflow: hidden;     /* bare innholdsområdet skal scrolle, ikke hele siden */
+  height: 100vh;        /* fills the full screen height */
+  overflow: hidden;     /* only the content area should scroll, not the whole page */
 }
 
-/* ── Sidepanel ── */
+/* sidebar */
 .sidebar {
   width: var(--sidebar-w);
   flex: 0 0 var(--sidebar-w);
-  /* flex: 0 0 240px betyr: ikke voks, ikke krymp, hold alltid 240px bred */
+  /* flex: 0 0 240px means: don't grow, don't shrink, always stay 240px wide */
   background: var(--sidebar-bg);
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--border);
   overflow: hidden;
-  transition: transform .25s ease;  /* klar for slide-in animasjon om det legges til later */
+  transition: transform .25s ease;  /* ready for a slide-in animation if added later */
   z-index: 100;
 }
 
@@ -23,7 +23,7 @@
   padding: 18px 16px 14px;
   font-family: var(--font-ui);
   font-size: 15px; font-weight: 900; letter-spacing: .8px;
-  /* letter-spacing gjør at logotekst ser mer gjennomtenkt ut */
+  /* letter-spacing makes logo text look more intentional */
   color: var(--gold);
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; gap: 10px;
@@ -31,8 +31,8 @@
 
 .nav-section {
   padding: 10px 8px;
-  flex: 1;          /* fyller resten av sidepanelets høyde */
-  overflow-y: auto; /* scrollbar kun om nødvendig */
+  flex: 1;          /* fills the rest of the sidebar height */
+  overflow-y: auto; /* scrollbar only if needed */
 }
 
 .nav-label {
@@ -40,22 +40,22 @@
   letter-spacing: 1.3px; text-transform: uppercase; padding: 10px 8px 4px;
 }
 
-/* standard farge som teacher */
+/* default color same as teacher */
 .nav-link {
   color: white;
 }
 
-/* åpen oppgaver, også når de låste åpnes */
+/* open tasks, also when locked tasks are unlocked */
 .nav-link.open {
   color: white;
 }
 
-/* fullført oppgave */
+/* completed task */
 .nav-link.completed {
   color: #3fb543;
 }
 
-/* låst */
+/* locked */
 .nav-link.locked {
   color: gray;
   opacity: 0.5;
@@ -66,11 +66,11 @@
 .nav-link {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 10px; border-radius: 9px;
-  color: rgba(232,208,168,.65);  /* gull med 65% gjennomsiktighet for inaktiv tilstand */
+  color: rgba(232,208,168,.65);  /* gold at 65% opacity for inactive state */
   text-decoration: none;
   font-size: 12px; font-weight: 700; cursor: pointer;
   transition: background .14s, color .14s;
-  /* Nullstiller standard knapp-stiler fra nettleseren */
+  /* resets default browser button styles */
   border: none; background: none; width: 100%; text-align: left;
 }
 .nav-link:hover  { background: rgba(255,255,255,.07); color: var(--gold); }
@@ -78,19 +78,19 @@
   background: rgba(56,184,208,.15);
   color: var(--cyan);
   border-left: 2px solid var(--cyan);
-  /* 2px venstre-kant viser hvilken side som er aktiv — vanlig mønster i moderne UI */
+  /* 2px left border shows which page is active */
 }
 .nav-link .nav-icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
 
 .nav-sub {
   margin-left: 14px;
   border-left: 1px solid var(--border);
-  /* Venstre-kanten tegner en vertikal linje som kobler undermenyer til sin forelder */
+  /* left border draws a vertical line connecting submenus to their parent */
   padding-left: 6px;
 }
 .nav-sub .nav-link { font-size: 11px; padding: 7px 8px; border-radius: 7px; }
 
-/* ── Språkbytte-knapp ── */
+/* language toggle button */
 #lang-toggle {
   padding: 6px 14px;
   background: rgba(56,184,208,.08);
@@ -100,17 +100,17 @@
   font-size: 11px; font-weight: 800;
   border-radius: 9px; cursor: pointer;
   transition: background .14s; letter-spacing: .5px;
-  flex-shrink: 0;  /* knappen skal ikke krympe om topbaren er smal */
+  flex-shrink: 0;  /* button should not shrink if the topbar is narrow */
 }
 #lang-toggle:hover { background: rgba(56,184,208,.18); }
 
-/* ── Hovedinnhold ── */
+/* main content area */
 main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-/* flex: 1 fyller all horisontal plass som ikke er tatt av sidepanelet */
+/* flex: 1 fills all horizontal space not taken by the sidebar */
 
 .topbar {
   height: 44px;
-  flex-shrink: 0;  /* holder topbaren på nøyaktig 44px, krymp aldri */
+  flex-shrink: 0;  /* keeps the topbar at exactly 44px, never shrink */
   background: rgba(0,0,0,.25); border-bottom: 1px solid var(--border);
   display: flex; align-items: center;
   padding: 0 20px; gap: 16px;
@@ -122,7 +122,7 @@ main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 .content {
   flex: 1;
   overflow-y: auto;
-  /* Dette er det eneste elementet som scroller — sidepanel og topbar forblir faste */
+  /* this is the only element that scrolls — sidebar and topbar stay fixed */
   padding: var(--pad) calc(var(--pad) * 1.4);
 }
 .reset-btn {
@@ -138,21 +138,21 @@ main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
   font-weight: 700;
 }
 
-/* ── Sidevisninger — SPA-mønster ──
-   Alle sider ligger alltid i DOM-en, men er skjult med display:none.
-   Bare den med .active vises. Ingen HTTP-forespørsler ved navigering. */
+/* page views — SPA pattern
+   all pages are always in the DOM but hidden with display:none.
+   only the one with .active is shown. no HTTP requests on navigation. */
 .page-view { display: none; }
 .page-view.active {
   display: block;
-  animation: fadeSlideIn .22s ease;  /* kort inngangsanimasjon */
+  animation: fadeSlideIn .22s ease;  /* short entrance animation */
 }
 @keyframes fadeSlideIn {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Responsiv layout ── */
+/* responsive layout */
 @media (max-width: 600px) {
-  /* To-kolonne kortgitter kollapser til én kolonne */
+  /* two-column card grid collapses to one column */
   .grid { grid-template-columns: 1fr; }
 }

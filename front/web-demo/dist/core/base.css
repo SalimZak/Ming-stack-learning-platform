@@ -1,65 +1,65 @@
-/* Nullstiller standard marg og padding på alle elementer så siden ser lik ut i alle nettlesere */
+/* resets margins and padding on all elements so the page looks consistent across browsers */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 /*
-  box-sizing: border-box gjør at padding og border er inkludert i bredden/høyden,
-  i stedet for å legge seg utenpå og gjøre elementer større enn forventet
+  box-sizing: border-box means padding and border are included in the width/height,
+  instead of adding on top and making elements larger than expected
 */
 
-/* ── Farger, størrelser og skrifttyper lagres som variabler her så de er enkle å endre ── */
+/* colors, sizes and fonts are stored as variables here so they're easy to change */
 :root {
-  --bg:         #0d1b2a;   /* hovedbakgrunn, mørk marineblå */
-  --bg2:        #111f30;   /* litt lysere bakgrunn for nestede områder */
-  --card:       #1a2e42;   /* bakgrunn for kort */
-  --text:       #E8D0A8;   /* hovedtekst, varm pergamentfarge */
-  --muted:      #8fa3b3;   /* sekundærtekst og etiketter */
-  --gold:       #E8D0A8;   /* samme som --text, holdt separat for fleksibilitet */
-  --cyan:       #38B8D0;   /* aksentfarge for aktive elementer og lenker */
+  --bg:         #0d1b2a;   /* main background, dark navy */
+  --bg2:        #111f30;   /* slightly lighter background for nested areas */
+  --card:       #1a2e42;   /* card background */
+  --text:       #E8D0A8;   /* main text, warm color */
+  --muted:      #8fa3b3;   /* secondary text and labels */
+  --gold:       #E8D0A8;   /* same as --text, kept separate for flexibility */
+  --cyan:       #38B8D0;   /* accent color for active elements and links */
 
-  /* Gjennomsiktige overlegg — tilpasser seg automatisk om bakgrunnsfargen endres */
+  /* transparent overlays — adjust automatically if the background color changes */
   --border:     rgba(232,208,168,.13);
   --panel:      rgba(255,255,255,.05);
   --panel2:     rgba(255,255,255,.09);
 
   --sidebar-w:  240px;
   --sidebar-bg: linear-gradient(180deg, #061730 0%, #1a0535 100%);
-  /* Gradient fra mørk blå øverst til mørk lilla nederst i sidepanelet */
+  /* gradient from dark blue at the top to dark purple at the bottom in the sidebar */
 
   --shadow:     0 10px 30px rgba(0,0,0,.45);
-  --radius:     13px;   /* brukes på alle kort og knapper for konsistente avrundede hjørner */
+  --radius:     13px;   /* used on all cards and buttons for consistent rounded corners */
 
-  /* Node-RED simulator-mål lagret som variabler for enkel justering */
+  /* Node-RED simulator dimensions stored as variables for easy adjustment */
   --topbar-h:   52px;
   --left-w:     182px;
   --right-w:    300px;
   --node-w:     142px;
   --port:       13px;
 
-  /* clamp(min, foretrukket, maks) — skalerer padding basert på skjermbredde */
+  /* clamp(min, preferred, max) — scales padding based on screen width */
   --pad: clamp(14px, 2.2vw, 24px);
 
-  /* Systemskrifttyper — ingen internettforbindelse nødvendig */
+  /* system fonts — no internet connection needed */
   --font-mono: 'Consolas', 'Menlo', 'DejaVu Sans Mono', 'Courier New', monospace;
   --font-ui:   'Segoe UI', system-ui, -apple-system, 'Ubuntu', sans-serif;
 }
 
 html, body {
   height: 100%;
-  /* Både html og body trenger height: 100% — hvis bare body har det fungerer det ikke */
+  /* both html and body need height: 100% — if only body has it, it doesn't work */
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-mono);
 }
 
-/* ── Typografi ── */
+/* typography */
 .page-title {
   font-family: var(--font-ui);
   font-size: clamp(22px, 2.4vw, 30px);
-  /* Aldri mindre enn 22px, aldri større enn 30px, skalerer jevnt imellom */
+  /* never smaller than 22px, never larger than 30px, scales smoothly in between */
   font-weight: 900;
   margin: 14px 0 6px; color: var(--gold);
 }
 .page-sub {
   font-size: 12px; color: var(--muted);
   line-height: 1.6; margin-bottom: 22px;
-  max-width: 600px;  /* hindrer for lange linjer som er vanskelige å lese */
+  max-width: 600px;  /* prevents lines from getting too long and hard to read */
 }

@@ -1,4 +1,4 @@
-// ── GRAFANA OPPGAVE 2 — Drag og slipp ──────────────────────────
+// grafana task 2 - drag and drop
 
 const PAIRS = [
   { id: 'gauge',     image: 'tasks/grafana/images/gauge.svg',
@@ -15,18 +15,19 @@ const PAIRS = [
     itemKey: 'gt2_pair_boolean_item',   slotKey: 'gt2_pair_boolean_slot',   hintKey: 'gt2_pair_boolean_hint' },
 ];
 
-// Maks 5 poeng (visualiseres p\u00e5 5 LED-er p\u00e5 fysisk boks)
+// max 5 points
 const GT2_MAX_SCORE = 5;
 const GT2_MIN_SCORE = 0;
 
 let gt2Score = 0;
 let gt2CorrectCount = 0;
 
-// trygg oppslag: returnerer t(key) hvis i18n er lastet, ellers fallback
+// safe i18n lookup, returns the key itself if the translation system isn't loaded yet
 function gt2T(key, fallback) {
   return (typeof t === 'function' ? t(key) : (fallback || key));
 }
 
+// Fisher-Yates shuffle — randomizes the array in place
 function gt2Shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -36,6 +37,7 @@ function gt2Shuffle(arr) {
   return a;
 }
 
+// shows a brief correct/wrong message then hides it after 900ms
 function flashMsg(text, ok) {
   const el = document.getElementById('flash-msg');
   el.textContent = text;
@@ -77,14 +79,14 @@ function buildSlots() {
     const slot = document.createElement('div');
     slot.className = 'drop-slot';
     slot.dataset.expects = p.id;
-    slot.dataset.tried = ''; // tom = f\u00f8rste fors\u00f8k ikke gjort enda
+    slot.dataset.tried = ''; // empty means this slot hasn't been attempted yet
     slot.innerHTML =
       '<div class="slot-label">' + gt2T(p.slotKey) + '</div>' +
       '<div class="slot-hint">'  + gt2T(p.hintKey) + '</div>' +
       '<div class="slot-droparea">' + gt2T('gt2_dropHere', 'Drop here') + '</div>';
 
     slot.addEventListener('dragover', e => {
-      e.preventDefault();
+      e.preventDefault(); // required to allow dropping
       e.dataTransfer.dropEffect = 'move';
       slot.classList.add('drag-over');
     });
@@ -93,7 +95,7 @@ function buildSlots() {
     slot.addEventListener('drop', e => {
       e.preventDefault();
       slot.classList.remove('drag-over');
-      if (slot.classList.contains('correct')) return;
+      if (slot.classList.contains('correct')) return; // don't allow drops on already completed slots
       handleDrop(slot, e.dataTransfer.getData('text/plain'));
     });
 
@@ -104,7 +106,7 @@ function buildSlots() {
 function handleDrop(slot, itemId) {
   const ok = itemId === slot.dataset.expects;
   const item = document.querySelector('.drag-item[data-id="' + itemId + '"]');
-  // f\u00f8rste fors\u00f8k p\u00e5 denne sonen?
+  // check if this is the first attempt on this slot
   const firstTry = !slot.dataset.tried;
 
   if (ok) {
@@ -122,7 +124,7 @@ function handleDrop(slot, itemId) {
     if (item) item.remove();
     gt2CorrectCount++;
 
-    // poeng kun hvis riktig p\u00e5 f\u00f8rste fors\u00f8k
+    // only award points on the first correct attempt
     if (firstTry) {
       gt2Score = Math.min(GT2_MAX_SCORE, gt2Score + 1);
       if (typeof pointSystem === 'function') pointSystem('grafana-t2', gt2Score);
@@ -133,8 +135,9 @@ function handleDrop(slot, itemId) {
     if (gt2CorrectCount >= PAIRS.length) {
       document.getElementById('complete-banner').style.display = 'block';
     }
-  } else {
-    // -1 kun p\u00e5 f\u00f8rste feilfors\u00f8k per sone (matcher MQTT task 3)
+  } 
+  else {
+    // only deduct a point on the first wrong attempt per slot
     if (firstTry) {
       gt2Score = Math.max(GT2_MIN_SCORE, gt2Score - 1);
       if (typeof pointSystem === 'function') pointSystem('grafana-t2', gt2Score);
@@ -148,7 +151,7 @@ function handleDrop(slot, itemId) {
 }
 
 function startTask() {
-  // hent tidligere poeng fra localStorage (samme m\u00f8nster som t3Start)
+  // load any previously saved score for this task
   if (typeof readData === 'function') {
     const data = readData();
     const saved = data.tasks && data.tasks['grafana-t2'];
@@ -166,19 +169,19 @@ function startTask() {
 
 function resetTask() {
   document.getElementById('complete-banner').style.display = 'none';
-  // poeng nullstilles IKKE (pointSystem bruker Math.max s\u00e5 h\u00f8yeste vinner)
+  // don't reset points here, the point system already keeps the highest score
   buildItems();
   buildSlots();
 }
 
-// kalles n\u00e5r brukeren bytter spr\u00e5k \u2014 bygger oppgaven p\u00e5 nytt hvis aktiv
+// called when the user switches language, rebuilds everything with the new text
 function gt2RefreshLabels() {
   const taskArea = document.getElementById('task-area');
   if (!taskArea || taskArea.style.display === 'none') return;
   buildItems();
   buildSlots();
 
-  // hvis fullf\u00f8rings-banneret allerede vises, re-bygg det p\u00e5 nytt spr\u00e5k
+  // if the complete banner is already showing, update it to the new language too
   const banner = document.getElementById('complete-banner');
   if (banner && banner.style.display === 'block') {
     banner.textContent = gt2T('gt2_complete', '\u2713 Oppgave fullf\u00f8rt!') +

@@ -1,9 +1,9 @@
-/* ── Kortgitter ── */
+/* card grid */
 .grid      { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .grid-auto {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  /* Lager automatisk så mange kolonner som får plass — ingen media queries nødvendig */
+  /* creates as many columns as fit — no media queries needed */
   gap: 14px;
 }
 
@@ -16,7 +16,7 @@
 }
 .card:hover {
   border-color: rgba(56,184,208,.5);
-  transform: translateY(-2px);  /* løfter kortet litt opp ved hover */
+  transform: translateY(-2px);  /* lifts the card slightly on hover */
   background: #1f3650;
 }
 .card-icon  { font-size: 24px; margin-bottom: 10px; }
@@ -31,7 +31,7 @@
 }
 .small-link:hover { text-decoration: underline; }
 
-/* ── Oppgave-relaterte komponenter ── */
+/* task components */
 .task-header { font-family: var(--font-ui); font-size: 20px; font-weight: 900; margin-bottom: 8px; color: var(--gold); }
 .task-desc   { font-size: 12px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; max-width: 620px; }
 
@@ -46,7 +46,7 @@
   margin-top: 16px; padding: 10px 24px;
   background: var(--cyan); border: none; border-radius: 8px;
   font-family: var(--font-mono); font-weight: 800; font-size: 13px;
-  color: #000;  /* svart tekst på cyan bakgrunn for god kontrast */
+  color: #000;  /* black text on cyan background for good contrast */
   cursor: pointer; transition: opacity .15s;
 }
 .startbtn:hover { opacity: .85; }
@@ -57,7 +57,13 @@
   font-size: 12px; color: var(--muted); margin-bottom: 20px; line-height: 1.7;
 }
 
-.messagebox      { text-align: center; font-size: 13px; font-weight: 800; padding: 10px 20px; border-radius: 8px; margin-bottom: 16px; }
+.messagebox      { text-align: center; 
+                   font-size: 13px; 
+                   font-weight: 800; 
+                   padding: 10px 20px; 
+                   border-radius: 8px; 
+                   margin-bottom: 16px; 
+                    }
 .message-correct { background: rgba(74,222,128,.15);  color: #4ade80; border: 1px solid #4ade80; }
 .message-wrong   { background: rgba(248,113,113,.15); color: #f87171; border: 1px solid #f87171; }
 
@@ -67,7 +73,7 @@
   border: 1px solid var(--cyan); border-radius: 12px; margin-bottom: 20px;
 }
 
-/* ── Intro info card — used on home, MING and technology hub pages ── */
+/* intro info card — used on home, MING and technology hub pages */
 .intro-card {
   background: var(--card); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 16px 20px;

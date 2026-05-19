@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<!-- Forteller nettleseren at dette er moderne HTML5 -->
+<!-- tells the browser this is HTML5 -->
 <html lang="no">
-<!-- lang="no" settes til norsk som standard, oppdateres når brukeren bytter språk -->
+<!-- set to Norwegian by default, updated when the user switches language -->
 <head>
   <meta charset="UTF-8">
-  <!-- Uten denne vil norske tegn som æ, ø, å vises feil -->
+  <!-- without this, Norwegian characters like æ, ø, å display incorrectly -->
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Får innholdet til å tilpasse seg skjermen -->
+  <!-- makes content adapt to screen width -->
 
   <title>ARTIFICER</title>
 
@@ -38,8 +38,8 @@
 
 <div class="app-shell">
 
-  <!-- ══ SIDEPANEL ══ -->
-  <!-- Bruker nav-tag for semantisk HTML — skjermlesere gjenkjenner dette som navigasjon -->
+  <!-- sidebar -->
+  <!-- nav tag for semantic HTML — screen readers recognize this as navigation -->
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-brand">
       <span data-i18n="brand">ARTIFICER</span>
@@ -48,8 +48,8 @@
     <div class="nav-section">
       <div class="nav-label" data-i18n="nav_home">Hjem</div>
 
-      <!-- Bruker button i stedet for a-tag fordi vi ikke skifter url bare div -->
-      <!-- data-page leses av go() for å markere riktig menyvalg som aktivt -->
+      <!-- using button instead of anchor tag because we don't change the URL on navigation -->
+      <!-- data-page is read by go() to mark the correct nav item as active -->
       <button class="nav-link active" data-page="home"     onclick="go('home')">
         <span class="nav-icon"></span><span data-i18n="nav_home">Hjem</span>
       </button>
@@ -69,7 +69,7 @@
         <span class="nav-icon"></span>MING
       </button>
 
-      <!-- nav-sub gir innrykk og en vertikal linje som viser hierarki -->
+      <!-- nav-sub adds indentation and a vertical line to show the menu hierarchy -->
       <div class="nav-sub">
         <button class="nav-link" data-page="mqtt" onclick="go('mqtt')">
           <span class="nav-icon"></span>MQTT
@@ -109,21 +109,21 @@
     </div>
   </nav>
 
-  <!-- ══ HOVEDINNHOLD ══ -->
+  <!-- main content -->
   <main>
     <div class="topbar">
       <div id="breadcrumb"><span data-i18n="nav_home">Hjem</span></div>
-      <!-- Viser hvilken "versjon" av språket -->
+      <!-- shows which language is active -->
       <button id="lang-toggle" onclick="toggleLang()">🇬🇧 EN</button>
-      <!-- Score fra menyen -->
+      <!-- total score shown in the topbar -->
       <div id="fellesScore">0</div>
     </div>
 
     <div class="content">
 
-      <!-- ══ SETUP (forced entry — vises kun første gang eller etter reset) ══ -->
+      <!-- setup — forced entry, only shown the first time or after a reset -->
       <div id="page-setup" class="page-view">
-        <!-- Steg 1: Språkvalg -->
+        <!-- step 1: language selection -->
         <div id="setup-step-1">
           <h1 class="page-title">Language / Språk</h1>
           <p class="page-sub">Choose your language before continuing. / Velg språk før du fortsetter.</p>
@@ -139,7 +139,7 @@
           </div>
         </div>
 
-        <!-- Steg 2: Rollevalg -->
+        <!-- step 2: role selection -->
         <div id="setup-step-2" style="display:none;">
           <h1 class="page-title" data-i18n="role_title">Velg rolle</h1>
           <p class="page-sub" data-i18n="role_sub">Velg om du er elev eller lærer.</p>
@@ -155,7 +155,7 @@
           </div>
         </div>
 
-        <!-- Steg 3: Manual -->
+        <!-- step 3: manual -->
         <div id="setup-step-3" style="display:none;">
           <h1 class="page-title" id="setup-manual-title" data-i18n="student_title">Elevveiledning</h1>
           <p class="page-sub" id="setup-manual-sub" data-i18n="student_sub">Din guide til MING-oppgavene.</p>
@@ -168,7 +168,7 @@
         </div>
       </div>
 
-      <!-- ══ HJEMSIDE ══ -->
+      <!-- home page -->
       <div id="page-home" class="page-view">
         <h1 class="page-title" data-i18n="home_headline">IIoT i en skoeske</h1>
         <div class="intro-card">
@@ -199,7 +199,7 @@
         </div>
       </div>
 
-      <!-- ══ ROLLEVALG ══ -->
+      <!-- role selection -->
       <div id="page-role" class="page-view">
         <h1 class="page-title" data-i18n="role_title">Velg rolle</h1>
         <p  class="page-sub"   data-i18n="role_sub">Velg om du er elev eller lærer.</p>
@@ -215,7 +215,7 @@
         </div>
       </div>
 
-      <!-- ══ ELEVVEILEDNING ══ -->
+      <!-- student manual -->
       <div id="page-student" class="page-view">
         <h1 class="page-title" data-i18n="student_title">Elevveiledning</h1>
         <p  class="page-sub"   data-i18n="student_sub">Din guide til MING-oppgavene.</p>
@@ -231,7 +231,7 @@
         </div>
       </div>
 
-      <!-- ══ LÆRERVEILEDNING ══ -->
+      <!-- teacher manual -->
       <div id="page-teacher" class="page-view">
         <h1 class="page-title" data-i18n="teacher_title">Lærerveiledning</h1>
         <p  class="page-sub"   data-i18n="teacher_sub">Din guide til undervisning med MING-plattformen.</p>
@@ -247,7 +247,7 @@
         </div>
       </div>
 
-      <!-- ══ INNSTILLINGER ══ -->
+      <!-- settings -->
       <div id="page-settings" class="page-view">
         <h1 class="page-title" data-i18n="settings_title">Innstillinger</h1>
         <p  class="page-sub"   data-i18n="settings_sub">Konfigurer preferansene dine her.</p>
@@ -264,7 +264,7 @@
         </div>
       </div>
 
-      <!-- ══ MING-HUB ══ -->
+      <!-- MING hub -->
       <div id="page-ming" class="page-view">
         <h1 class="page-title" data-i18n="ming_title">MING</h1>
         <div class="intro-card">
@@ -272,14 +272,14 @@
           <p class="page-sub" data-i18n="ming_sub">Velg en modul.</p>
         </div>
         <div class="grid">
-          <button class="card" onclick="go('mqtt')"   ><strong>MQTT</strong>    <span data-i18n="ming_mqttSub">Meldingsprotokoll.</span></button>
+          <button class="card" onclick="go('mqtt')"   ><strong>MQTT</strong> <span data-i18n="ming_mqttSub">Meldingsprotokoll.</span></button>
           <button class="card" onclick="go('influx')" ><strong>InfluxDB</strong> <span data-i18n="ming_influxSub">Tidsserie-database.</span></button>
           <button class="card" onclick="go('nodered')"><strong>Node-RED</strong> <span data-i18n="ming_noderedSub">Visuelle flyter.</span></button>
           <button class="card" onclick="go('grafana')"><strong>Grafana</strong>  <span data-i18n="ming_grafanaSub">Visualisering.</span></button>
         </div>
       </div>
 
-      <!-- ══ MQTT — oppgavevalg ══ -->
+      <!-- MQTT — task selection -->
       <div id="page-mqtt" class="page-view">
         <h1 class="page-title" data-i18n="mqtt_title">MQTT</h1>
         <div class="intro-card">
@@ -296,7 +296,7 @@
       </div>
 
 
-            <!-- MQTT OPPGAVE 1 -->
+            <!-- MQTT TASK 1 -->
       <div id="page-mqtt-t1" class="page-view">
         <h1 class="page-title" data-i18n="mqtt_t1_title">MQTT - Oppgave 1</h1>
 
@@ -397,7 +397,7 @@
         <button class="small-link" onclick="go('mqtt')" data-i18n="mqtt_t1_back">← Tilbake til MQTT-oppgaver</button>
       </div>
 
-      <!-- MQTT OPPGAVE 2 -->
+      <!-- MQTT TASK 2 -->
       <div id="page-mqtt-t2" class="page-view">
         <h1 class="page-title" data-i18n="mqtt_t2_title">MQTT - Oppgave 2</h1>
         
@@ -438,7 +438,7 @@
           <button class="small-link" onclick="go('mqtt')" data-i18n="mqtt_t2_back">← Tilbake til MQTT-oppgaver</button>
         </div>
 
-      <!-- ══ INFLUXDB — oppgavevalg + plassholdere ══ -->
+      <!-- InfluxDB — task selection -->
       <div id="page-influx" class="page-view">
         <h1 class="page-title" data-i18n="influx_title">InfluxDB</h1>
         <div class="intro-card">
@@ -453,7 +453,7 @@
         </div>
         <button class="small-link" onclick="go('ming')">← MING</button>
       </div>
-      <!-- ══ INFLUXDB OPPGAVE 1 — Multiple Choice ══ -->
+      <!-- InfluxDB TASK 1 — Multiple Choice -->
       <div id="page-influx-t1" class="page-view">
         <h1 class="page-title" data-i18n="influx_t1_title">InfluxDB - Oppgave 1</h1>
 
@@ -554,26 +554,26 @@
         <button class="small-link" onclick="go('influx')" data-i18n="influx_t1_back">← Tilbake </button>
       </div>
 
-
+      <!-- InfluxDB task 2 -->
       <div id="page-influx-t2" class="page-view">
         <h1 class="page-title" data-i18n="influx_t2_title">InfluxDB – Oppgave 2</h1>
 
-        <!-- Infobox — vises før oppgaven starter, skjules av it2Start() -->
+        <!-- infobox shown before the task starts, hidden by it2Start() -->
         <div id="it2-infobox" class="infobox">
           <h4 data-i18n="it2_infoTitle">Simuler skriving av sensordata til InfluxDB</h4>
           <p  data-i18n="it2_infoBody">Oppgavebeskrivelse.</p>
           <button class="startbtn" onclick="it2Start()" data-i18n="it2_startBtn">Start</button>
         </div>
 
-        <!-- Spillområde — skjult til it2Start() kalles -->
+        <!-- game area — hidden until it2Start() is called -->
         <div id="it2-game" style="display:none">
-          <!-- poeng score -->
+          <!-- score display -->
           <div id="it2-score">Poeng: 0</div>
 
-          <!-- Runde-etikett -->
+          <!-- round label -->
           <div id="it2-round"></div>
 
-          <!-- Tre kort side om side: målområde, live avlesning, nedtelling -->
+          <!-- three cards side by side: target range, live reading, countdown -->
           <div id="it2-prompt">
             <div class="it2-box" id="it2-target-box">
               <div class="it2-box-label" data-i18n="it2_targetLabel">Målområde</div>
@@ -590,7 +590,7 @@
             </div>
           </div>
 
-          <!-- Databasetabell — fyller seg opp etter hvert som målinger lykkes -->
+          <!-- database table — fills up as measurements succeed -->
           <table id="it2-table">
             <thead>
               <tr>
@@ -604,17 +604,17 @@
 
         </div><!-- /it2-game -->
 
-        <!-- Vises når alle 5 målinger er fullført -->
+        <!-- shown when all 5 measurements are complete -->
         <div id="it2-complete" class="complete-banner" style="display:none" data-i18n="it2_complete">✓ Alle 5 målinger skrevet til InfluxDB!</div>
 
         <button class="small-link" onclick="go('influx')" data-i18n="influx_t2_back">← Tilbake</button>
       </div>
 
-      <!-- ══ INFLUXDB OPPGAVE 3 — True / False ══ -->
+      <!-- InfluxDB TASK 3 — True / False -->
       <div id="page-influx-t3" class="page-view">
         <h1 class="page-title" data-i18n="influx_t3_title">InfluxDB – Oppgave 3</h1>
 
-        <!-- startpage-->
+        
         <div id="influxT3-infobox" class="infobox">
           <h3 data-i18n="it3_infoTitle">True or False</h3>
           <p data-i18n="it3_infoBody">Dette er en True/False oppgave med 5 spørsmål. Les hvert utsagn nøye og velg om det er sant eller usant. Det er 1 poeng for hvert korrekt svar.</p>
@@ -661,11 +661,11 @@
         <button class="small-link" onclick="go('influx')" data-i18n="influx_t3_back">← Tilbake</button>
       </div>
 
-      <!-- ══ INFLUXDB OPPGAVE 4 — Drag og slipp (placeholder) ══ -->
+      <!-- InfluxDB TASK 4 — Drag and Drop -->
       <div id="page-influx-t4" class="page-view">
         <h1 class="page-title" data-i18n="influx_t4_title">InfluxDB – Oppgave 4</h1>
 
-        <!-- startpage -->
+        
         <div id="influxT4-startPage" class="infobox">
           <h4 data-i18n="inft4_infoTitle">Tidsserie sortering</h4>
           <p data-i18n="inft4_infoBody1">Plasser sensorboksene fra venstre side i riktig rekkefølge i bucket (databasen) på høyre side. Nyeste tidsstempel øverst.</p>
@@ -674,15 +674,15 @@
           <button class="startbtn" onclick="influxT4Start()" data-i18n="inft4_startBtn">Start</button>
         </div>
 
-        <!-- taskpage -->
+        
         <div id="influxT4Page">
-          <!-- poeng -->
+          <!-- score display -->
           <div id="influxT4-poeng">Poeng: 0 — Found: 0/6</div>
-          <!-- venstre og høyre side layout-->
+          <!-- left and right side layout -->
           <div id="influxT4-layout">
-            <!-- venstre side med sensorbokser -->
+            <!-- left side: sensor boxes -->
             <div id="venstreSide"></div>
-            <!-- høyre side med database -->
+            <!-- right side: database -->
             <div id="høyreSide">
               <div class="bucketTittel" data-i18n="inft4_bucketTitle">Bucket: sensor_data</div>
               <div id="databaseRader"></div>
@@ -693,7 +693,7 @@
         <button class="small-link" onclick="go('influx')" data-i18n="influx_t4_back">← Tilbake</button>
       </div>
 
-<!-- ══ NODE-RED — oppgavevalg + plassholdere ══ -->
+<!-- Node-RED — task selection -->
       <div id="page-nodered" class="page-view">
         <h1 class="page-title" data-i18n="nodered_title">Node-RED</h1>
         <div class="intro-card">
@@ -708,7 +708,7 @@
         </div>
         <button class="small-link" onclick="go('ming')">← MING</button>
       </div>
-      <!-- NODE-RED OPPGAVE 1 - Multiple Choice -->
+      <!-- Node-RED TASK 1 - Multiple Choice -->
       <div id="page-nodered-t1" class="page-view">
         <h1 class="page-title" data-i18n="nodered_t1_title">Node-RED - Oppgave 1</h1>
 
@@ -809,7 +809,7 @@
         <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t1_back">← Tilbake</button>
       </div>
 
-      <!-- NODE-RED OPPGAVE 2 - True/False -->
+      <!-- Node-RED TASK 2 - True/False -->
       <div id="page-nodered-t2" class="page-view">
         <h1 class="page-title" data-i18n="nodered_t2_title">Node-RED - Oppgave 2</h1>
         <!-- infoboks-->
@@ -890,7 +890,7 @@
         <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t2_back">← Tilbake</button>
       </div>
 
-      <!-- NODE-RED OPPGAVE 3 — Drag og slipp (placeholder) -->
+      <!-- Node-RED TASK 3 — Drag and Drop -->
       <div id="page-nodered-t3" class="page-view">
         <h1 class="page-title" data-i18n="nodered_t3_title">Node-RED - Oppgave 3</h1>
         <div class="task-desc" data-i18n="nodered_t3_desc">Insert task description here.</div>
@@ -920,7 +920,7 @@
         <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t3_back">← Tilbake</button>
       </div>
 
-      <!-- ══ NODE-RED OPPGAVE 4 ══ -->
+      <!-- Node-RED TASK 4 -->
       <div id="page-nodered-t4" class="page-view">
         <h1 class="page-title" data-i18n="nodered_t4_title">Node-RED – Oppgave 4</h1>
 
@@ -937,7 +937,7 @@
         <button class="small-link" style="margin-top:8px" onclick="go('nodered')" data-i18n="nodered_t4_back">← Tilbake</button>
       </div>
 
-      <!-- ══ GRAFANA — oppgavevalg + plassholdere ══ -->
+      <!-- Grafana — task selection -->
       <div id="page-grafana" class="page-view">
         <h1 class="page-title" data-i18n="grafana_title">Grafana</h1>
         <div class="intro-card">
@@ -952,7 +952,7 @@
         </div>
         <button class="small-link" onclick="go('ming')">← MING</button>
       </div>
-      <!-- ══ GRAFANA OPPGAVE 1 — Multiple Choice ══ -->
+      <!-- Grafana TASK 1 — Multiple Choice -->
       <div id="page-grafana-t1" class="page-view">
         <h1 class="page-title" data-i18n="grafana_t1_title">Grafana - Oppgave 1</h1>
 
@@ -1052,7 +1052,7 @@
         <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t1_back">← Tilbake</button>
       </div>
 
-      <!-- NODE-RED OPPGAVE 2 - True/False -->
+      <!-- Node-RED TASK 2 - True/False -->
       <!-- ══ GRAFANA OPPGAVE 2 — Drag and Drop ══ -->
       <div id="page-grafana-t2" class="page-view">
         <h1 class="page-title" data-i18n="grafana_t2_title">Grafana – Oppgave 2</h1>
@@ -1084,7 +1084,7 @@
         <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t2_back">← Tilbake</button>
       </div>
 
-      <!-- ══ GRAFANA OPPGAVE 3 — Catch the Object ══ -->
+      <!-- Grafana TASK 3 — Catch the Object -->
       <div id="page-grafana-t3" class="page-view">
         <h1 class="page-title" data-i18n="grafana_t3_title">Grafana – Oppgave 3</h1>
 
@@ -1119,35 +1119,35 @@
         <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t3_back">← Tilbake</button>
       </div>
 
-      <!-- ══ GRAFANA OPPGAVE 4 — Live Dashboard Simulation ══ -->
+      <!-- Grafana TASK 4 — Live Dashboard Simulation -->
       <div id="page-grafana-t4" class="page-view">
         <h1 class="page-title" data-i18n="grafana_t4_title">Grafana – Oppgave 4</h1>
 
-        <!-- Infobox — vises før oppgaven starter, skjules av gt4Start() -->
+        <!-- infobox shown before the task starts, hidden by gt4Start() -->
         <div id="gt4-infobox" class="infobox">
           <h4 data-i18n="gt4_infoTitle">Live dashbord-simulering</h4>
           <p  data-i18n="gt4_infoBody">Oppgavebeskrivelse.</p>
           <button class="startbtn" onclick="gt4Start()" data-i18n="gt4_startBtn">Start</button>
         </div>
 
-        <!-- Spillområde — skjult til gt4Start() kalles -->
+        <!-- game area — hidden until gt4Start() is called -->
         <div id="gt4-game" style="display:none">
-          <!-- poeng score -->
+          <!-- score display -->
           <div id="gt4-score">Poeng: 0</div>
 
-          <!-- Grafana-panel med linjediagram -->
+          <!-- Grafana panel with line chart -->
           <div id="gt4-panel">
             <div id="gt4-panel-title" data-i18n="gt4_panelLabel">Avstandssensor (mm)</div>
             <canvas id="gt4-chart"></canvas>
           </div>
 
-          <!-- InfluxDB skrivelogg — nye linjer legges øverst -->
+          <!-- InfluxDB write log — new entries prepended to the top -->
           <div class="taskbox" style="margin-bottom:12px">
             <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;margin-bottom:6px" data-i18n="gt4_writeLog">InfluxDB skrivelogg</div>
             <div id="gt4-write-log"></div>
           </div>
 
-          <!-- Instruksjonsboks: målområde, live avlesning, hold-fremgang -->
+          <!-- instruction box: target range, live reading, hold progress -->
           <div id="gt4-instr">
             <div class="gt4-instr-col">
               <div class="gt4-instr-label" data-i18n="gt4_targetLabel">Målområde</div>
@@ -1167,14 +1167,14 @@
 
         </div><!-- /gt4-game -->
 
-        <!-- Vises når alle 8 datapunkter er plottet -->
+        <!-- shown when all 8 data points are plotted -->
         <div id="gt4-complete" class="complete-banner" style="display:none" data-i18n="gt4_complete">✓ Dashbordet er fullført!</div>
 
         <button class="small-link" onclick="go('grafana')" data-i18n="grafana_t4_back">← Tilbake</button>
       </div>
 
-      <!-- ══ SENSORSIDE ══ -->
-      <!-- Henter live data fra ESP32, faller tilbake til simulerte verdier om enheten er offline -->
+      <!-- sensor page — fetches live data from the ESP32, falls back to simulated values if offline -->
+      
       <div id="page-sensors" class="page-view">
         <h1 class="page-title" data-i18n="sensors_title">Live sensordata</h1>
         <p  class="page-sub"   data-i18n="sensors_sub">Sanntidsavlesninger.</p>
@@ -1182,11 +1182,11 @@
           <div class="sensor-card">
             <div class="sensor-label" data-i18n="sensors_pot">Potensiometer</div>
             <div>
-              <!-- Oppdateres hvert sekund av JavaScript-pollingsløkken -->
+              <!-- updated every second by the JavaScript polling loop -->
               <span class="sensor-value" id="pot-value">—</span>
               <span class="sensor-unit" data-i18n="sensors_unit_ratio">ratio</span>
             </div>
-            <!-- Viser ● LIVE eller ◌ simulert avhengig av om ESP32 svarer -->
+            <!-- shows LIVE or sim depending on whether the ESP32 responds -->
             <div class="sensor-status" id="pot-status"></div>
           </div>
           <div class="sensor-card">
@@ -1216,16 +1216,16 @@
         </div>
         <div class="sensor-log">
           <div class="sensor-log-title" data-i18n="sensors_log">Logg</div>
-          <!-- Nye logginnlegg legges øverst, maks 10 innlegg om gangen -->
+          <!-- new log entries are prepended, max 10 at a time -->
           <div id="sensor-log-lines"></div>
         </div>
       </div>
 
-      <!-- MQTT OPPGAVE 3 — Klikk og Plasser -->
+      <!-- MQTT TASK 3 — Click and Place -->
       <div id="page-task3" class="page-view">
         <h1 class="page-title" data-i18n="t3_header">MQTT - Oppgave 3</h1>
 
-        <!-- Infoboks som vises før oppgaven starter, skjules av t3Start() -->
+        <!-- infobox shown before the task starts, hidden by t3Start() -->
         <div id="t3-infobox" class="infobox">
         <h4 data-i18n="t3_infoTitle">Forklaring av MQTT-flyt</h4>
           <p>I MQTT kommuniserer ikke enheter direkte med hverandre. All kommunikasjon går gjennom en broker. Brokeren tar imot meldinger og videresender dem til riktige mottakere.</p>
@@ -1234,25 +1234,25 @@
           <p>Riktig plassering på første forsøk gir +1 poeng.</p>
           <button class="startbtn" onclick="t3Start()" data-i18n="t3_startBtn">Start oppgave</button>
         </div>
-        <!-- poeng score -->
+        <!-- score display -->
         <div id="t3-score">Score: 0</div>
-        <!-- Vises kun når alle 8 soner er riktig fylt -->
+        <!-- shown when all 8 zones are correctly filled -->
         <div id="t3-complete-banner" class="complete-banner" style="display:none" data-i18n="t3_complete">Fullført</div>
-        <!-- Kort riktig/feil-tilbakemelding, skjules automatisk etter 1 sekund -->
+        <!-- brief correct/wrong feedback, hidden automatically after 1 second -->
         <div id="t3-message" class="messagebox" style="display:none"></div>
-        <!-- Instruksjonsboks, skjult til oppgaven starter -->
+        <!-- instruction box, hidden until the task starts -->
         <div class="taskbox" id="t3-taskbox" style="display:none" data-i18n="t3_taskbox">Instruksjoner.</div>
 
-        <!-- Tre-kolonne diagram: skjult til t3Start() kalles -->
+        <!-- three-column diagram, hidden until t3Start() is called -->
         <div class="mqtt-layout" id="t3-layout" style="display:none">
 
-          <!-- VENSTRE: sensorer som publiserer -->
+          <!-- left side: sensors that publish -->
           <div class="mqtt-side">
             <div class="device-row">
               <div class="circle"></div>
-              <!-- Etiketter settes av t3RefreshLabels() så de oppdateres ved språkbytte -->
+              <!-- labels are set by t3RefreshLabels() so they update on language switch -->
               <div class="dev-label" id="t3-lbl-temp"></div>
-              <!-- data-expected leses av t3Place() for å sjekke om pilen er riktig -->
+              <!-- data-expected is read by t3Place() to check if the arrow is correct -->
               <div class="dropzone" data-expected="TempPublish" onclick="t3Place(this)">
                 <div data-i18n="t3_clickPlace">Klikk for å plassere</div>
                 <div class="dropzone-hint" data-i18n="t3_hintPublish">Send melding til utgiver</div>
@@ -1268,34 +1268,34 @@
             </div>
           </div>
 
-          <!-- MIDTEN: sirkel og valg -->
+          <!-- center: broker circle and arrow selector -->
           <div class="mqtt-center">
-            <!-- Tekst settes av t3RefreshLabels() — \n blir linjeskift pga white-space:pre-line -->
+            <!-- text set by t3RefreshLabels() — \n becomes a line break because of white-space:pre-line -->
             <div class="broker-circle" id="t3-broker-lbl"></div>
             <div class="arrow-select-box">
               <div class="arrow-select-title" data-i18n="t3_select">Velg</div>
-              <!-- Pilknapper bygges dynamisk av t3Start() -->
+              <!-- arrow buttons built dynamically by t3Start() -->
               <div class="arrow-list" id="t3-arrows"></div>
             </div>
           </div>
 
-          <!-- HØYRE: subscriber klienter -->
+          <!-- right side: subscriber clients -->
           <div class="mqtt-side">
-            <!-- Klient 1 — abonnerer på Temp -->
+            <!-- client 1 — subscribes to Temp -->
             <div class="device-row">
               <div class="circle"></div>
               <div class="dev-label" id="t3-lbl-c1"></div>
               <div class="dropzone" data-expected="SubTemp"     onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintSubscribe">Motta meldinger fra utgiver</div></div>
               <div class="dropzone" data-expected="TempPublish" onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintForward">Send melding til abonnent</div></div>
             </div>
-            <!-- Klient 2 — abonnerer kun på Hum -->
+            <!-- client 2 — subscribes to Hum only -->
             <div class="device-row">
               <div class="circle"></div>
               <div class="dev-label" id="t3-lbl-c2"></div>
               <div class="dropzone" data-expected="SubHum"      onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintSubscribe">Motta meldinger fra utgiver</div></div>
               <div class="dropzone" data-expected="HumPublish"  onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintForward">Send melding til abonnent</div></div>
             </div>
-            <!-- Klient 3 — abonnerer på Temp -->
+            <!-- client 3 — subscribes to Temp -->
             <div class="device-row">
               <div class="circle"></div>
               <div class="dev-label" id="t3-lbl-c3"></div>
@@ -1308,8 +1308,8 @@
         <button class="small-link" onclick="go('mqtt')">← MQTT</button>
       </div>
 
-      <!-- ══ NODE-RED OPPGAVE 4 ══ -->
-      <!-- #nr-root er tom — initNodeRed() fyller den med simulator-UI når brukeren navigerer hit -->
+      <!-- Node-RED TASK 4 -->
+      <!-- #nr-root is empty — initNodeRed() fills it with the simulator UI when the user navigates here -->
       <div id="page-task4" class="page-view">
         <div style="margin-bottom:12px">
           <div class="task-header" data-i18n="nr_title">Sette opp MQTT i Node-RED</div>
@@ -1334,7 +1334,7 @@
   </main>
 </div><!-- /app-shell -->
 
-<!--infobokser-->
+<!-- info popup button -->
 <button class="mc-info-btn" onclick="openInfo()">i</button>
 
 <div id="infoPopup" class="popup-overlay mc-popup-overlay">
@@ -1346,7 +1346,7 @@
 </div>
 
 
-<!-- JS — i18n først (alt avhenger av t()), så router, så features -->
+<!-- JS — i18n first (everything depends on t()), then router, then features -->
 <script src="core/i18n.js"></script>
 <script src="core/router.js"></script>
 
@@ -1372,141 +1372,137 @@
 <script src="tasks/grafana/Grafana_T4.js"></script>
 
 <script>
-//local storage
+// localStorage helpers
 const mainData = {
   highscore: 0, role: "student", manual: "student", tasks: {}
 };
-//laste lagret data, tekst til objekt
+// load saved data — parse text back to object
 function readData() {
   return JSON.parse(localStorage.getItem("artificer_data")) || mainData;//lagret data eller default values
 }
-//lagrer data, objekt til tekst
+// save data — convert object to text
 function writeData(data) {
   localStorage.setItem("artificer_data", JSON.stringify(data));
 }
-// lagrer poeng score og sette de sammen
+// save task score and add to total
 function pointSystem(task, points) {
-  let data = readData(); //henter lagret data
-  let oldPoints;// gammel poeng om det var noe
+  let data = readData();
+  let oldPoints;
 
-if (data.tasks[task]) { //hvis oppgaven finnes hent tildigere poeng
-  oldPoints = data.tasks[task].points;
+if (data.tasks[task]) { // get previous points if the task exists
+      oldPoints = data.tasks[task].points;
 } else {
-  oldPoints = 0;} // om den ikke finnes = 0
+    oldPoints = 0;
+  }
 
-  //viser statusen om oppgaven er open/låst og poengene. Overskriver kun poeng > tidligere poeng
+  // only overwrite if the new score is higher than the previous one
   data.tasks[task] = {open: true, points: Math.max(oldPoints, points)};
 
-  //summerer poengene fra de andre oppgavene
+  // sum points from all tasks
   let totalPoints = 0;
-  Object.values(data.tasks).forEach(value => { //henter all verdiene fra task
-    totalPoints += value.points || 0; // legger til poengene og 0 som default
+  Object.values(data.tasks).forEach(value => {
+    totalPoints += value.points || 0;
   });
-  data.highscore = totalPoints; //skrevet til og lagrer felles highscoren
+  data.highscore = totalPoints;
   writeData(data);
 
-  //oppdaterer score i menyen
+
   menyScore();
 
-  //låste oppgaver funksjonen
+
   statusTasks();
 }
-//felles poengscore i menybaren
+// show total score in the topbar
 function menyScore() {
-  let el = readData(); //henter data
-  let data = document.getElementById("fellesScore"); //finne hvor på siden poengene skrives(HTML)
-  // sjekker om elemente finnes og viser totalscore i meny
+  let el = readData();
+  let data = document.getElementById("fellesScore");
+
   if (data) {
     data.textContent = el.highscore;
   }
 }
 
-// lagrer manualvalg
+// save role choice
 function setRole(type) {
   let data = readData();
-  data.role = type; //lagrer rolle
-  data.manual = type; //lagrer manual
+  data.role = type;
+  data.manual = type;
   writeData(data);
   menyScore();
   statusTasks();
 }
 
-//reaster lagret data 
+// clear all saved data and reload
 function resetData() {
-  localStorage.removeItem("artificer_data"); //sletter data
-  location.reload(); //laster siden på nytt
+  localStorage.removeItem("artificer_data");
+  location.reload();
 }
 
-//sjekker om alle de enklere oppgavene er fullført
+// check if all basic tasks are completed
 function basicTasks() {
   let data = readData();
   const requiredTasks = ["mqtt-t1","mqtt-t2","influx-t1","influx-t2",
     "nodered-t1","nodered-t2", "grafana-t1","grafana-t2"];
-  //sjekker dersom alle enklere oppgavene er utført
-  const basicCompleted = requiredTasks.every(function(task) { //går gjennom listen og sjekker om alle er fullført
-    const basicTask = data.tasks[task]; //henter oppgave fra listen
-    return basicTask && basicTask.open; //finnes oppgaven og er den fulført
+
+  const basicCompleted = requiredTasks.every(function(task) {
+    const basicTask = data.tasks[task];
+    return basicTask && basicTask.open;
   });
-  return basicCompleted; //sender true dersom alle er fullført og motsatt hvis ikke
+  return basicCompleted;
 }
 
-//låse sider
+// check if a page should be locked
 function isLocked(page) {
   let data = readData();
-  if (data.role === "teacher") return false; //læreren har tilgang til alle oppgaver
+  if (data.role === "teacher") return false; // teacher has access to all tasks
 
-  //hvis de enklere oppgavene ikke er fullført er vanskligere låst
+  // harder tasks are locked until basic tasks are completed
   if (!basicTasks()) {
     return page.includes("task3") || page.includes("task4") || page.endsWith("-t3") || page.endsWith("-t4");
   }
   return false;
 }
 
-//oppdater ikonet for låste oppgaver
-//ikon på knapp, sjekker om siden er låst, henter data for status
+// update the lock icon on nav buttons
 function updateIconLock(btn, page, data) {
   if (isLocked(page)) {
-    // lås for låste oppgaver
-    btn.querySelector(".nav-icon").textContent = "\uD83D\uDD12";
+    btn.querySelector(".nav-icon").textContent = "\uD83D\uDD12"; // lock emoji
   } 
   else {
-    // ingen ikon på enklere oppgaver, fullørte og lærer manual
     btn.querySelector(".nav-icon").textContent = "";
   }
 }
 
-//om oppgaven er låst eller ikke gjort eller er ferdig
+// update nav link states (locked / completed / open)
 function statusTasks() {
   let data = readData();
 
   //går gjennom meny knappene med oppgavene
   document.querySelectorAll(".nav-link").forEach(btn => {
-    let page = btn.dataset.page; //henter siden til knappen
-    if (!page) return; //hopper over siden sin knapp
-    //reseter listen
+    let page = btn.dataset.page;
+    if (!page) return;
+
     btn.classList.remove("locked", "completed", "open");
 
-    // rydde ikon
+
     btn.querySelector(".nav-icon").textContent = "";
-    // lærer får ingen klasse eller ikon
+    // teacher gets no state classes
     if (data.role === "teacher") return;
 
-    // hvis siden er låst så blir den markert som det
+
     if (isLocked(page)) {
       btn.classList.add("locked");
       updateIconLock(btn, page, data);
       return;
     }
 
-    // sjekker om oppgaven er fullført
+
     let basicTask = data.tasks[page];
     let taskCompleted = basicTask && basicTask.open;
-    //endrer csss
-    if (taskCompleted) { //oppgaven er fullført, grønn
-      btn.classList.add("completed");
-    } 
-      else if ((page.endsWith("-t1") || page.endsWith("-t2")) && !taskCompleted){ //en av oppgavene i temaet fullført
-      btn.classList.add("open"); //resten er hvit
+    if (taskCompleted) {
+      btn.classList.add("completed"); // green
+    } else if ((page.endsWith("-t1") || page.endsWith("-t2")) && !taskCompleted) {
+      btn.classList.add("open"); // white
     }
 
     // gir riktig ikon
@@ -1520,8 +1516,7 @@ function go(page) {
     return;
   }
 
-  // infotext, som oppdaterer seg hver gang brukeren bytter side
-  // page-id → i18n key (texts live in core/i18n.js, EN/NO)
+  // info text — updates every time the user switches page
   const infoKeys = {
     // mqtt
     "mqtt-t1": "info_mqtt_t1",
@@ -1545,10 +1540,10 @@ function go(page) {
     "grafana-t4": "info_grafana_t4",
   };
 
-  //oppdater infotekst når siden bytter
+
   infoBoxText(infoKeys[page] ? t(infoKeys[page]) : "");
 
-  // skjuler alle sidene
+  // hide all pages and remove active state from all nav links
   document.querySelectorAll(".page-view").forEach(p => p.classList.remove("active"));
   document.querySelectorAll(".nav-link").forEach(el => el.classList.remove("active"));
 
@@ -1569,7 +1564,6 @@ function go(page) {
 
   fetch('/led?page=' + encodeURIComponent(page))
     .catch(err => console.warn('LED sync failed:', err));
-
 }
 
 function mt4StartTask() {
@@ -1580,6 +1574,7 @@ function mt4StartTask() {
   if (area)    area.style.display    = 'block';
   if (banner)  banner.style.display  = 'none';
   if (typeof initNodeRed === 'function') initNodeRed('nr-root');
+  // initNodeRed is defined in MQTT_T4.js — checked with typeof to avoid errors if the script fails to load
 }
 
 function nrt4StartTask() {
@@ -1590,37 +1585,37 @@ function nrt4StartTask() {
   if (typeof initNodeRedT4 === 'function') initNodeRedT4('nr-root-t4');
 }
 
-// viser riktig status når siden åpner
+// show correct status when the page first loads
 document.addEventListener("DOMContentLoaded", () => {
   menyScore();
   statusTasks();
 
-  // Forced entry: ingen lagret data = første gang (eller etter reset)
+  // forced entry: no saved data means first visit or after a reset
   if (!localStorage.getItem("artificer_data")) {
-    setSidebarLock(true);
+    setSidebarLock(true); // lock the sidebar so the user can't skip setup
     go('setup');
   } else {
     go('home');
   }
 });
 
-// ── Setup-flyt funksjoner ──────────────────────────────────
+// setup flow functions
 
-// Steg 1 → 2: lagrer språkvalg og viser rollevalg
+// step 1 -> 2: saves language choice and shows role selection
 function setupSelectLang(code) {
   setLang(code);
   document.getElementById('setup-step-1').style.display = 'none';
   document.getElementById('setup-step-2').style.display = 'block';
-  applyI18n(); // oppdaterer tekst til valgt språk
+  applyI18n(); // update all text to the chosen language
 }
 
-// Steg 2 → 3: lagrer rollevalg og viser riktig manual
+// step 2 -> 3: saves role choice and shows the correct manual
 function setupSelectRole(type) {
   setRole(type);
   document.getElementById('setup-step-2').style.display = 'none';
   document.getElementById('setup-step-3').style.display = 'block';
 
-  // Oppdater manual-innhold basert på rolle
+  // swap the i18n keys based on role so the manual shows the right content
   const titleEl = document.getElementById('setup-manual-title');
   const subEl   = document.getElementById('setup-manual-sub');
   const bodyEl  = document.getElementById('setup-manual-body');
@@ -1636,18 +1631,18 @@ function setupSelectRole(type) {
   applyI18n();
 }
 
-// Steg 3 → hjem: avslutter oppsett og sender brukeren til hjemskjermen
+// step 3 → home: finishes setup and sends the user to the home page
 function setupFinish() {
-  // Reset steg-visning slik at flyten starter på nytt ved reset
+  // reset step visibility so the flow starts from the beginning after a reset
   document.getElementById('setup-step-1').style.display = 'block';
   document.getElementById('setup-step-2').style.display = 'none';
   document.getElementById('setup-step-3').style.display = 'none';
-  // Lås opp menyen igjen
-  setSidebarLock(false);
+
+  setSidebarLock(false); // unlock the sidebar now that setup is complete
   go('home');
 }
 
-// Låser eller låser opp menyen avhengig av om brukeren er i setup
+// locks or unlocks the sidebar depending on whether the user is in setup
 function setSidebarLock(locked) {
   const sidebar = document.getElementById('sidebar');
   sidebar.style.pointerEvents = locked ? 'none' : '';

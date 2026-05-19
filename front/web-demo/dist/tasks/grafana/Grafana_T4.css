@@ -1,6 +1,4 @@
-/* ── Grafana Oppgave 4 — Live Dashboard Simulation ── */
-
-/* Grafana-panel-wrapper — mørk bakgrunn med cyan kant, ligner ekte Grafana */
+/* panel wrapper - dark background with cyan border to match a real Grafana panel */
 #gt4-panel {
   background: var(--bg2);
   border: 1px solid var(--cyan);
@@ -18,13 +16,13 @@
   margin-bottom: 10px;
 }
 
-/* Graf-canvas inne i panelet */
+/* chart canvas inside the panel */
 #gt4-chart {
   width: 100%;
   max-height: 260px;
 }
 
-/* Instruksjonsboks under panelet */
+/* instruction box below the panel */
 #gt4-instr {
   background: var(--panel);
   border: 1px solid var(--border);
@@ -69,7 +67,7 @@
   margin-top: 4px;
 }
 
-/* Hold-fremdriftslinje */
+/* hold progress bar */
 #gt4-hold-bar {
   height: 8px;
   background: rgba(255,255,255,.08);
@@ -94,7 +92,7 @@
   min-height: 16px;
 }
 
-/* InfluxDB skrivelogg */
+/* InfluxDB write log */
 #gt4-write-log {
   display: grid;
   gap: 4px;

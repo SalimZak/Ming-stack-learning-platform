@@ -1,8 +1,6 @@
-// ══════════════════════════════════════════════════════════
-//  i18n — OVERSETTELSESSYSTEM
-//  Egenutviklet, ingen eksterne pakker.
-//  Bruker data-i18n-attributter i HTML for å oversette tekst.
-// ══════════════════════════════════════════════════════════
+// i18n - translation system
+// custom built, no external packages
+// uses data-i18n attributes in HTML to translate text
 
 // To objekter med alle tekster — ett per språk, med samme nøkler
 const LANGUAGES = {
@@ -531,10 +529,10 @@ const LANGUAGES = {
   }
 };
 
-// Henter lagret språk fra localStorage, standard er norsk
+// loads saved language from localStorage, defaults to Norwegian
 let _lang = localStorage.getItem('artificer_lang') || 'no';
 
-// Slår opp riktig tekst for en nøkkel — returnerer selve nøkkelen om oversettelsen mangler
+// looks up the correct text for a key — returns the key itself if the translation is missing
 function t(key) {
   const dict = LANGUAGES[_lang] || LANGUAGES['no'];
   return dict[key] !== undefined ? dict[key] : key;
@@ -542,7 +540,7 @@ function t(key) {
 
 function getLang() { return _lang; }
 
-// Bytter språk, lagrer valget og oppdaterer all tekst i DOM-en
+// switches language, saves the choice and updates all text in the DOM
 function setLang(code) {
   if (!LANGUAGES[code]) return;
   _lang = code;
@@ -550,7 +548,7 @@ function setLang(code) {
   applyI18n();
 }
 
-// Går gjennom alle elementer med data-i18n og bytter ut teksten
+// goes through all elements with data-i18n and replaces their text
 function applyI18n() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     el.textContent = t(el.getAttribute('data-i18n'));
@@ -565,18 +563,18 @@ function applyI18n() {
     el.innerHTML = t(el.getAttribute('data-i18n-html'));
   });
 
-  // Oppdaterer språkknappen til å vise det andre språket
+  // update the language button to show the other language
   const toggle = document.getElementById('lang-toggle');
   if (toggle) {
     toggle.textContent = _lang === 'no' ? '🇬🇧 EN' : '🇳🇴 NB';
     toggle.title       = _lang === 'no' ? 'Switch to English' : 'Bytt til norsk';
   }
 
-  // Oppdaterer html lang-attributtet for skjermlesere
+  // update the html lang attribute for screen readers
   document.documentElement.lang = _lang;
 }
 
-// Kjører oversettelsen så snart DOM-en er klar
+// run the translation as soon as the DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', applyI18n);
 } else {

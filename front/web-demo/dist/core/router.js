@@ -1,7 +1,8 @@
-// ── MENU ──────────────────────────────────────────────────
+// router - handles navigation and breadcrumbs
 
-// Breadcrumbs-stier for hver side — funksjoner i stedet for strenger
-// fordi t() må kalles når brødsmulene vises, ikke når objektet lages (da vet vi ikke språk)
+// breadcrumb paths for each page — stored as functions instead of strings
+// because t() must be called when the breadcrumb is displayed, not when this object is created
+// (at creation time the language isn't loaded yet)
 const BREADCRUMBS = {
   home:         () => t('nav_home'),
   role:         () => t('role_title'),
@@ -32,34 +33,10 @@ const BREADCRUMBS = {
   'grafana-t4': () => `MING → Grafana → ${t('grafana_task4')}`,
 };
 
-// Holder styr på hvilken side som vises — brukes av sensor-pollingsløkken
+// tracks which page is currently shown — used by the sensor polling loop
 let _currentPage = 'home';
 
-/*
-// Hoved-navigasjonsfunksjon — skjuler alle sider og viser den riktige
-function go(page) {
-  document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
-
-  const target = document.getElementById('page-' + page);
-  if (!target) return;  // sikkerhetsvakt mot ukjente side-IDer
-  target.classList.add('active');
-
-  document.querySelectorAll(`.nav-link[data-page="${page}"]`)
-    .forEach(el => el.classList.add('active'));
-
-  _currentPage = page;
-  updateBreadcrumb();
-  document.querySelector('.content').scrollTop = 0;
-
-  // Starter sensor/simulator kun når brukeren navigerer dit — sparer ressurser
-  if (page === 'sensors') startSensorPolling();
-  if (page === 'task4')   initNodeRed('nr-root');
-  if (page === 'task3')   t3RefreshLabels();
-}
-*/
-
-// Oppdaterer brødsmule-teksten i topbaren
+// updates the breadcrumb text in the topbar
 function updateBreadcrumb() {
   const bc = document.getElementById('breadcrumb');
   if (!bc) return;
@@ -67,14 +44,14 @@ function updateBreadcrumb() {
   bc.innerHTML = `<span>${fn ? fn() : _currentPage}</span>`;
 }
 
-// Bytter mellom norsk og engelsk, oppdaterer JS-bygd tekst manuelt etterpå
+// switches between Norwegian and English, then manually updates JS-built text
 function toggleLang() {
   setLang(getLang() === 'no' ? 'en' : 'no');
-  t3RefreshLabels();   // disse elementene har ikke data-i18n, må oppdateres manuelt
-  if (typeof gt2RefreshLabels === 'function') gt2RefreshLabels();
+  t3RefreshLabels();   // these elements don't have data-i18n, so they need manual updates
+  if (typeof gt2RefreshLabels  === 'function') gt2RefreshLabels();
   if (typeof nrt3RefreshLabels === 'function') nrt3RefreshLabels();
   updateBreadcrumb();
-  // Tilbakestiller Node-RED simulator slik at nodeetiketter bygges på nytt med nytt språk
+  // reset the Node-RED simulator so node labels rebuild with the new language
   const nrRoot = document.getElementById('nr-root');
   if (nrRoot && nrRoot._nrInit) { nrRoot._nrInit = false; initNodeRed('nr-root'); }
 }

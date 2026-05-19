@@ -1,6 +1,6 @@
-/* ── InfluxDB Oppgave 2 — Sensor Measurement ── */
+/* influxDB task 2 - sensor measurement */
 
-/* Prompt-rad med de tre kortene side om side */
+/* prompt row with the three cards side by side */
 #it2-prompt {
   display: flex;
   gap: 14px;
@@ -9,7 +9,7 @@
   margin-bottom: 20px;
 }
 
-/* Felles stil for alle tre kortene */
+/* shared style for all three cards */
 .it2-box {
   background: var(--panel);
   border: 1px solid var(--border);
@@ -28,7 +28,7 @@
   margin-bottom: 8px;
 }
 
-/* Målområde-kortet — fremhevet med cyan kant */
+/* target range card - highlighted with cyan border */
 #it2-target-box {
   border-color: var(--cyan);
 }
@@ -39,7 +39,7 @@
   color: var(--cyan);
 }
 
-/* Live avlesning-kortet */
+/* live reading card */
 #it2-live-value {
   font-size: 24px;
   font-weight: 900;
@@ -53,7 +53,7 @@
   font-weight: 700;
 }
 
-/* Nedtellingskortet */
+/* countdown card */
 #it2-timer-val {
   font-size: 32px;
   font-weight: 900;
@@ -61,7 +61,7 @@
   transition: color .3s;
 }
 
-/* Runde-etikett over prompt-kortene */
+/* round label above the prompt cards */
 #it2-round {
   font-size: 12px;
   font-weight: 700;
@@ -69,7 +69,7 @@
   margin-bottom: 10px;
 }
 
-/* Databasetabell */
+/* database table */
 #it2-table {
   width: 100%;
   border-collapse: collapse;
@@ -102,7 +102,7 @@
   border-bottom: none;
 }
 
-/* Vellykket rad — status-kolonne er grønn */
+/* successful row - status column is green */
 .it2-status-ok {
   color: #4ade80;
   font-weight: 700;

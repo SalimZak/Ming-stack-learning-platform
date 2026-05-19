@@ -1,22 +1,22 @@
-// ── GRAFANA OPPGAVE 4 — Live Dashboard Simulation ────────────
+// grafana task 4 - live dashboard simulation
 
 (()=>{
 
-const GT4_REQUIRED    = 8;    // antall datapunkter for å fylle dashbordet
-const GT4_HOLD_TIME   = 3000; // millisekunder sensoren må holdes i område
-const GT4_POLL        = 500;  // avlesningsintervall i ms
+const GT4_REQUIRED    = 8;    // number of data points needed to fill the dashboard
+const GT4_HOLD_TIME   = 3000; // milliseconds the sensor must stay in range
+const GT4_POLL        = 500;  // polling interval in ms
 
-let _gt4Task      = null;  // aktiv SensorTask-instans
-let _gt4Chart     = null;  // Chart.js-instans for dashbord-panelet
-let _gt4Count     = 0;     // antall datapunkter lagt til grafen
-let _gt4Score     = 0;     // poeng for denne oppgaven
-let _gt4Labels    = [];    // tidsstempler på x-aksen
-let _gt4Values    = [];    // sensorverdier på y-aksen
+let _gt4Task      = null;  // active SensorTask instance
+let _gt4Chart     = null;  // Chart.js instance for the dashboard panel
+let _gt4Count     = 0;     // number of data points added to the chart
+let _gt4Score     = 0;     // score for this task
+let _gt4Labels    = [];    // timestamps for the x-axis
+let _gt4Values    = [];    // sensor values for the y-axis
 
-// Genererer en tilfeldig målsone for avstandssensoren
+// generates a random target zone for the distance sensor
 function gt4NewTarget() {
   const center    = Math.floor(100 + Math.random() * 700); // 100–800 mm
-  const tolerance = Math.random() < 0.5 ? 25 : 50;        // ±25 eller ±50 mm
+  const tolerance = Math.random() < 0.5 ? 25 : 50;        // ±25 or ±50 mm
   return {
     min:       Math.max(0, center - tolerance),
     max:       center + tolerance,
@@ -24,12 +24,12 @@ function gt4NewTarget() {
   };
 }
 
-// Formaterer et Unix-tidsstempel til HH:MM:SS
+// formats a unix timestamp to HH:MM:SS for the chart x-axis
 function gt4FormatTs(ts) {
   return new Date(ts).toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
 
-// Bygger Chart.js-panelet første gang
+// builds the Chart.js panel, destroys any existing instance first
 function gt4BuildChart() {
   const ctx = document.getElementById('gt4-chart');
   if (!ctx) return;
@@ -42,7 +42,7 @@ function gt4BuildChart() {
       datasets: [{
         label:           t('gt4_panelLabel'),
         data:            _gt4Values,
-        borderColor:     '#38B8D0',      // cyan — Grafana-aksentfarge
+        borderColor:     '#38B8D0',      // cyan to match the Grafana accent color
         backgroundColor: 'rgba(56,184,208,.10)',
         fill:            true,
         tension:         0.3,
@@ -51,7 +51,7 @@ function gt4BuildChart() {
       }]
     },
     options: {
-      animation:   false,  // oppdatering skal føles som live-panel, ikke animert
+      animation:   false,  // disabled so updates feel instant like a real Grafana panel
       responsive:  true,
       plugins: {
         legend: { display: false },
@@ -74,24 +74,24 @@ function gt4BuildChart() {
   });
 }
 
-// Legger et nytt punkt til grafen og oppdaterer Chart.js
+// adds a new data point and tells Chart.js to re-render
 function gt4AddPoint(timestamp, value) {
   _gt4Labels.push(gt4FormatTs(timestamp));
   _gt4Values.push(value);
   if (_gt4Chart) {
-    _gt4Chart.update();  // oppdater panel uten å bygge på nytt — simulerer live Grafana-refresh
+    _gt4Chart.update();  // update without rebuilding the whole chart, simulates a live Grafana refresh
   }
 }
 
-// Starter en ny målingsrunde
+// starts a new measurement round with a fresh target zone
 function gt4StartRound() {
   const target = gt4NewTarget();
 
-  // Oppdater instruksjonsboksen med nytt målområde
+  // update the instruction box with the new target range
   const instrEl = document.getElementById('gt4-instr-range');
   if (instrEl) instrEl.textContent = `${target.min} – ${target.max} mm  (±${target.tolerance} mm)`;
 
-  // Nullstill hold-fremdriftslinje og status
+  // reset the hold progress bar and status text
   const fillEl = document.getElementById('gt4-hold-fill');
   if (fillEl) { fillEl.style.width = '0%'; fillEl.style.background = '#38B8D0'; }
 
@@ -104,7 +104,7 @@ function gt4StartRound() {
   const srcEl = document.getElementById('gt4-live-src');
   if (srcEl) srcEl.textContent = '';
 
-  // Rydd forrige SensorTask
+  // clean up the previous SensorTask before starting a new one
   if (_gt4Task) { _gt4Task.destroy(); _gt4Task = null; }
 
   _gt4Task = new SensorTask({
@@ -123,7 +123,7 @@ function gt4StartRound() {
     },
 
     onProgress(elapsed, required) {
-      // Animer hold-fremdriftslinjen — viser brukeren at stabil avlesning = god data
+      // animate the hold bar so the user can see they need to stay in range
       const pct   = Math.min(100, (elapsed / required) * 100);
       const fillEl = document.getElementById('gt4-hold-fill');
       if (fillEl) fillEl.style.width = pct + '%';
@@ -132,9 +132,9 @@ function gt4StartRound() {
     },
 
     onComplete(reading) {
-      // Punkt bekreftet — vis InfluxDB-skrivemelding og oppdater Grafana-panelet
+      // reading confirmed, show the InfluxDB write confirmation and update the chart
       const fillEl = document.getElementById('gt4-hold-fill');
-      if (fillEl) fillEl.style.background = '#4ade80';  // grønn = bekreftet skrevet
+      if (fillEl) fillEl.style.background = '#4ade80';  // green means the reading was confirmed
 
       const statusEl = document.getElementById('gt4-status');
       if (statusEl) statusEl.textContent = t('gt4_written');
@@ -142,23 +142,23 @@ function gt4StartRound() {
       gt4AddPoint(reading.timestamp, reading.value);
       _gt4Count++;
 
-      // Oppdater poeng
+      // update the score
       _gt4Score++;
       pointSystem('grafana-t4', Math.min(_gt4Score, GT4_REQUIRED));
       scoreGt4();
 
-      // Vis InfluxDB-skrivebekreftelse
+      // show the InfluxDB write confirmation entry
       gt4ShowWriteConfirm(reading);
 
       if (_gt4Count >= GT4_REQUIRED) {
         setTimeout(gt4Finish, 1000);
       } else {
-        setTimeout(gt4StartRound, 1500);  // kort pause så brukeren rekker å se bekreftelsen
+        setTimeout(gt4StartRound, 1500);  // short pause so the user can see the confirmation
       }
     },
 
     onReset() {
-      // Verdien forlot området — nullstill hold-linjen
+      // value left the target range, reset the hold bar
       const fillEl = document.getElementById('gt4-hold-fill');
       if (fillEl) { fillEl.style.width = '0%'; fillEl.style.background = '#38B8D0'; }
       const statusEl = document.getElementById('gt4-status');
@@ -169,7 +169,7 @@ function gt4StartRound() {
   _gt4Task.start();
 }
 
-// Viser en kort InfluxDB-skrivebekreftelse under grafen
+// shows a short InfluxDB write confirmation entry below the chart
 function gt4ShowWriteConfirm(reading) {
   const el = document.getElementById('gt4-write-log');
   if (!el) return;
@@ -177,10 +177,10 @@ function gt4ShowWriteConfirm(reading) {
   const line = document.createElement('div');
   line.className   = 'gt4-write-line';
   line.textContent = `✓ sensor,type=dist value=${reading.value} ${reading.timestamp}000000  (${ts})`;
-  el.prepend(line);  // nyeste øverst — slik InfluxDB-logger ser ut
+  el.prepend(line);  // newest on top, same as how InfluxDB logs look
 }
 
-// Viser fullføringsbanneret og stopper alt
+// shows the completion banner and cleans everything up
 function gt4Finish() {
   if (_gt4Task) { _gt4Task.destroy(); _gt4Task = null; }
   const gameEl = document.getElementById('gt4-game');
@@ -189,15 +189,16 @@ function gt4Finish() {
   if (doneEl) doneEl.style.display = 'block';
 }
 
-// Oppdaterer poenget for oppgaven
+// updates the score display
 function scoreGt4() {
   const el = document.getElementById('gt4-score');
-  if (el) el.textContent = 'Poeng: ' + _gt4Score;
+  if (el) el.textContent = 'Score: ' + _gt4Score;
 }
 
-// Kalles av Start-knappen
+// called by the start button
 function gt4Start() {
   _gt4Count  = 0;
+  // reset all data arrays so the chart starts empty
   _gt4Labels = [];
   _gt4Values = [];
   _gt4Score  = 0;

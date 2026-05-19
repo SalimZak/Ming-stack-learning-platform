@@ -1,4 +1,4 @@
-// ── NODE-RED OPPGAVE 3 — Drag og slipp ──────────
+// Node-RED task 3 - drag and drop
 
 const NRT3_PAIRS = [
   { id: 'node',    itemKey: 'nrt3_pair_node_item',    slotKey: 'nrt3_pair_node_slot',    hintKey: 'nrt3_pair_node_hint' },
@@ -9,18 +9,19 @@ const NRT3_PAIRS = [
   { id: 'deploy',  itemKey: 'nrt3_pair_deploy_item',  slotKey: 'nrt3_pair_deploy_slot',  hintKey: 'nrt3_pair_deploy_hint' },
 ];
 
-// Maks 5 poeng (samme skala som de andre oppgavene)
+// max 5 points, same scale as the other tasks
 const NRT3_MAX_SCORE = 5;
 const NRT3_MIN_SCORE = 0;
 
 let nrt3Score = 0;
 let nrt3CorrectCount = 0;
 
-// trygg oppslag: returnerer t(key) hvis i18n er lastet, ellers fallback
+// safe i18n lookup, returns fallback if translation system isn't loaded yet
 function nrt3T(key, fallback) {
   return (typeof t === 'function' ? t(key) : (fallback || key));
 }
 
+// Fisher-Yates shuffle — randomizes the array in place
 function nrt3Shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -30,6 +31,7 @@ function nrt3Shuffle(arr) {
   return a;
 }
 
+// shows a brief correct/wrong message then hides it after 900ms
 function nrt3FlashMsg(text, ok) {
   const el = document.getElementById('nrt3-flash-msg');
   el.textContent = text;
@@ -38,19 +40,19 @@ function nrt3FlashMsg(text, ok) {
   setTimeout(() => { el.style.display = 'none'; }, 900);
 }
 
-// Viser fullføringsbanneret med poengsum
+// shows the completion banner with the final score
 function nrt3ShowCompleteBanner() {
   const banner = document.getElementById('nrt3-complete-banner');
   if (!banner) return;
-  banner.textContent = nrt3T('nrt3_complete', '\u2713 Oppgave fullf\u00f8rt!') +
-                       ' \u2014 ' + nrt3T('nrt3_completeScore', 'Poeng') +
+  banner.textContent = nrt3T('nrt3_complete', '\u2713 Task complete!') +
+                       ' \u2014 ' + nrt3T('nrt3_completeScore', 'Score') +
                        ': ' + nrt3Score + '/' + NRT3_MAX_SCORE;
   banner.style.display = 'block';
 }
 
 function nrt3BuildItems() {
   const source = document.getElementById('nrt3-drag-source');
-  source.innerHTML = '<div class="drag-source-label">' + nrt3T('nrt3_sourceLabel', 'Begrep') + '</div>';
+  source.innerHTML = '<div class="drag-source-label">' + nrt3T('nrt3_sourceLabel', 'Terms') + '</div>';
 
   nrt3Shuffle(NRT3_PAIRS).forEach(p => {
     const itemLabel = nrt3T(p.itemKey);
@@ -79,23 +81,24 @@ function nrt3BuildSlots() {
     const slot = document.createElement('div');
     slot.className = 'drop-slot';
     slot.dataset.expects = p.id;
-    slot.dataset.tried = ''; // tom = første forsøk ikke gjort enda
+    slot.dataset.tried = ''; // empty means this slot hasn't been attempted yet
+
     slot.innerHTML =
       '<div class="slot-label">' + nrt3T(p.slotKey) + '</div>' +
       '<div class="slot-hint">'  + nrt3T(p.hintKey) + '</div>' +
       '<div class="slot-droparea">' + nrt3T('nrt3_dropHere', 'Drop here') + '</div>';
 
     slot.addEventListener('dragover', e => {
-      e.preventDefault();
+      e.preventDefault(); // required to allow dropping
       e.dataTransfer.dropEffect = 'move';
       slot.classList.add('drag-over');
     });
-    slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+    slot.addEventListener('dragleave', () => slot.classList.remove('drag-over')); // remove highlight when drag leaves
 
     slot.addEventListener('drop', e => {
       e.preventDefault();
       slot.classList.remove('drag-over');
-      if (slot.classList.contains('correct')) return;
+      if (slot.classList.contains('correct')) return; // don't allow drops on already completed slots
       nrt3HandleDrop(slot, e.dataTransfer.getData('text/plain'));
     });
 
@@ -106,7 +109,7 @@ function nrt3BuildSlots() {
 function nrt3HandleDrop(slot, itemId) {
   const ok = itemId === slot.dataset.expects;
   const item = document.querySelector('#nrt3-drag-source .drag-item[data-id="' + itemId + '"]');
-  // første forsøk på denne sonen?
+  // check if this is the first attempt on this slot
   const firstTry = !slot.dataset.tried;
 
   if (ok) {
@@ -117,7 +120,7 @@ function nrt3HandleDrop(slot, itemId) {
     if (item) item.remove();
     nrt3CorrectCount++;
 
-    // poeng kun hvis riktig på første forsøk (matcher Grafana T2)
+    // only award points on the first correct attempt
     if (firstTry) {
       nrt3Score = Math.min(NRT3_MAX_SCORE, nrt3Score + 1);
       if (typeof pointSystem === 'function') pointSystem('nodered-t3', nrt3Score);
@@ -129,7 +132,7 @@ function nrt3HandleDrop(slot, itemId) {
       nrt3ShowCompleteBanner();
     }
   } else {
-    // -1 kun på første feilforsøk per sone
+    // only deduct a point on the first wrong attempt per slot
     if (firstTry) {
       nrt3Score = Math.max(NRT3_MIN_SCORE, nrt3Score - 1);
       if (typeof pointSystem === 'function') pointSystem('nodered-t3', nrt3Score);
@@ -143,7 +146,7 @@ function nrt3HandleDrop(slot, itemId) {
 }
 
 function nrt3StartTask() {
-  // hent tidligere poeng fra localStorage (samme mønster som Grafana T2)
+  // load any previously saved score for this task
   if (typeof readData === 'function') {
     const data = readData();
     const saved = data.tasks && data.tasks['nodered-t3'];
@@ -161,19 +164,19 @@ function nrt3StartTask() {
 
 function nrt3ResetTask() {
   document.getElementById('nrt3-complete-banner').style.display = 'none';
-  // poeng nullstilles IKKE (pointSystem bruker Math.max så høyeste vinner)
+  // don't reset points here, the point system already keeps the highest score
   nrt3BuildItems();
   nrt3BuildSlots();
 }
 
-// kalles når brukeren bytter språk — bygger oppgaven på nytt hvis aktiv
+// called when the user switches language, rebuilds everything with the new text
 function nrt3RefreshLabels() {
   const taskArea = document.getElementById('nrt3-task-area');
   if (!taskArea || taskArea.style.display === 'none') return;
   nrt3BuildItems();
   nrt3BuildSlots();
 
-  // hvis fullføringsbanneret allerede vises, re-bygg det på nytt språk
+  // if the complete banner is already showing, update it to the new language too
   const banner = document.getElementById('nrt3-complete-banner');
   if (banner && banner.style.display === 'block') {
     nrt3ShowCompleteBanner();

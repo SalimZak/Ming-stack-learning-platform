@@ -1,15 +1,15 @@
-/* ── Node-RED Simulator (Oppgave 4) ── */
+/* Node-RED simulator — shared by MQTT Task 4 and Node-RED Task 4 */
 #nr-root { width: 100%; }
 
 .nr-app {
   height: calc(100vh - 44px - 110px);
-  /* 100vh minus topbar og oppgavebeskrivelse over simulatoren */
+  /* 100vh minus the topbar and the task description above the simulator */
   min-height: 520px; overflow: hidden;
   background:
     radial-gradient(1000px 500px at 20% 10%, rgba(56,184,208,.12), transparent 60%),
     radial-gradient(800px 450px at 80% 30%, rgba(232,208,168,.10), transparent 60%),
     var(--bg);
-  /* To myke gradientglød over bakgrunnen for dybde */
+  /* two soft gradient glows over the background for depth */
   color: var(--text); font-family: var(--font-mono);
   border-radius: 14px; box-shadow: var(--shadow); border: 1px solid var(--border);
 }
@@ -19,7 +19,7 @@
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 14px; border-bottom: 1px solid var(--border);
   background: rgba(0,0,0,.22);
-  backdrop-filter: blur(10px);  /* frostet-glass effekt bak topbaren */
+  backdrop-filter: blur(10px);  /* frosted glass effect behind the topbar */
 }
 .nr-brand   { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 13px; }
 .nr-actions { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -30,38 +30,46 @@
   cursor: pointer; font-weight: 700; font-size: 12px; font-family: var(--font-mono);
 }
 .nr-btn:hover  { background: var(--panel2); }
-.nr-btn:active { transform: translateY(1px); }  /* liten "trykk"-effekt */
+.nr-btn:active { transform: translateY(1px); }  /* small press effect */
 .nr-btn-small  { padding: 5px 8px; border-radius: 8px; font-size: 11px; }
 
-/* Tre-kolonne layout inne i simulatoren */
+/* three-column layout inside the simulator */
 .nr-main  { height: calc(100% - var(--topbar-h)); display: flex; overflow: hidden; }
 .nr-left  { width: var(--left-w);  flex: 0 0 var(--left-w);  border-right: 1px solid var(--border); background: rgba(0,0,0,.14); overflow: auto; padding-bottom: 12px; }
 .nr-right { width: var(--right-w); flex: 0 0 var(--right-w); border-left:  1px solid var(--border); background: rgba(0,0,0,.14); overflow: hidden; display: flex; flex-direction: column; }
 
 .nr-panel-title { padding: 10px 10px 6px; font-weight: 900; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .9px; }
 
-/* Nodebrikker i venstre panel som kan dras ut på lerretet */
+/* draggable node tiles in the left panel */
 .nr-node-list { padding: 6px 8px 8px; display: grid; gap: 8px; }
 .nr-node {
-  user-select: none;  /* hindrer tekst fra å bli markert under dra */
+  user-select: none;  /* prevents text from being selected while dragging */
   background: var(--panel); border: 1px solid var(--border);
   border-radius: 12px; padding: 10px; cursor: grab;
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-rows: auto auto;
-  /* 2x2 grid: tittel øverst venstre, "drag"-pille høyre (strekker seg over begge rader), undertittel nederst venstre */
+  /* 2x2 grid: title top left, drag pill on the right spanning both rows, subtitle bottom left */
   column-gap: 8px; row-gap: 2px;
 }
 .nr-node:active { cursor: grabbing; }
 .nr-node-title  { font-weight: 900; font-size: 12px; }
 .nr-node-sub    { font-size: 11px; color: var(--muted); font-weight: 700; }
-.nr-node-drag   { grid-row: 1 / span 2; align-self: center; justify-self: end; font-size: 10px; color: var(--muted); border: 1px solid var(--border); padding: 4px 8px; border-radius: 999px; background: rgba(0,0,0,.18); }
+.nr-node-drag   { grid-row: 1 / span 2; align-self: center; 
+                  justify-self: end; 
+                  font-size: 10px; 
+                  color: var(--muted); 
+                  border: 1px solid var(--border); 
+                  padding: 4px 8px; 
+                  border-radius: 999px; 
+                  background: rgba(0,0,0,.18); 
+                }
 
-/* Lerret der noder slippes og kobles */
+/* canvas where nodes are dropped and connected */
 .nr-canvas-wrap { flex: 1 1 auto; position: relative; overflow: hidden; }
 .nr-canvas {
   position: relative; height: 100%; width: 100%; overflow: hidden;
-  /* Rutenettbakgrunn laget med CSS-gradienter, samme stil som ekte Node-RED */
+  /* grid background made with CSS gradients, same style as real Node-RED */
   background-image:
     linear-gradient(to right,  rgba(255,255,255,.06) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255,255,255,.06) 1px, transparent 1px);
@@ -73,23 +81,23 @@
   padding: 8px 12px; border-radius: 12px; border: 1px solid var(--border);
   background: rgba(0,0,0,.25); color: var(--muted); font-weight: 700; font-size: 12px;
   z-index: 2;
-  pointer-events: none;  /* hint-teksten skal aldri blokkere klikk på lerretet */
+  pointer-events: none;  /* hint text should never block clicks on the canvas */
 }
 
-/* SVG-overlegg for ledninger — ligger over lerretet, under noder */
+/* SVG overlay for wires, sits above the canvas, below nodes */
 .nr-wires {
   position: absolute; inset: 0; z-index: 1;
   pointer-events: none;
-  /* pointer-events: none lar klikk gå gjennom SVG-laget til noder og lerret under */
+  /* pointer-events: none lets clicks pass through the SVG layer to nodes and canvas below */
 }
 .nr-wire      { stroke: rgba(56,184,208,.95); filter: drop-shadow(0 2px 6px rgba(0,0,0,.35)); }
 .nr-wire-temp { stroke: rgba(232,208,168,.95); stroke-dasharray: 6 6; }
-/* Stiplet gull-linje vises mens brukeren drar en ny kobling */
+/* dashed gold line shown while the user is drawing a new connection */
 
-/* Nodeinstanser som slippes på lerretet */
+/* node instances dropped onto the canvas */
 .nr-node-inst {
   position: absolute;
-  /* Absolutt posisjonering lar noder dras fritt ved å oppdatere left/top i JavaScript */
+  /* absolute positioning lets nodes be dragged freely by updating left/top in JavaScript */
   width: var(--node-w); border-radius: 12px; border: 1px solid var(--border);
   background: rgba(20,30,40,.90); box-shadow: var(--shadow);
   backdrop-filter: blur(10px); user-select: none; z-index: 3;
@@ -101,23 +109,23 @@
 .nr-node-inst-body { padding: 6px; display: grid; gap: 4px; }
 .nr-field > span   { font-size: 10px; color: var(--muted); font-weight: 900; }
 
-/* Inn- og ut-porter på sidene av nodeinstanser */
+/* input and output ports on the sides of node instances */
 .nr-port {
   position: absolute;
   top: 50%; transform: translateY(-50%);
-  /* Sentrert vertikalt på noden med transform, fungerer selv om nodehøyden endrer seg */
+  /* vertically centered on the node with transform, works even if the node height changes */
   width: var(--port); height: var(--port);
   border-radius: 999px; border: 2px solid rgba(255,255,255,.75);
   background: rgba(0,0,0,.35); cursor: crosshair;
-  pointer-events: auto;  /* skrur på klikk selv om SVG-overlegget har pointer-events: none */
+  pointer-events: auto;  /* re-enables clicks even though the SVG overlay has pointer-events: none */
   z-index: 4;
 }
 .nr-port-in  { left:  -7px; border-color: rgba(232,208,168,.9); box-shadow: 0 0 0 3px rgba(232,208,168,.10); }
 .nr-port-out { right: -7px; border-color: rgba(56,184,208,.9);  box-shadow: 0 0 0 3px rgba(56,184,208,.12); }
-/* -7px plasserer portene halvveis utenfor nodens kant så de ser tilkoblet ut */
+/* -7px places ports halfway outside the node edge so they look connected */
 .nr-port:hover { transform: translateY(-50%) scale(1.15); }
 
-/* Debug-panel til høyre */
+/* debug panel on the right */
 .nr-debug-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px 8px; border-bottom: 1px solid var(--border); }
 .nr-debug-title  { font-weight: 950; font-size: 13px; }
 .nr-debug-body   { padding: 8px 10px 12px; overflow: auto; flex: 1 1 auto; }
@@ -127,23 +135,23 @@
   font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,.88);
   padding: 8px 10px; border: 1px solid rgba(255,255,255,.08);
   background: rgba(255,255,255,.04); border-radius: 10px;
-  white-space: pre-wrap;   /* bevarer linjeskift og mellomrom i debug-meldinger */
+  white-space: pre-wrap;   /* preserves line breaks and spaces in debug messages */
   word-break: break-word;
 }
 
-/* Topic-velger inne i MQTT-noder: <- topic-navn -> */
+/* topic selector inside MQTT nodes */
 .nr-topic-slider { display: flex; align-items: center; gap: 4px; background: rgba(0,0,0,.25); border: 1px solid rgba(255,255,255,.10); border-radius: 8px; padding: 3px 4px; }
 .nr-topic-arrow  { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); color: var(--text); border-radius: 6px; width: 20px; height: 20px; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0; }
 .nr-topic-arrow:hover { background: rgba(255,255,255,.16); }
 .nr-topic-value  {
   flex: 1; font-size: 10px; font-weight: 700; color: var(--cyan);
   text-align: center; white-space: nowrap; overflow: hidden;
-  text-overflow: ellipsis;  /* lange topic-navn vises med ... i stedet for å flyte ut */
+  text-overflow: ellipsis;  /* long topic names show with ... instead of overflowing */
 }
 
-/* ── Responsiv layout ── */
+/* responsive layout */
 @media (max-width: 820px) {
-  /* Stabler simulatorpanelene vertikalt på smale vinduer */
+  /* stack the simulator panels vertically on narrow screens */
   .nr-main  { flex-direction: column; }
   .nr-left  { width: 100%; flex: 0 0 auto; border-right: none; border-bottom: 1px solid var(--border); }
   .nr-right { width: 100%; flex: 0 0 30vh; border-left:  none; border-top:    1px solid var(--border); }

@@ -1,19 +1,19 @@
-// ── INFLUXDB OPPGAVE 2 — Sensor Measurement ──────────────────
+// influxDB task 2 - sensor measurement
 
 (()=>{
 
-const IT2_REQUIRED = 5;  // antall vellykkede målinger for å fullføre
-const IT2_TIMEOUT  = 10; // sekunder brukeren har per måling
+const IT2_REQUIRED = 5;  // number of successful measurements needed to finish
+const IT2_TIMEOUT  = 10; // seconds the user has per measurement
 
-let _it2Task  = null;  // aktiv SensorTask-instans
-let _it2Timer = null;  // nedtellingsintervall-ID
-let _it2Count = 0;     // antall lagrede målinger
-let _it2Score = 0;     // poeng for denne oppgaven
+let _it2Task  = null;  // active SensorTask instance
+let _it2Timer = null;  // countdown interval ID
+let _it2Count = 0;     // number of saved measurements
+let _it2Score = 0;     // score for this task
 
-// Genererer en tilfeldig målsone for potmeteret (ratio 0.0–1.0)
+// generates a random target zone for the potentiometer (ratio 0.0–1.0)
 function it2NewTarget() {
   const center    = parseFloat((0.1 + Math.random() * 0.8).toFixed(2)); // 0.10–0.90
-  const tolerance = 0.05;                 // alltid ±0.05
+  const tolerance = 0.05;                 // always ±0.05
   return {
     min:       parseFloat(Math.max(0, center - tolerance).toFixed(2)),
     max:       parseFloat(Math.min(1, center + tolerance).toFixed(2)),
@@ -21,17 +21,17 @@ function it2NewTarget() {
   };
 }
 
-// Formaterer et Unix-tidsstempel til lesbar streng
+// formats a unix timestamp to a readable time string
 function it2FormatTs(ts) {
   return new Date(ts).toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
 
-// Starter en enkelt målerunde
+// starts a single measurement round
 function it2StartRound() {
   const target   = it2NewTarget();
   let   timeLeft = IT2_TIMEOUT;
 
-  // Oppdater prompt-boksene
+  // update the prompt boxes with the new round info
   const roundEl = document.getElementById('it2-round');
   if (roundEl) roundEl.textContent = t('it2_roundOf').replace('{n}', _it2Count + 1);
 
@@ -47,16 +47,16 @@ function it2StartRound() {
   const timerEl = document.getElementById('it2-timer-val');
   if (timerEl) { timerEl.textContent = timeLeft; timerEl.style.color = ''; }
 
-  // Rydder forrige runde
+  // clean up the previous round
   if (_it2Task)  { _it2Task.destroy();      _it2Task  = null; }
   if (_it2Timer) { clearInterval(_it2Timer); _it2Timer = null; }
 
-  // SensorTask for denne runden
+  // SensorTask for this round
   _it2Task = new SensorTask({
     sensorKey:    'pot',
     targetMin:    target.min,
     targetMax:    target.max,
-    holdTime:     0,       // fullfør ved første avlesning innenfor området
+    holdTime:     0,       // complete on the first reading that lands in range
     pollInterval: 500,
 
     onValue(reading) {
@@ -68,14 +68,14 @@ function it2StartRound() {
     },
 
     onComplete(reading) {
-      // Stopp nedtelling
+      // stop the countdown
       if (_it2Timer) { clearInterval(_it2Timer); _it2Timer = null; }
 
-      // Legg til rad i databasetabellen
+      // add the reading as a row in the database table
       it2AddRow(reading.timestamp, reading.value);
       _it2Count++;
 
-      // Oppdater poeng
+      // update the score
       _it2Score++;
       pointSystem('influx-t2', Math.min(_it2Score, IT2_REQUIRED));
       scoreIt2();
@@ -90,16 +90,16 @@ function it2StartRound() {
 
   _it2Task.start();
 
-  // Nedtellingstimer — 10 sekunder per måling
+  // countdown timer — 10 seconds per measurement
   _it2Timer = setInterval(() => {
     timeLeft--;
     const el = document.getElementById('it2-timer-val');
     if (el) {
       el.textContent = timeLeft;
-      if (timeLeft <= 3) el.style.color = '#f87171'; // rød de siste 3 sekundene
+      if (timeLeft <= 3) el.style.color = '#f87171'; // red for the last 3 seconds
     }
     if (timeLeft <= 0) {
-      // Tid ute — stopp denne runden og start ny
+      // time ran out, stop this round and start a new one
       clearInterval(_it2Timer);
       _it2Timer = null;
       _it2Task.destroy();
@@ -111,7 +111,7 @@ function it2StartRound() {
   }, 1000);
 }
 
-// Legger til en vellykket rad i databasetabellen
+// adds a successful reading as a row in the database table
 function it2AddRow(timestamp, value) {
   const tbody = document.getElementById('it2-tbody');
   if (!tbody) return;
@@ -125,7 +125,7 @@ function it2AddRow(timestamp, value) {
   tbody.appendChild(tr);
 }
 
-// Viser fullføringsbanneret og stopper all aktivitet
+// shows the completion banner and stops everything
 function it2Finish() {
   if (_it2Task)  { _it2Task.destroy();      _it2Task  = null; }
   if (_it2Timer) { clearInterval(_it2Timer); _it2Timer = null; }
@@ -135,13 +135,13 @@ function it2Finish() {
   if (doneEl) doneEl.style.display = 'block';
 }
 
-// Oppdaterer poenget for oppgaven
+// updates the score display
 function scoreIt2() {
   const el = document.getElementById('it2-score');
-  if (el) el.textContent = 'Poeng: ' + _it2Score;
+  if (el) el.textContent = 'Score: ' + _it2Score;
 }
 
-// Kalles av Start-knappen
+// called by the start button
 function it2Start() {
   _it2Count = 0;
   _it2Score = 0;

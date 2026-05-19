@@ -196,16 +196,17 @@
   border-style: solid;
   background: rgba(74,222,128,.08);
 }
+
+.drop-slot.wrong-flash {
+  border-color: #f87171;
+  background: rgba(248,113,113,.08);
+}
+
 .drop-slot.correct .slot-droparea {
   border-color: #4ade80;
   background: rgba(74,222,128,.10);
   color: #4ade80;
   font-weight: 700;
-}
-
-.drop-slot.wrong-flash {
-  border-color: #f87171;
-  background: rgba(248,113,113,.08);
 }
 
 .reset-btn {
