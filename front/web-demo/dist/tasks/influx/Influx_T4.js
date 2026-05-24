@@ -87,7 +87,7 @@ function boxContent(sensorNavn, ekteTemp) {
 
 // lager timestamp ved å returnere dato og tid
 function timeDate(dato) {
-    let år  = dato.getFullYear(); // henter året
+    let aar  = dato.getFullYear(); // henter året
     // januar=0, så for å få mai til 05 istedet for 04, så må man legge til + 1 i måned
     // det skal være 2 tegn, og fyller med 0 vis ikke
     let mnd = String(dato.getMonth() + 1).padStart(2, "0"); // henter måned
@@ -96,7 +96,7 @@ function timeDate(dato) {
     let min = String(dato.getMinutes()).padStart(2, "0"); // henter minutt
     let sek = String(dato.getSeconds()).padStart(2, "0"); // henter sekund
     // dato med bindestrek(-), tid med semikolon(:)
-    return år + "-" + mnd + "-" + dag + " " + hrs + ":" + min + ":" + sek; 
+    return aar + "-" + mnd + "-" + dag + " " + hrs + ":" + min + ":" + sek; 
 }
 
 // Blander liste random, slik at sensor boksene kommer ut i tilfeldig rekkefølge
@@ -190,14 +190,21 @@ function contentReveal(boxIndex) {
     let dataContent = sensorData[boxIndex]; // henter sensor data innholdet til boksen
     dataContent.contentReveal = true; // her blir innholdet avslørt
 
-    let tempReveal = document.getElementById("temp-" + boxIndex);
-    if (tempReveal) tempReveal.textContent = dataContent.temp + "°C";//hvis temperatur finnes, så bytter ? med verdi
+    fetch("/influx") // henter ekte tempratur verdier rett før de blir avslørt
+        .then(function(svar){return svar.json();})
+        .then(function(json){dataContent.temp = parseFloat(json.temp)})
 
-    let timeReveal = document.getElementById("tid-" + boxIndex);
-    if (timeReveal) timeReveal.textContent = dataContent.timestamp;//hvis timestamp finnes, så bytter ? med verdi
+        .catch(function(){})
+        .finally(function(){
+            let tempReveal = document.getElementById("temp-" + boxIndex);
+            if (tempReveal) tempReveal.textContent = dataContent.temp + "°C";//hvis temperatur finnes, så bytter ? med verdi
 
-    let countdownReveal = document.getElementById("countDown-" + boxIndex);
-    if (countdownReveal) countdownReveal.textContent = ""; // fjern nedtellingsteksten når tiden er over
+            let timeReveal = document.getElementById("tid-" + boxIndex);
+            if (timeReveal) timeReveal.textContent = dataContent.timestamp;//hvis timestamp finnes, så bytter ? med verdi
+
+            let countdownReveal = document.getElementById("countDown-" + boxIndex);
+            if (countdownReveal) countdownReveal.textContent = ""; // fjern nedtellingsteksten når tiden er over
+    });
 }
 
 // Når brukeren klikker på en sensorboks
@@ -229,10 +236,10 @@ function sensorBoksIRad(valgtRad, radNummer) {
 
     // Fyll inn database bucket med sensor,temp,verdi og tid
     valgtRad.innerHTML = 
-        '<div>Measurement: Temperature</div>' +        // fast — alltid temperature
-        '<div>Tag: '       + dataContent.sensorNavn + '</div>' +
-        '<div>Field: '     + dataContent.temp       + '°C</div>' +
-        '<div>Timestamp: ' + dataContent.timestamp  + '</div>';
+        '<div>Measurement: Temperature</div>' + // fast — alltid temperature
+        '<div>Tag: ' + dataContent.sensorNavn + '</div>' +
+        '<div>Field: ' + dataContent.temp + '°C</div>' +
+        '<div>Timestamp: '+ dataContent.timestamp  + '</div>';
 
         valgtRad.dataset.filled = "true"; // marker raden som fylt sånn at den ikke kan flyttes
         valgtRad.classList.add("correct"); // grønn på raden
