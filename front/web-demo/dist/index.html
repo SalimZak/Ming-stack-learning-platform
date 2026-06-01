@@ -812,81 +812,79 @@
       <!-- Node-RED TASK 2 - True/False -->
       <div id="page-nodered-t2" class="page-view">
         <h1 class="page-title" data-i18n="nodered_t2_title">Node-RED - Oppgave 2</h1>
-        <!-- infoboks-->
+ 
         <div id="noderedT2-infobox" class="infobox">
-          <h3>True or False</h3>
-          <p>Informasjon om Temaet skal stå her</p>
-          <p>Dette er er true or false oppgave med 10 spørsmål. Med 4 valg alternativer. Kun ett er korrekt. det er 1 poneg for hver korrekt svar.</p>
-          <button class="startbtn" onclick="nodeREDT2Start()">Start</button>
+          <h3 data-i18n="nrt2_infoTitle">True or False</h3>
+          <p data-i18n="nrt2_infoBody">Les gjennom Node-RED-beskrivelsen på forrige side før du starter. Dette er en sant/usant-oppgave med 10 spørsmål. 1 poeng per korrekt svar.</p>
+          <button class="startbtn" onclick="nodeREDT2Start()" data-i18n="mc_startBtn">Start</button>
         </div>
-
+ 
         <div id="noderedT2-taskbox" style="display:none;">
-          <!-- score -->
           <div id="noderedT2-score" class="scoreBox">Poeng Score: 0 / 10</div>
-
+ 
           <div class="TFbox" data-correct="1">
-            <p>Spørsmål 1?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
+            <p data-i18n="nrt2_q1">Node-RED lar deg bygge dataflyter ved å dra og koble noder grafisk, uten å skrive kode linje for linje.</p>
+            <button onclick="quizSelect(this,1)" data-i18n="tf_true">Sant</button>
+            <button onclick="quizSelect(this,0)" data-i18n="tf_false">Usant</button>
           </div>
-
+ 
           <div class="TFbox" data-correct="0">
-            <p>Spørsmål 2?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
+            <p data-i18n="nrt2_q2">I MING-stacken sitter Node-RED på slutten av kjeden og tar seg av visualisering av data.</p>
+            <button onclick="quizSelect(this,1)" data-i18n="tf_true">Sant</button>
+            <button onclick="quizSelect(this,0)" data-i18n="tf_false">Usant</button>
           </div>
-
-          <div class="TFbox" data-correct="0">
-            <p>Spørsmål 3?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
-          <div class="TFbox" data-correct="0">
-            <p>Spørsmål 4?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
+ 
           <div class="TFbox" data-correct="1">
-            <p>Spørsmål 5?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
+            <p data-i18n="nrt2_q3">En flow i Node-RED er en koblet sekvens av noder som behandler data fra inngang til utgang.</p>
+            <button onclick="quizSelect(this,1)" data-i18n="tf_true">Sant</button>
+            <button onclick="quizSelect(this,0)" data-i18n="tf_false">Usant</button>
           </div>
-
+ 
           <div class="TFbox" data-correct="1">
-            <p>Spørsmål 6?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
+            <p data-i18n="nrt2_q4">Node-RED kan brukes til å filtrere bort feilaktige sensorverdier.</p>
+            <button onclick="quizSelect(this,1)" data-i18n="tf_true">Sant</button>
+            <button onclick="quizSelect(this,0)" data-i18n="tf_false">Usant</button>
           </div>
-
+ 
           <div class="TFbox" data-correct="1">
-            <p>Spørsmål 7?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
+            <p data-i18n="nrt2_q5">Node-RED kan brukes til å utløse alarmer når verdier overstiger gitte grenser.</p>
+            <button onclick="quizSelect(this,1)" data-i18n="tf_true">Sant</button>
+            <button onclick="quizSelect(this,0)" data-i18n="tf_false">Usant</button>
           </div>
-
+ 
           <div class="TFbox" data-correct="0">
-            <p>Spørsmål 8?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
+            <p data-i18n="nrt2_q6">Når Node-RED utløser en alarm basert på en innkommende verdi, er det lagringslaget som jobber.</p>
+            <button onclick="quizSelect(this,1)" data-i18n="tf_true">Sant</button>
+            <button onclick="quizSelect(this,0)" data-i18n="tf_false">Usant</button>
           </div>
-
-          <div class="TFbox" data-correct="1">
-            <p>Spørsmål 9?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
-          </div>
-
+ 
           <div class="TFbox" data-correct="0">
-            <p>Spørsmål 10?</p>
-            <button onclick="quizSelect(this,1)">True</button>
-            <button onclick="quizSelect(this,0)">False</button>
+            <p data-i18n="nrt2_q7">MQTT kan sende data direkte til InfluxDB uten hjelp fra Node-RED.</p>
+            <button onclick="quizSelect(this,1)" data-i18n="tf_true">Sant</button>
+            <button onclick="quizSelect(this,0)" data-i18n="tf_false">Usant</button>
           </div>
-
-          <!-- submitt-->
-          <button class="mc-finish-btn" onclick="quizFinish('.TFbox','noderedT2-score')">Lever</button>
+ 
+          <div class="TFbox" data-correct="1">
+            <p data-i18n="nrt2_q8">En viktig grunn til at Node-RED trengs er at MQTT-meldinger ikke er i formatet InfluxDB krever.</p>
+            <button onclick="quizSelect(this,1)" data-i18n="tf_true">Sant</button>
+            <button onclick="quizSelect(this,0)" data-i18n="tf_false">Usant</button>
           </div>
+ 
+          <div class="TFbox" data-correct="1">
+            <p data-i18n="nrt2_q9">Node-RED tar imot MQTT-meldinger over nettverket via TCP/IP.</p>
+            <button onclick="quizSelect(this,1)" data-i18n="tf_true">Sant</button>
+            <button onclick="quizSelect(this,0)" data-i18n="tf_false">Usant</button>
+          </div>
+ 
+          <div class="TFbox" data-correct="1">
+            <p data-i18n="nrt2_q10">Node-RED kan rute data til ulike mottakere og legge til tidsstempling på data.</p>
+            <button onclick="quizSelect(this,1)" data-i18n="tf_true">Sant</button>
+            <button onclick="quizSelect(this,0)" data-i18n="tf_false">Usant</button>
+          </div>
+ 
+          <button class="mc-finish-btn" onclick="quizFinish('.TFbox','noderedT2-score')" data-i18n="mc_finishBtn">Lever</button>
+        </div>
+ 
         <button class="small-link" onclick="go('nodered')" data-i18n="nodered_t2_back">← Tilbake</button>
       </div>
 
