@@ -224,9 +224,9 @@ function grafDiagram(){
 }
 
 // Eksponerer funksjonene som HTML onclick-attributter trenger
-window.startSpill    = startSpill;
-window.kakeDiagram   = kakeDiagram;
+window.startSpill = startSpill;
+window.kakeDiagram = kakeDiagram;
 window.stolpeDiagram = stolpeDiagram;
-window.grafDiagram   = grafDiagram;
+window.grafDiagram = grafDiagram;
 
 })();

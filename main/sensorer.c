@@ -27,7 +27,7 @@ static const char *TAG = "sensor_test";
 
 static i2c_master_bus_handle_t g_i2c_bus = NULL;
 static SemaphoreHandle_t g_i2c_mutex = NULL;   
-static sensor_health_t g_health = {false, false, false, false}; 
+static sensor_health_t g_health = {false, false, false, false, false}; 
 static volatile float g_distance = NAN;
 static volatile float g_press = NAN;
 static volatile float g_temperature = NAN;
@@ -343,40 +343,64 @@ void press_sensor(void *pvParameters){
     if(loadcell_sensor_init() != ESP_OK){
         ESP_LOGE(TAG, "loadcell init failed");
         g_health.loadcell = false;
+        g_press = 0.0f;          // ikke NAN — GUI får 0 istedenfor søppel
         vTaskDelete(NULL);
         return;
     }
 
-    int timeout  = 100000;
+    // Vent på at HX711 er klar (maks ~1 sek)
+    int timeout = 10000;
     while (gpio_get_level(HX711_DT) == 1) {
         if (--timeout == 0){
             ESP_LOGE(TAG, "loadcell sensor timedout");
             g_health.loadcell = false;
+            g_press = 0.0f;
             vTaskDelete(NULL);
             return;
         }
+        esp_rom_delay_us(100);   // ikke busy-wait — gir fra seg litt CPU
     }
     g_health.loadcell = true;
 
+    // Tare: 10 målinger som nullpunkt
     int32_t tare_sum = 0;
     for (int i = 0; i < 10; i++){
         int32_t r = hx711_read_raw();
         if(r == INT32_MIN){
             ESP_LOGE(TAG, "loadcell died during tare");
             g_health.loadcell = false;
+            g_press = 0.0f;
             vTaskDelete(NULL);
             return;
-            /* kanskje det er å dra den men sjekk for om sensoren dør under nullstillingen,
-            usannsynlig men i teorien det kan skje så hvorfor ikke */
         }
         tare_sum += r;
+        vTaskDelay(pdMS_TO_TICKS(10));   // litt pause mellom tare-lesinger
     }
-
-    baseline = tare_sum /10;
+    baseline = tare_sum / 10;
     weight_init = 0;
 
     for( ;; ){
-        int32_t raw = hx711_read_raw();
+        // Middel over 5 prøver — samme som fungerende hx711.c
+        int32_t sum = 0;
+        bool read_ok = true;
+
+        for (int i = 0; i < 5; i++) {
+            int32_t r = hx711_read_raw();
+            if (r == INT32_MIN) {
+                ESP_LOGW(TAG, "loadcell read failed");
+                read_ok = false;
+                break;
+            }
+            sum += r;
+            vTaskDelay(pdMS_TO_TICKS(10));
+        }
+
+        if (!read_ok) {
+            vTaskDelay(pdMS_TO_TICKS(100));
+            continue;   // hopp over, behold forrige g_press-verdi
+        }
+
+        int32_t raw = sum / 5;
         float weight_g = (float)(raw - baseline) / scale;
 
         // IIR-filter (alpha = 0.6)
@@ -384,12 +408,7 @@ void press_sensor(void *pvParameters){
             weight_filtered = weight_g;
             weight_init = 1;
         } else {
-            weight_filtered = 0.6f * weight_g + 0.4f * weight_filtered;
-        }
-        g_press = weight_filtered;
-        vTaskDelay(pdMS_TO_TICKS(100));
-    }
-}
+            weight_filtered = 0.6f * weight
 
 void ds18b20_sensor(void *pvParameters){
     if(ds18b20_init() != ESP_OK){

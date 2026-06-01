@@ -58,7 +58,7 @@ static esp_err_t tinyusb_netif_recv_cb(void *buffer, uint16_t len, void *ctx)
         memcpy(buf_copy, buffer, len);
         return esp_netif_receive(s_netif, buf_copy, len, NULL);      
     } else {
-        //Shall we assert here? 
+
     }
     return ESP_OK;
 }
