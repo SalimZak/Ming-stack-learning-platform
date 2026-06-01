@@ -389,7 +389,7 @@ function initNodeRed(rootId) {
   let dragNode = null, dragOffset = { x: 0, y: 0 };
 
   canvas.addEventListener('pointerdown', e => {
-    if (e.target.closest('.nr-port') || e.target.closest('.nr-topic-arrow')) return;
+    if (e.target.closest('.nr-port') || e.target.closest('.nr-topic-arrow') || e.target.closest('.nr-play')) return;
     const node = e.target.closest('.nr-node-inst');
     if (!node) return;
     dragNode = node;

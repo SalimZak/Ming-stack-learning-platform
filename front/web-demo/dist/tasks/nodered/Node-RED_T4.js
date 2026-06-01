@@ -31,10 +31,15 @@ const TOPIC_OPTIONS = ['sensor/temperatur', 'sensor/fuktighet', 'sensor/trykk'];
 const CORRECT_TOPIC = 'sensor/trykk';
 // only sensor/trykk is correct, the sensor sends pressure data
 
+// scoring: starts at 5, -1 per hint used, floor at 0
+const NR_MAX_SCORE = 5;
+const NR_MIN_SCORE = 0;
+
 let _selectedTopicIndex = 0;  // which topic is shown on the MQTT nodes
 let _hintIndex = 0;           // which hint shows next
 let _nrNodeId  = 1;           // auto-increment ID for node instances on the canvas
 const _nrWires = [];          // all drawn wires — updated by nrRedrawWires()
+let _nrCompleted = false;     // true once the user has completed the flow at least once this session
 
 // fetches loadcell value from the backend, falls back to simulated if ESP32 is offline
 async function nrGetSensorValue() {
@@ -220,6 +225,23 @@ function nrFlowValid(root) {
   return true;
 }
 
+// calculates the current score based on hints used
+function nrCurrentScore() {
+  return Math.max(NR_MIN_SCORE, NR_MAX_SCORE - _hintIndex);
+}
+
+// shows the completion banner with the score and saves it to the shared point system
+function nrShowCompleteBanner() {
+  const banner = document.getElementById('nrt4-complete-banner');
+  if (!banner) return;
+  const score = nrCurrentScore();
+  banner.textContent = t('nr_complete') + ' \u2014 ' + t('nr_completeScore') +
+                       ': ' + score + '/' + NR_MAX_SCORE;
+  banner.style.display = 'block';
+  if (typeof pointSystem === 'function') pointSystem('nodered-t4', score);
+  _nrCompleted = true;
+}
+
 // simulates the Inject node sending a message through the flow
 async function nrHandlePlay(root) {
   if (!nrFlowValid(root)) { nrDebugLog(root, t('nr_flowInvalid')); return; }
@@ -244,6 +266,9 @@ async function nrHandlePlay(root) {
   });
 
   Broker.pub(topic, 'trykk=' + result.value.toFixed(2)); // publish the pressure value
+
+  // flow is valid and a message was sent — register completion
+  if (!_nrCompleted) nrShowCompleteBanner();
 }
 
 // checks the flow and logs the first error it finds — one at a time to avoid overwhelming the user
@@ -278,6 +303,7 @@ function initNodeRed(rootId) {
   // reset all state
   _hintIndex = 0; _selectedTopicIndex = 0; _nrNodeId = 1;
   _nrWires.length = 0;
+  _nrCompleted = false;
   Broker.clear();
 
   // inject the simulator HTML
@@ -366,7 +392,7 @@ function initNodeRed(rootId) {
   let dragNode = null, dragOffset = { x: 0, y: 0 };
 
   canvas.addEventListener('pointerdown', e => {
-    if (e.target.closest('.nr-port') || e.target.closest('.nr-topic-arrow')) return;
+    if (e.target.closest('.nr-port') || e.target.closest('.nr-topic-arrow') || e.target.closest('.nr-play')) return;
     const node = e.target.closest('.nr-node-inst');
     if (!node) return;
     dragNode = node;
@@ -470,6 +496,9 @@ function initNodeRed(rootId) {
     nrClearWires(root);
     root.querySelector('#debug-lines').innerHTML = '';
     _hintIndex = 0; _selectedTopicIndex = 0;
+    _nrCompleted = false;
+    const banner = document.getElementById('nrt4-complete-banner');
+    if (banner) banner.style.display = 'none';
     root._nrInit = false;
     Broker.clear();
     nrDebugLog(root, t('nr_resetOk'));
@@ -495,6 +524,9 @@ function initNodeRed(rootId) {
       nrSimLog(root, msg); // replaces the previous sim line instead of stacking
     });
     Broker.pub(topic, 'trykk=' + val); // publish so the subscriber above receives it
+
+    // flow is valid and a message was sent — register completion
+    if (!_nrCompleted) nrShowCompleteBanner();
   }, { signal });
 
   // initial wire draw (empty canvas) and ready message in the debug log

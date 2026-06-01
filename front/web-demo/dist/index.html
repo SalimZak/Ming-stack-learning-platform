@@ -1285,32 +1285,22 @@
             <div class="device-row">
               <div class="circle"></div>
               <div class="dev-label" id="t3-lbl-c1"></div>
-              <div class="dropzone" data-expected="SubTemp" onclick="t3Place(this)">
-                <div data-i18n="t3_clickPlace">Klikk for å plassere</div>
-            </div>
-              <div class="dropzone" data-expected="TempPublish" onclick="t3Place(this)">
-                <div data-i18n="t3_clickPlace">Klikk for å plassere</div>
+              <div class="dropzone" data-expected="SubTemp"     onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintSubscribe">Motta meldinger fra utgiver</div></div>
+              <div class="dropzone" data-expected="TempPublish" onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintForward">Send melding til abonnent</div></div>
             </div>
             <!-- client 2 — subscribes to Hum only -->
             <div class="device-row">
               <div class="circle"></div>
               <div class="dev-label" id="t3-lbl-c2"></div>
-              <div class="dropzone" data-expected="SubHum" onclick="t3Place(this)">
-                <div data-i18n="t3_clickPlace">Klikk for å plassere</div>
-            </div>
-              <div class="dropzone" data-expected="HumPublish" onclick="t3Place(this)">
-                <div data-i18n="t3_clickPlace">Klikk for å plassere</div>
+              <div class="dropzone" data-expected="SubHum"      onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintSubscribe">Motta meldinger fra utgiver</div></div>
+              <div class="dropzone" data-expected="HumPublish"  onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintForward">Send melding til abonnent</div></div>
             </div>
             <!-- client 3 — subscribes to Temp -->
             <div class="device-row">
               <div class="circle"></div>
               <div class="dev-label" id="t3-lbl-c3"></div>
-              <div class="dropzone" data-expected="SubTemp" onclick="t3Place(this)">
-                <div data-i18n="t3_clickPlace">Klikk for å plassere</div>
-            </div>
-              <div class="dropzone" data-expected="TempPublish" onclick="t3Place(this)">
-                <div data-i18n="t3_clickPlace">Klikk for å plassere</div>
-            </div>
+              <div class="dropzone" data-expected="SubTemp"     onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintSubscribe">Motta meldinger fra utgiver</div></div>
+              <div class="dropzone" data-expected="TempPublish" onclick="t3Place(this)"><div data-i18n="t3_clickPlace">Klikk for å plassere</div><div class="dropzone-hint" data-i18n="t3_hintForward">Send melding til abonnent</div></div>
             </div>
           </div>
         </div>
@@ -1528,6 +1518,12 @@ function go(page) {
 
   // info text — updates every time the user switches page
   const infoKeys = {
+    // generelle sider
+    "home":     "info_home",
+    "ming":     "info_ming",
+    "settings": "info_settings",
+    "role":     "info_role",
+    "sensors":  "info_sensors",
     // mqtt
     "mqtt-t1": "info_mqtt_t1",
     "mqtt-t2": "info_mqtt_t2",
