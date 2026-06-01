@@ -408,7 +408,13 @@ void press_sensor(void *pvParameters){
             weight_filtered = weight_g;
             weight_init = 1;
         } else {
-            weight_filtered = 0.6f * weight
+            weight_filtered = 0.6f * weight_g + 0.4f * weight_filtered;
+        }
+
+        g_press = weight_filtered;
+        vTaskDelay(pdMS_TO_TICKS(100));
+    }
+}
 
 void ds18b20_sensor(void *pvParameters){
     if(ds18b20_init() != ESP_OK){
