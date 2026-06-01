@@ -14,6 +14,11 @@
   transition: border-color .15s, transform .15s, background .15s;
   font-family: var(--font-mono); font-size: inherit; text-align: left;
 }
+
+#setup-manual-body {
+  white-space: pre-wrap;
+}
+
 .card:hover {
   border-color: rgba(56,184,208,.5);
   transform: translateY(-2px);  /* lifts the card slightly on hover */
